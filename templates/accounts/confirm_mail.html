@@ -1,0 +1,25 @@
+{%extends 'base/non_auth_base.html'%}
+{%block title%}
+    Check Your mail
+{%endblock%}
+{%block stylesheet%}
+    <style>
+        .vertical-center {
+            min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+            min-height: 100vh; /* These two lines are counted as one :-)       */
+          
+            display: flex;
+            align-items: center;
+          }
+    </style>
+{%endblock%}
+{% block content %}
+
+  <div class="container vertical-center">
+      <div class="mx-auto w-50 bg-white shadow p-4">
+        <h1 class="font-weight-bold mt-3 text-success"><i class='bx bxs-comment-check'></i> Mail Sent! please confirm your mail.</h1>
+        
+      </div>
+  </div>
+
+{% endblock %}

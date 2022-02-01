@@ -1,0 +1,970 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{%load crispy_forms_tags%}
+{%block content%}
+    <div class="container-fluid px-0 pt-4">
+      <div class="d-flex align-items-center mb-5">
+        <h3 class="mr-auto">Menus</h3>
+        <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+            <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
+            <a href="#" class="btn btn-dark">Menus</a>
+        </div> -->
+    </div>
+      <!-- Add Category modal -->
+      <div class="modal fade" id="add_category" tabindex="-1" aria-labelledby="add_categoryLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form id="categoryform" action="" method="post">
+              <div class="modal-body">
+                
+                  {%csrf_token%}
+                  {{form_menucategory|crispy}}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="btn_addcategory" type="submit" class="btn btn-primary">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Category List -->
+      <div class="card border-0 shadow">
+        <h4 class="card-header bg-primary-cus text-light">
+          Menu List
+          <button class="btn float-right p-1" style="font-size: 20px;" data-toggle="modal" data-target="#add_category"><i class='bx bxs-message-square-add'></i></button>
+        </h4>
+        <div class="card-body px-2">
+          <div id="accordionCategory" class="accordion">
+            
+            {%for category in menu_category%}
+              <!-- Delete Category model -->
+              <div class="modal fade" id="deleteCategory{{category.id}}" tabindex="-1" aria-labelledby="deleteCategory{{category.id}}Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteCategory{{category.id}}Label">Delete Category</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      Are you want to delete "{{category.name}}"
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button id="btnDeleteCategory{{category.id}}" data-id="{{category.id}}" type="button" class="btn btn-danger">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- edit Category model -->
+              <div class="modal fade" id="editCategory{{category.id}}" tabindex="-1" aria-labelledby="editCategory{{category.id}}Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="editCategory{{category.id}}Label">Edit Category</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <input id="id_editCategory{{category.id}}" type="text" class="form-control" value="{{category.name}}" required>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button id="btnEditCategory{{category.id}}" data-id="{{category.id}}" type="button" class="btn btn-success">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Add Item modal -->
+              <div class="modal fade" id="add_item{{category.id}}" tabindex="-1" aria-labelledby="add_itemLabel" aria-hidden="true">
+                <form id="itemform{{category.id}}" action="" method="post">
+                <div class="modal-dialog modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    
+                      <div class="modal-body">
+  
+                          {%csrf_token%}
+                          <input name="id" type="hidden" value="{{category.id}}" >
+                          <div class="form-group">
+                            <label for="id_name{{category.id}}">Name</label>
+                            <input name="name" type="text" class="form-control" id="id_name{{category.id}}" placeholder="Example:Burger, Pitza and etc.">
+                          </div>
+                          <div class="form-group">
+                            <label for="id_price{{category.id}}">Price ({{currency.code}})</label>
+                            <input name="price" type="number" class="form-control" id="id_price{{category.id}}" placeholder="{{currency.symbol}}">
+                          </div>
+                          <div class="form-group">
+                            <label for="id_desc{{category.id}}">Description</label>
+                            <textarea name="desc" class="form-control" id="id_desc{{category.id}}" rows="3"></textarea>
+                          </div>
+                          <div class="form-row align-items-center">
+                            <div class="form-group col">
+                              <h6>Item Image</h6>
+                              <div class="item-pic mb-4">
+                                  <label class="-label" for="id_image{{category.id}}">
+                                      <span><i class="bi bi-pencil"></i></span>
+                                      <span>Edit</span>
+                                  </label>
+                                  <input id="id_image{{category.id}}" type="file" name="img" accept="image/*"/>
+                                  <img src="/media/item_imgs/default.png" class="img-fluid" id="output_image{{category.id}}" width="200" />
+                              </div>
+                            </div>
+                            <div class="form-group col">
+                              <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="food_type" id="non-veg{{category.id}}" value="true" checked>
+                                  <label class="form-check-label" for="non-veg{{category.id}}">Non-Veg</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="food_type" id="veg{{category.id}}" value="false">
+                                  <label class="form-check-label" for="veg{{category.id}}">Veg</label>
+                                </div>
+                              </div>
+                              <div class="form-group d-flex align-items-center">
+                                <p class="mr-2 m-0 " id="">Enable</p>
+                                <label class="switch m-0">
+                                  <input name="display" id="id_display{{category.id}}" type="checkbox" checked>
+                                  <span class="slider round"></span>
+                                </label>
+                                <!-- <label class="ml-2" id="id_display_label{{category.id}}">Public</label> -->
+                              </div>
+                              
+                            </div>
+                          </div>
+                          <label for="">Food Available Time</label>
+                          <div class="form-row">
+                            <div class="form-group col">
+                              <label for="id_start_time{{category.id}}">Start Time</label>
+                              <input type="time" id="id_start_time{{category.id}}" name="start_time" class="form-control" >
+                            </div>
+                            <div class="form-group col">
+                              <label for="id_end_time{{category.id}}">End Time</label>
+                              <input type="time" id="id_end_time{{category.id}}" name="end_time" class="form-control" >
+                            </div>
+                          </div>
+                          <!-- <div class="form-group">
+                            <h5 class="text-center">Item Image</h5>
+                            <div class="item-pic mb-4">
+                                <label class="-label" for="id_image{{category.id}}">
+                                    <span><i class="bi bi-pencil"></i></span>
+                                    <span>Edit</span>
+                                </label>
+                                <input id="id_image{{category.id}}" type="file" name="img" accept="image/*"/>
+                                <img src="/media/item_imgs/default.png" class="img-fluid" id="output_image{{category.id}}" width="200" />
+                            </div>
+                          </div> -->
+                          <!-- <div class="form-row justify-content-between">
+                            <div class="form-group col">
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="food_type" id="non-veg{{category.id}}" value="true" checked>
+                                <label class="form-check-label" for="non-veg{{category.id}}">Non-Veg</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="food_type" id="veg{{category.id}}" value="false">
+                                <label class="form-check-label" for="veg{{category.id}}">Veg</label>
+                              </div>
+                            </div>
+                            <div class="form-group col text-right d-flex align-items-center">
+                              <p class="mr-2 m-0 " id="">Display to customers</p>
+                              <label class="switch m-0">
+                                <input name="display" id="id_display{{category.id}}" type="checkbox" checked>
+                                <span class="slider round"></span>
+                              </label>
+                            </div>
+                          </div> -->
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <!-- <button id="btn_additem{{category.id}}" type="button" class="btn btn-primary" data-id="{{category.id}}">Add</button> -->
+                        <input id="btn_additem{{category.id}}" data-id="{{category.id}}" type="submit" value="Add" class="btn btn-success">
+                      </div>
+                  </div>
+                </div>
+              </form>
+              </div>
+
+            <!-- Category List -->
+            <div id="category{{category.id}}" class="mb-3">
+            
+              <div class="line"></div>
+              <div class="heading bg-primary-light-cus d-flex align-items-center">
+                <input type="hidden" class="category_id" value="{{category.id}}">
+                <p id="category_name{{category.id}}" class="m-0">{{category.name}}</p>
+                <div class="ml-auto">
+                  <!-- add item btn -->
+                  <button class="btn text-dark p-0 btn-sm " style="font-size: 20px;" data-toggle="modal" data-target="#add_item{{category.id}}"><i class="bi bi-plus-square"></i></button>
+                  <!-- edit category btn -->
+                  <button class="btn btn-primary btn-sm ml-3 "  data-toggle="modal" data-target="#editCategory{{category.id}}"><i class='bx bx-edit'></i></button>
+                  <!-- delete category btn -->
+                  <button class="btn btn-danger btn-sm ml-3 "  data-toggle="modal" data-target="#deleteCategory{{category.id}}"><i class="bi bi-trash"></i></button>
+                  <div class="triangle ml-3"></div>
+                  
+                </div>
+                <div class="drag-point ml-2 text-primary-light-cus"><i class="bi bi-grip-vertical"></i></div>
+                
+              </div>
+              
+              
+              <div class="contents">
+                <div class="" id="accordionMenu{{category.id}}">
+
+                  {%for item in items%}
+                  {%if item.category.id == category.id%}
+                  <!-- Edit Item modal -->
+                  <div class="modal fade " id="edit_item{{item.id}}" tabindex="-1" aria-labelledby="edit_itemLabel" aria-hidden="true">
+                    <form id="itemEditform{{item.id}}" action="" method="post">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title text-dark" id="exampleModalLabel">Edit Item</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        
+                          <div class="modal-body text-dark">
+
+                              {%csrf_token%}
+                              <input name="id" type="hidden" value="{{item.id}}" >
+                              <div class="form-group">
+                                <label for="id_name{{item.id}}">Name</label>
+                                <input name="name" type="text" class="form-control" id="id_name{{item.id}}" placeholder="Example:Burger, Pitza and etc." value="{{item.name}}">
+                              </div>
+                              <div class="form-group">
+                                <label for="id_price{{item.id}}">Price ({{currency.code}})</label>
+                                <input name="price" type="number" class="form-control" id="id_price{{item.id}}" value="{{item.price}}" placeholder="{{currency.symbol}}">
+                              </div>
+                              <div class="form-group">
+                                <label for="id_desc{{item.id}}">Description</label>
+                                <textarea name="desc" class="form-control" id="id_desc{{item.id}}" rows="3">{{item.desc}}</textarea>
+                              </div>
+                              
+                              <div class="form-row align-items-center">
+                                <div class="form-group col">
+                                  <h6>Item Image</h6>
+                                  <div class="item-pic mb-4">
+                                      <label class="-label" for="id_edit_image{{item.id}}">
+                                          <span><i class="bi bi-pencil"></i></span>
+                                          <span>Edit</span>
+                                      </label>
+                                      <input id="id_edit_image{{item.id}}" type="file" name="img" accept="image/*"/>
+                                      <img src="{{item.img.url}}" class="img-fluid" id="item_output_image{{item.id}}" width="200" />
+                                  </div>
+                                </div>
+                                <div class="form-group col">
+                                  <div class="form-group">
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="food_type" id="non-veg{{item.id}}" value="true" {%if item.food_type%}checked{%endif%}>
+                                      <label class="form-check-label" for="non-veg{{item.id}}">Non-Veg</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="food_type" id="veg{{item.id}}" value="false"{%if not item.food_type%}checked{%endif%}>
+                                      <label class="form-check-label" for="veg{{item.id}}">Veg</label>
+                                    </div>
+                                  </div>
+                                  <div class="form-group text-right d-flex align-items-center">
+                                    <p class="m-0 mr-2 ">Enable</p>
+                                    <label class="switch m-0">
+                                      <input name="display" id="id_display{{item.id}}" type="checkbox" checked>
+                                      <span style="height: 2.5em;" class="slider round"></span>
+                                    </label>
+                                    
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                              <label for="">Food Available Time</label>
+                              <div class="form-row">
+                                <div class="form-group col">
+                                  <label for="id_start_time{{item.id}}">Start Time</label>
+                                  <input type="time" id="id_start_time{{item.id}}" name="start_time" class="form-control" value="{{item.start_time|time:'H:i'}}">
+                                </div>
+                                <div class="form-group col">
+                                  <label for="id_end_time{{item.id}}">End Time</label>
+                                  <input type="time" id="id_end_time{{item.id}}" name="end_time" class="form-control" value="{{item.end_time|time:'H:i'}}">
+                                </div>
+                              </div>
+                              
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <button id="btn_additem{{category.id}}" type="button" class="btn btn-primary" data-id="{{category.id}}">Add</button> -->
+                            <input id="btn_edititem{{item.id}}" data-id="{{item.id}}" type="submit" value="Save Changes" class="btn btn-success">
+                          </div>
+                      </div>
+                    </div>
+                  </form>
+                  </div>
+
+                  <!-- Delete Item model -->
+                  <div class="modal fade" id="deleteItem{{item.id}}" tabindex="-1" aria-labelledby="deleteItem{{item.id}}Label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title text-dark" id="deleteItem{{item.id}}Label">Delete Item</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <h6 class="text-dark">Are you want to delete "{{item.name}}"</h6>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button id="btnDeleteItem{{item.id}}" data-id="{{item.id}}" type="button" class="btn btn-danger">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Item List -->
+                  <div id="item{{item.id}}" class="card mb-2">
+                    <div class="card-header p-2" id="heading{{item.id}}">
+                      
+                      <div class="d-flex align-items-center">
+                        <img id="item_img{{item.id}}" src="{{item.img.url}}" alt="Item img" style="object-fit: cover; width: 30px; height: 30px;">
+                        <h6 id="itemname{{item.id}}" class="text-dark m-0 p-2">{{item.name}}</h6>
+                        <div class="ml-auto"> 
+                          <!-- edit btn -->
+                          <button class="btn btn-primary btn-sm ml-3" data-toggle="modal" data-target="#edit_item{{item.id}}"><i class='bx bx-edit'></i></button>
+                          <!-- delete btn -->
+                          <button class="btn btn-danger btn-sm ml-3" data-toggle="modal" data-target="#deleteItem{{item.id}}"><i class="bi bi-trash"></i></button>
+                        </div>
+                      </div>
+
+                      <!-- <div class="mb-0 float-left">
+                        
+                        <h6 id="itemname{{item.id}}" style="cursor: pointer;" class="text-dark m-0 p-2" data-toggle="modal" data-target="#edit_item{{item.id}}">{{item.name}}</h6>
+                        
+                      </div>
+                      <div class="float-right">
+                        <button class="btn btn-danger btn-sm ml-3" data-toggle="modal" data-target="#deleteItem{{item.id}}"><i class="bi bi-trash"></i></button>
+                      </div> -->
+                    </div>
+                
+                  
+                  </div>
+                  {%endif%}
+                  
+                  {%endfor%}
+
+                </div>
+                 
+              </div>
+            </div>
+           
+            {%endfor%}
+
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+{%endblock%}
+{%block script%}
+    <script>
+      
+    </script>
+    <script>
+
+      //For the menu accordion
+      $(document).ready(function(){
+        $(".accordion").on("click", ".heading", function() {
+ 
+          $(this).toggleClass("active").next().slideToggle();
+  
+          $(".contents").not($(this).next()).slideUp(300);
+                      
+          $(this).siblings().removeClass("active");
+        });
+       });
+    </script>
+
+    <script>
+      //For sending ajax request.
+      $(document).ready(function(){
+        $('form').attr('autocomplete', 'off');
+        var csrf = $('input[name=csrfmiddlewaretoken]').val();
+        //Script for reordering or dragging the menu categories.
+        var accordionCategory = document.getElementById('accordionCategory');
+        Sortable.create(accordionCategory, {
+          animation: 150,
+          onEnd: function (/**Event*/evt) {
+            //Send Ajax request.
+            var category_ids = document.querySelectorAll('.category_id');
+            var ids = [];
+            category_ids.forEach(function(id){
+              ids.push(parseInt(id.value))
+
+            })
+            console.log(ids);
+            $.ajax({
+              url:"{%url 'reorder'%}",
+              method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'ids[]':ids,
+              
+              },
+              success:function(responce){
+                console.log('reoder Success')
+              }
+            });
+          },
+        });
+        //Adding Category 
+        $('#categoryform').submit(function(e){
+          e.preventDefault();
+          $('.error').remove()
+          var category_name = $('#categoryform #id_name').val();
+          if(category_name==''){
+            error = '<small class="text-danger error">Category name is required.</small>';
+            $('#categoryform').find('#id_name').after(error);
+          }else{
+            $.ajax({
+              url:"{%url 'add_category'%}",
+              method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                name:category_name,
+              
+              },
+              success:function(responce){
+                $('#add_category').modal('hide');
+                category = `
+
+                <!-- edit Category model -->
+                <div class="modal fade" id="editCategory${responce.id}" tabindex="-1" aria-labelledby="editCategory${responce.id}Label" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editCategory${responce.id}Label">Edit Category</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <input id="id_editCategory${responce.id}" type="text" class="form-control" value="${responce.name}" required>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="btnEditCategory${responce.id}" data-id="${responce.id}" type="button" class="btn btn-success">Save Changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- Delete Category model -->
+                <div class="modal fade" id="deleteCategory${responce.id}" tabindex="-1" aria-labelledby="deleteCategory${responce.id}Label" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteCategory${responce.id}Label">Delete Category</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Are you want to delete "${responce.name}"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="btnDeleteCategory${responce.id}" data-id="${responce.id}" type="button" class="btn btn-danger">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Add Item modal -->
+                <div class="modal fade" id="add_item${responce.id}" tabindex="-1" aria-labelledby="add_itemLabel" aria-hidden="true">
+                  <form id="itemform${responce.id}" autocomplete="off" action="" method="post">
+                  <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      
+                        <div class="modal-body">
+    
+                            {%csrf_token%}
+                            <input name="id" type="hidden" value="${responce.id}" >
+                            <div class="form-group">
+                              <label for="id_name${responce.id}">Name</label>
+                              <input name="name" type="text" class="form-control" id="id_name${responce.id}" placeholder="Example:Burger, Pitza and etc.">
+                            </div>
+                            <div class="form-group">
+                              <label for="id_price${responce.id}">Price ({{currency.code}})</label>
+                              <input name="price" type="number" class="form-control" id="id_price${responce.id}" placeholder="{{currency.symbol}}" >
+                            </div>
+                            <div class="form-group">
+                              <label for="id_desc${responce.id}">Description</label>
+                              <textarea name="desc" class="form-control" id="id_desc${responce.id}" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-row align-items-center">
+                              <div class="form-group col">
+                                <h6>Item Image</h6>
+                                <div class="item-pic mb-4">
+                                    <label class="-label" for="id_image${responce.id}">
+                                        <span><i class="bi bi-pencil"></i></span>
+                                        <span>Edit</span>
+                                    </label>
+                                    <input id="id_image${responce.id}" type="file" name="img" accept="image/*"/>
+                                    <img src="/media/item_imgs/default.png" class="img-fluid" id="output_image${responce.id}" width="200" />
+                                </div>
+                              </div>
+                              <div class="form-group col">
+                                <div class="form-group ">
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="food_type" id="non-veg${responce.id}" value="true" checked>
+                                    <label class="form-check-label" for="non-veg${responce.id}">Non-Veg</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="food_type" id="veg${responce.id}" value="false">
+                                    <label class="form-check-label" for="veg${responce.id}">Veg</label>
+                                  </div>
+                                </div>
+                                <div class="form-group d-flex align-items-center">
+                                  <p class="mr-2 m-0 " id="">Enable</p>
+                                  <label class="switch m-0">
+                                    <input name="display" id="id_display${responce.id}" type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                  </label>
+                                  
+                                </div>
+                              </div>
+                            </div>
+                            <label for="">Food Available Time</label>
+                            <div class="form-row">
+                              <div class="form-group col">
+                                <label for="id_start_time${responce.id}">Start Time</label>
+                                <input type="time" id="id_start_time${responce.id}" name="start_time" class="form-control" >
+                              </div>
+                              <div class="form-group col">
+                                <label for="id_end_time${responce.id}">End Time</label>
+                                <input type="time" id="id_end_time${responce.id}" name="end_time" class="form-control" >
+                              </div>
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <!-- <button id="btn_additem${responce.id}" type="button" class="btn btn-primary" data-id="${responce.id}">Add</button> -->
+                          <input id="btn_additem${responce.id}" data-id="${responce.id}" type="submit" value="Add" class="btn btn-success">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                
+                <!-- Category List -->
+                <div id="category${responce.id}" class="mb-3">
+                  <div class="line"></div>
+                  <div class="heading bg-primary-light-cus d-flex align-items-center">
+                    <input type="hidden" class="category_id" value="${responce.id}">
+                    <p id="category_name${responce.id}" class="m-0"> ${responce.name}</p>
+                    <div class="ml-auto">
+                      <button class="btn text-dark p-0 btn-sm " style="font-size: 20px;" data-toggle="modal" data-target="#add_item${responce.id}"><i class="bi bi-plus-square"></i></button>
+                      <!-- edit category btn -->
+                      <button class="btn btn-primary btn-sm ml-3 "  data-toggle="modal" data-target="#editCategory${responce.id}"><i class='bx bx-edit'></i></button>
+                      <button class="btn btn-danger btn-sm ml-3 "  data-toggle="modal" data-target="#deleteCategory${responce.id}"><i class="bi bi-trash"></i></button>
+                      <div class="triangle ml-3"></div>
+                      
+                    </div>
+                    <div class="drag-point ml-2 text-primary-light-cus"><i class="bi bi-grip-vertical"></i></div>
+                  </div>
+                  <div class="contents">
+                    <div class="accordion" id="accordionMenu${responce.id}">
+                      
+                    </div>
+                     
+                  </div>
+                </div>
+                `
+                $('#accordionCategory').append(category);
+                //Add Item event inside ajax success.
+                $('#itemform'+responce.id).submit(function(e){
+                  e.preventDefault();
+                  $form = $(this)
+                  var formData = new FormData(this);
+                  sendAjaxAddItem(formData,responce.id,$form);
+                });
+                $('#btnEditCategory'+responce.id).click(function(){
+                  var category_id = parseInt($(this).data('id'))
+                  var category_name = $('#id_editCategory'+responce.id).val()
+                  if(category_name==''){
+                    error = '<small class="text-danger error">Category name is required.</small>';
+                    $('#id_editCategory'+responce.id).after(error);
+                  }else{
+                    $.ajax({
+                      url:"{%url 'edit_category'%}",
+                      method:'post',
+                      data:{
+                        csrfmiddlewaretoken:csrf,
+                        id:category_id,
+                        new_name:category_name,
+                      
+                      },
+                      success:function(response){
+                        $('#editCategory'+responce.id).modal('hide');
+                        $('#category_name'+responce.id).text(category_name)
+                      }
+                    })
+                  }
+                })
+                $('#btnDeleteCategory'+responce.id).click(function(){
+                  var category_id = parseInt($(this).data('id'))
+                  $.ajax({
+                    url:"{%url 'delete_category'%}",
+                    method:'post',
+                    data:{
+                      csrfmiddlewaretoken:csrf,
+                      id:category_id,
+                    
+                    },
+                    success:function(responce){
+                      $('#deleteCategory'+category_id).modal('hide')
+                      $('#category'+category_id).hide('fast');
+                      $('#category'+category_id).remove();
+                    }
+                  });
+                })
+                $('#id_image'+responce.id).change(function(){
+                  var image = document.getElementById("output_image"+responce.id);
+                  image.src = URL.createObjectURL(event.target.files[0]);
+                });
+              }
+            })
+          }
+          
+        })
+        function sendAjaxAddItem(formData,category_id,$form){
+          $.ajax({
+            url:"{%url 'add_item'%}",
+            method:'post',
+            enctype: "multipart/form-data",
+            data:formData,
+            success:function(response){
+              
+              $('.error').remove();
+                if(response.error){
+                  //error
+                    $.each(response.errors, function(name, error){
+                        error = '<small class="text-danger error">' + error + '</small>'
+                        $form.find('[name=' + name + ']').after(error);
+                    })
+                }
+                else{
+                  //No errors
+                  document.getElementById('itemform'+category_id).reset();
+                  $('#output_image'+category_id).attr("src","/media/item_imgs/default.png");
+                  $('#add_item'+category_id).modal('hide');
+                  item = `
+                  <!-- Edit Item modal -->
+                  <div class="modal fade " id="edit_item${response.id}" tabindex="-1" aria-labelledby="edit_itemLabel" aria-hidden="true">
+                    <form id="itemEditform${response.id}" action="" method="post">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title text-dark" id="exampleModalLabel">Edit Item</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        
+                          <div class="modal-body text-dark">
+
+                              {%csrf_token%}
+                              <input name="id" type="hidden" value="${response.id}" >
+                              <div class="form-group">
+                                <label for="id_name${response.id}">Name</label>
+                                <input name="name" type="text" class="form-control" id="id_name${response.id}" placeholder="Example:Burger, Pitza and etc." value="${response.name}">
+                              </div>
+                              <div class="form-group">
+                                <label for="id_price${response.id}">Price ({{currency.code}})</label>
+                                <input name="price" type="number" class="form-control" id="id_price${response.id}" value="${response.price}" placeholder="{{currency.symbol}}">
+                              </div>
+                              <div class="form-group">
+                                <label for="id_desc${response.id}">Description</label>
+                                <textarea name="desc" class="form-control" id="id_desc${response.id}" rows="3">${response.desc}</textarea>
+                              </div>
+                              
+                              <div class="form-row  align-items-center">
+                                <div class="form-group col">
+                                  <h6>Item Image</h6>
+                                  <div class="item-pic mb-4">
+                                      <label class="-label" for="id_edit_image${response.id}">
+                                          <span><i class="bi bi-pencil"></i></span>
+                                          <span>Edit</span>
+                                      </label>
+                                      <input id="id_edit_image${response.id}" type="file" name="img" accept="image/*"/>
+                                      <img src="${response.img}" class="img-fluid" id="item_output_image${response.id}" width="200" />
+                                  </div>
+                                </div>
+                                <div class="form-group col">
+                                  <div class="form-group ">
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="food_type" id="non-veg${response.id}" value="true" {%if response.id%}checked{%endif%}>
+                                      <label class="form-check-label" for="non-veg${response.id}">Non-Veg</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="food_type" id="veg${response.id}" value="false"{%if not response.id %}checked{%endif%}>
+                                      <label class="form-check-label" for="veg${response.id}">Veg</label>
+                                    </div>
+                                  </div>
+                                  <div class="form-group d-flex align-items-center">
+                                    <p class="m-0 mr-2 ">Enable</p>
+                                    <label class="switch m-0">
+                                      <input name="display" id="id_display${response.id}" type="checkbox" checked>
+                                      <span style="height: 2.5em;" class="slider round"></span>
+                                    </label>
+                                    <!-- <label class="ml-2 text-dark" id="id_display_label${response.id}">Public</label> -->
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                              <label for="">Food Available Time</label>
+                              <div class="form-row">
+                                <div class="form-group col">
+                                  <label for="id_start_time${response.id}">Start Time</label>
+                                  <input type="time" id="id_start_time${response.id}" name="start_time" class="form-control" value="${response.start_time}">
+                                </div>
+                                <div class="form-group col">
+                                  <label for="id_end_time${response.id}">End Time</label>
+                                  <input type="time" id="id_end_time${response.id}" name="end_time" class="form-control" value="${response.end_time}">
+                                </div>
+                              </div>
+                              
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            
+                            <input id="btn_edititem${response.id}" data-id="${response.id}" type="submit" value="Save Changes" class="btn btn-success">
+                          </div>
+                        </div>
+                     </div>
+                    </form>
+                  </div>
+
+                    <!-- Delete Item model -->
+                    <div class="modal fade" id="deleteItem${response.id}" tabindex="-1" aria-labelledby="deleteItem${response.id}Label" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="deleteItem${response.id}Label">Delete Item</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <h6 class="text-dark">Are you want to delete "${response.name}"</h6>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="btnDeleteItem${response.id}" data-id="${response.id}" type="button" class="btn btn-danger">Delete</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Item List -->
+                    <div id="item${response.id}" class="card">
+                      <div class="card-header p-2" id="heading${response.id}">
+                        
+                        <div class="d-flex">
+                          <img id="item_img${response.id}" src="${response.img}" alt="Item img" style="object-fit: cover; width: 30px; height: 30px;">
+                          <h6 id="itemname${response.id}" class="text-dark m-0 p-2">${response.name}</h6>
+                          <div class="ml-auto"> 
+                            <!-- edit btn -->
+                            <button class="btn btn-primary btn-sm ml-3" data-toggle="modal" data-target="#edit_item${response.id}"><i class='bx bx-edit'></i></button>
+                            <!-- delete btn -->
+                            <button class="btn btn-danger btn-sm ml-3" data-toggle="modal" data-target="#deleteItem${response.id}"><i class="bi bi-trash"></i></button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    `
+                    $('#accordionMenu'+category_id).append(item);
+                    $('#itemEditform'+response.id).submit(function(e){
+                      e.preventDefault();
+                      $form = $(this)
+                      var formData = new FormData(this)
+                      sendAjaxEditItem(formData,response.id,$form);
+                    })
+                    $('#btnDeleteItem'+response.id).click(function(){
+                      var item_id = parseInt($(this).data('id'))
+                      $.ajax({
+                        url:"{%url 'delete_item'%}",
+                        method:'post',
+                        data:{
+                          csrfmiddlewaretoken:csrf,
+                          id:item_id,
+                         
+                        },
+                        success:function(response){
+                          $('#deleteItem'+item_id).modal('hide')
+                          $('#item'+item_id).hide('fast');
+                        }
+                      });
+                    });
+                    $('#id_edit_image'+response.id).change(function(){
+                      var image = document.getElementById("item_output_image"+response.id);
+                      image.src = URL.createObjectURL(event.target.files[0]);
+                    });
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+        }
+        {%for category in menu_category%}
+        //Edit category
+        $('#btnEditCategory{{category.id}}').click(function(){
+          var category_id = parseInt($(this).data('id'))
+          var category_name = $('#id_editCategory{{category.id}}').val()
+          if(category_name==''){
+            error = '<small class="text-danger error">Category name is required.</small>';
+            $('#id_editCategory{{category.id}}').after(error);
+          }else{
+            $.ajax({
+              url:"{%url 'edit_category'%}",
+              method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                id:category_id,
+                new_name:category_name,
+              
+              },
+              success:function(responce){
+                $('#editCategory{{category.id}}').modal('hide');
+                $('#category_name{{category.id}}').text(responce.name)
+              }
+            })
+          }
+        })
+        //Adding an Item.
+        $('#itemform{{category.id}}').submit(function(e){
+          e.preventDefault();
+          $form = $(this)
+          var formData = new FormData(this);
+          sendAjaxAddItem(formData,'{{category.id}}',$form);
+        });
+        //Delete Category
+        $('#btnDeleteCategory{{category.id}}').click(function(){
+          var category_id = parseInt($(this).data('id'))
+          $.ajax({
+            url:"{%url 'delete_category'%}",
+            method:'post',
+            data:{
+              csrfmiddlewaretoken:csrf,
+              id:category_id,
+             
+            },
+            success:function(responce){
+              $('#deleteCategory{{category.id}}').modal('hide');
+              $('#category{{category.id}}').hide('fast');
+              $('#category{{category.id}}').remove();
+            }
+          });
+        })
+        $('#id_display{{category.id}}').change(function(){
+          if ($(this).is(":checked")){
+            $('#id_display_label{{category.id}}').text('Public')
+          }else{
+            $('#id_display_label{{category.id}}').text('Private')
+          }
+        });
+        //For change upload image in add item modal.
+        $('#id_image{{category.id}}').change(function(){
+          var image = document.getElementById("output_image{{category.id}}");
+          image.src = URL.createObjectURL(event.target.files[0]);
+        });
+        {%endfor%}
+        {%for item in items%}
+        //Edit or Update an Item
+        function sendAjaxEditItem(formData,item_id,$form){
+          $.ajax({
+            url:"{%url 'update_item'%}",
+            method:'post',
+            enctype: "multipart/form-data",
+            data:formData,
+            success:function(response){
+              
+              $('.error').remove();
+                console.log(response)
+                if(response.error){
+                  //error
+                    $.each(response.errors, function(name, error){
+                        error = '<small class="text-danger error">' + error + '</small>'
+                        $form.find('[name=' + name + ']').after(error);
+                    })
+                }
+                else{
+                  //No errors
+                  $('#itemname'+item_id).text(response.name)
+                  $('#item_img'+item_id).attr('src',response.img);
+                  $('#edit_item'+item_id).modal('hide');
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+        }
+        $('#itemEditform{{item.id}}').submit(function(e){
+          e.preventDefault();
+          $form = $(this)
+          var formData = new FormData(this)
+          sendAjaxEditItem(formData,'{{item.id}}',$form);
+        });
+        //For change upload image in Edit item modal.
+        $('#id_edit_image{{item.id}}').change(function(){
+          var image = document.getElementById("item_output_image{{item.id}}");
+          image.src = URL.createObjectURL(event.target.files[0]);
+        });
+        //Deleting the Item
+        $('#btnDeleteItem{{item.id}}').click(function(){
+          var item_id = parseInt($(this).data('id'))
+          $.ajax({
+            url:"{%url 'delete_item'%}",
+            method:'post',
+            data:{
+              csrfmiddlewaretoken:csrf,
+              id:item_id,
+             
+            },
+            success:function(responce){
+              $('#deleteItem{{item.id}}').modal('hide')
+              $('#item{{item.id}}').hide('fast');
+            }
+          });
+        })
+
+        {%endfor%}
+      })
+    </script>
+{%endblock%}

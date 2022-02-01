@@ -1,0 +1,50 @@
+<!-- Navbar -->
+<div class="banner">
+    <img id="img_bg" class="img-fluid" src="{{restaurant.image.url}}" alt="BG" style="object-fit: cover;">
+    <div id="sticky_nav">
+        <img id="img_logo" src="{{restaurant.logo.url}}" alt="logo">
+        <h3 id="id_title" class="ml-auto text-light">{{restaurant.name}}</h3>
+    </div>
+</div>
+<!-- <header class="header body-pd" id="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light pl-0">
+      <div class="header_toggle mr-3 p-2"> <i class='bx bx-chevron-right bx-x' id="header-toggle"></i> </div>
+      <a class="navbar-brand mr-auto" href="#">Restaurant</a>
+      
+    </nav>
+</header> -->
+<!-- Navbar end -->
+{%url 'dashboard' as dashboard%}
+{%url 'restaurant' as restaurant_url%}
+{%url 'menu' as menu%}
+{%url 'qr-builder' as qr_builder%}
+<!-- Sidebar -->
+<div class="l-navbar show p-0" id="nav-bar">
+    <div class="position-relative" style="top:0; width: 100%; height: 200px;
+    background-image: url({{restaurant.image.url}});
+    background-size: cover;">
+        <img id="img_logo" src="{{restaurant.logo.url}}" alt="logo">
+        <h3 id="id_title" class="ml-auto text-light">{{restaurant.name}}</h3>
+    </div>
+      <nav class="nav" >
+
+          <div> 
+            
+            <a href="{%url 'qrmenu-category_list' unique_id=restaurant.unique_id name=restaurant.name%}" class="nav_logo" style="text-decoration: none;">
+                 <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">Categories</span> 
+            </a>
+              <div class="nav_list">
+                {%for category in categories%}
+                    <a href="{%url 'qrmenu-menu_list' unique_id=restaurant.unique_id category_id=category.id name=restaurant.name %}" class="nav_link {%if request.path == dashboard%}active{%endif%}"> <i class='bx bx-restaurant'></i> <span class="nav_name">{{category.name}}</span> 
+                    </a> 
+                    
+                {%endfor%}
+              </div>
+          </div> 
+          
+      </nav>
+      <div id="toggle_icon" class="header_toggle text-light p-2" style="text-shadow: 0 2px 2px #000;"> 
+        <i class='bx bx-menu bx-x ' id="header-toggle"></i>
+      </div>
+</div>
+<!-- Sidebar end -->

@@ -1,0 +1,376 @@
+{%extends 'qrmenu/customer_view/customer_menu_base.html'%}
+{%load static%}
+{% load currency %}
+{%load custom_filters%}
+{%block title%}{{restaurant.name}}{%endblock%}
+{%block content%}
+<!--Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable"
+  style="position:absolute;
+    right:0;
+    left:0;
+    bottom:0;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderModalLabel">Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" autocomplete="off">
+          {%csrf_token%}
+          <div class="form-group">
+            <label for="cus_name">Customer Name</label>
+            <input type="text" class="form-control" id="cus_name" name="cus_name">
+            <small id="name_error" class="form-text text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label for="table_no">Table No.</label>
+            <input type="number" class="form-control w-50" id="table_no" name="table_no">
+            <small id="table_error" class="form-text text-danger"></small>
+          </div>
+        </form>
+        <div class="d-flex align-items-center">
+          <h3>Your Orders</h3>
+          <button id="clear_orders" class="ml-auto btn btn-sm btn-danger">clear all</button>
+        </div>
+
+        <div id="ordered_list">
+
+        </div>
+        <div class="card-body p-1 border">
+          <div class="row justify-content-between align-items-center p-1">
+            <div class="col-4">
+              <h6>Total</h6>
+            </div>
+            <div class="col-2">
+              <p class="m-0">{{currency.code}} <small id="total_price" class="">0</small></p>
+            </div>
+            
+          </div>                  
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="placeorder_btn" type="button" class="btn btn-lg btn-primary w-100">Place Order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Call Modal -->
+<div class="modal fade" id="callModal" tabindex="-1" aria-labelledby="callModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-scrollable" 
+    style="position:absolute;
+    right:0;
+    left:0;
+    bottom:0;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="callModalLabel">Call</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" autocomplete="off">
+          <!-- <div class="form-group">
+            <label for="cus_name">Customer Name</label>
+            <input type="text" class="form-control" id="cus_name" name="cus_name">
+            <small id="name_error" class="form-text text-danger"></small>
+          </div> -->
+          <div class="form-group">
+            <label for="call_table_no">Table No.</label>
+            <input type="number" class="form-control" id="call_table_no" name="table_no">
+            <small id="call_table_error" class="form-text text-danger"></small>
+          </div>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button  type="button" class="call_waiter btn btn-lg btn-primary w-100"><i class='bx bxs-bell-ring'></i> Call</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
+    <h3 class="mt-3 text-center ">{{category_name}}</h3>
+      
+    {%for menu in menu_items%}
+    {%if menu.display%}
+      {%if restaurant.allowCustomerOrder or restaurant.allowCalltoWaiter%}
+        {%if restaurant.allowCustomerOrder%}
+          <div class="card-body p-1 border">
+            <div class="row align-items-center p-1">
+              <div class="col-8 d-flex align-items-center">
+                <div class="position-relative" style="width: 50px; height: 50px; z-index: 1; cursor: pointer;">
+                  <img class="img-fluid" src="{{menu.img.url}}" alt="Profile" style="object-fit: cover; width: 50px; height: 50px;">
+                  {%if menu.food_type%}
+                    <img class="position-absolute" src="{%static 'imgs/icons/non-veg.jpg'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px; object-fit: cover;">
+                  {%else%}
+                    <img class="position-absolute" src="{%static 'imgs/icons/veg.png'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px;">
+                  {%endif%}
+                </div>
+                <h5 class="m-0 ml-2">{{menu.name}}</h5>
+              </div>
+              <div class="col">
+                <h6 class="m-0">{{currency.symbol}} <small class="">{{ menu.price}}</small></h6>
+              </div>
+              
+              {%if not menu.start_time|available_time:menu.end_time == None%}
+                {%if not menu.start_time|available_time:menu.end_time%}
+                  <div class="col-sm text-right">
+                    <h6 class="text-danger">Available From {{menu.start_time}}</h6>
+                  </div>
+                {%else%}
+                  <div class="col-sm text-right">
+                    <button id="subtract_btn{{menu.id}}" class="btn btn-sm btn-secondary"><i class='bx bx-minus'></i></button>
+                    <input id="menu_quantity{{menu.id}}" class="text-center bg-light" type="text" value="0" readonly style="width: 2em; border: none; outline: none;">
+                    <button id="addition_btn{{menu.id}}" class="btn btn-sm btn-secondary"><i class='bx bx-plus'></i></button>
+                  </div>
+                {%endif%}
+              {%else%}
+                <div class="col-sm text-right">
+                  <button id="subtract_btn{{menu.id}}" class="btn btn-sm btn-secondary"><i class='bx bx-minus'></i></button>
+                  <input id="menu_quantity{{menu.id}}" class="text-center bg-light" type="text" value="0" readonly style="width: 2em; border: none; outline: none;">
+                  <button id="addition_btn{{menu.id}}" class="btn btn-sm btn-secondary"><i class='bx bx-plus'></i></button>
+                </div>
+              {%endif%}
+            </div>                  
+          </div>
+        {%else%}
+          <div class="card-body p-1 border">
+            <div class="row align-items-center p-1">
+              <div class="col-8 d-flex align-items-center">
+                <div class="position-relative" style="width: 50px; height: 50px; z-index: 1; cursor: pointer;">
+                  <img class="img-fluid" src="{{menu.img.url}}" alt="Profile" style="object-fit: cover; width: 50px; height: 50px;">
+                  {%if menu.food_type%}
+                    <img class="position-absolute" src="{%static 'imgs/icons/non-veg.jpg'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px; object-fit: cover;">
+                  {%else%}
+                    <img class="position-absolute" src="{%static 'imgs/icons/veg.png'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px;">
+                  {%endif%}
+                </div>
+                <h5 class="m-0 ml-2">{{menu.name}}</h5>
+              </div>
+              <div class="col">
+                <h6 class="m-0">{{currency.symbol}} <small class="">{{ menu.price}}</small></h6>
+              </div>
+              {%if not menu.start_time|available_time:menu.end_time == None%}
+                {%if not menu.start_time|available_time:menu.end_time%}
+                  <div class="col-sm text-right">
+                    <h6 class="text-danger">Available From {{menu.start_time}}</h6>
+                  </div>
+                
+                {%endif%}
+              {%endif%}
+            </div>                  
+          </div>
+        {%endif%}
+      {%else%}
+        <div class="card-body p-1 border">
+          <div class="row align-items-center p-1">
+            <div class="col-8 d-flex align-items-center">
+              <div class="position-relative" style="width: 50px; height: 50px; z-index: 1; cursor: pointer;">
+                <img class="img-fluid" src="{{menu.img.url}}" alt="Profile" style="object-fit: cover; width: 50px; height: 50px;">
+                {%if menu.food_type%}
+                  <img class="position-absolute" src="{%static 'imgs/icons/non-veg.jpg'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px; object-fit: cover;">
+                {%else%}
+                  <img class="position-absolute" src="{%static 'imgs/icons/veg.png'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px;">
+                {%endif%}
+              </div>
+              <h5 class="m-0 ml-2">{{menu.name}}</h5>
+            </div>
+            <div class="col">
+              <h6 class="m-0">{{currency.symbol}} <small class="">{{ menu.price}}</small></h6>
+            </div>
+            {%if not menu.start_time|available_time:menu.end_time == None%}
+                {%if not menu.start_time|available_time:menu.end_time%}
+                  <div class="col-sm text-right">
+                    <h6 class="text-danger">Available From {{menu.start_time}}</h6>
+                  </div>
+                
+                {%endif%}
+              
+              {%endif%}
+          </div>                  
+        </div>
+      {%endif%} 
+    {%endif%}
+    {%endfor%}
+</div>
+{%if restaurant.allowCalltoWaiter or restaurant.allowCustomerOrder%}
+  {%if restaurant.allowCustomerOrder%}
+    <button class="fixed-bottom btn btn-lg btn-success rounded-0 w-100" data-toggle="modal" data-target="#orderModal">Add Cart <i class='bx bxs-cart-add'></i></button>
+  {%else%}
+    <button class="fixed-bottom btn btn-lg btn-primary rounded-0 w-100" data-toggle="modal" data-target="#callModal">Call Waiter <i class='bx bxs-bell-ring'></i></button>
+  {%endif%}
+  
+{%endif%}
+{%endblock%}
+{%block script%}
+<!-- Hide nav bar  -->
+    <script>
+
+        document.getElementById('nav-bar').classList.toggle('show')
+        document.getElementById('header-toggle').classList.toggle('bx-x')
+        document.getElementById('toggle_icon').classList.toggle('menu')
+    </script>
+    <!-- add items -->
+    <script>
+      $('#clear_orders').click(function(e){
+        e.preventDefault();
+        localStorage.removeItem('restaurantQR');
+        location.reload();
+      })
+      function order(){
+        //if localstorage is empty.
+        if(!localStorage.getItem('restaurantQR')){
+          localStorage.setItem('restaurantQR','{}')
+        }
+        //Display data form local storage.
+        $('#ordered_list').empty()
+        var total_price=0;
+        local_data = JSON.parse(localStorage.getItem('restaurantQR'))
+        {%for menu in menus%}
+        if(local_data.menu{{menu.id}}){
+          if(local_data.menu{{menu.id}}.qt>0){
+            var quantity = local_data.menu{{menu.id}}.qt;
+            $('#menu_quantity{{menu.id}}').val(quantity);
+            menu_price = parseFloat('{{menu.price}}')
+            total_price += quantity*menu_price
+
+            ordered_item = `
+            <div class="card-body p-1 border">
+              <div class="row align-items-center p-1">
+                <div class="col-6 d-flex align-items-center">
+                  <div class="position-relative" style="width: 50px; height: 50px; z-index: 1; cursor: pointer;">
+                    <img class="img-fluid" src="{{menu.img.url}}" alt="Profile" style="object-fit: cover; width:50px; height:50px;">
+                    {%if menu.food_type%}
+                      <img class="position-absolute" src="{%static 'imgs/icons/non-veg.jpg'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px; object-fit: cover;">
+                    {%else%}
+                      <img class="position-absolute" src="{%static 'imgs/icons/veg.png'%}" alt="icon" style="bottom: 0; right: 0; width: 15px; height: 15px;">
+                    {%endif%}
+                  </div>
+                  <h5 class="m-0 ml-2">{{menu.name}}</h5>
+                </div>
+                <div class="col">
+                  <h6 class="m-0">Qt <small class="">${quantity}</small></h6>
+                </div>
+                <div class="col">
+                  <h6 class="m-0">{{currency.symbol}} <small class="">{{menu.price}}</small></h6>
+                </div>
+                <div class="col">
+                  <button class="btn btn-sm btn-danger delete_menu" data-menu_id="{{menu.id}}"><i class='bx bxs-trash'></i></button>
+                </div>
+              </div>                  
+            </div>
+            `
+            $('#ordered_list').append(ordered_item)
+            //Delete Orders.
+            $('.delete_menu').click(function(){
+              var menu_id = $(this).data('menu_id');
+              var key = 'menu'+menu_id;
+              local_data = JSON.parse(localStorage.getItem('restaurantQR'));
+              delete local_data[key]
+              //set value to zero
+              $('#menu_quantity'+menu_id).val(0);
+              //console.log(local_data);
+              localStorage.setItem('restaurantQR',JSON.stringify(local_data))
+              order();
+            })
+          }
+        }
+        {%endfor%}
+        $('#total_price').text(total_price)
+        return total_price;
+      }
+      order();
+
+      
+
+      //Click Listeners for quantity.
+      {%for menu in menu_items%}
+        $('#addition_btn{{menu.id}}').click(function(){
+          //if localstorage is empty.
+          if(!localStorage.getItem('restaurantQR')){
+            localStorage.setItem('restaurantQR','{}')
+          }
+          var count = parseFloat($('#menu_quantity{{menu.id}}').val()) + 1;
+          $('#menu_quantity{{menu.id}}').val(count);
+          //Storing data into localStorage.
+          local_data = JSON.parse(localStorage.getItem('restaurantQR'));
+          local_data.menu{{menu.id}}={id:{{menu.id}},qt:count}
+          localStorage.setItem('restaurantQR',JSON.stringify(local_data))
+          order();
+        });
+        $('#subtract_btn{{menu.id}}').click(function(){
+          //if localstorage is empty.
+          if(!localStorage.getItem('restaurantQR')){
+            localStorage.setItem('restaurantQR','{}')
+          }
+          var count = parseFloat($('#menu_quantity{{menu.id}}').val()) - 1; 
+          if(count<0){
+            count = 0;
+          }
+          $('#menu_quantity{{menu.id}}').val(count);
+          //Storing data into localStorage.
+          local_data = JSON.parse(localStorage.getItem('restaurantQR'));
+          local_data.menu{{menu.id}}={id:{{menu.id}},qt:count}
+          localStorage.setItem('restaurantQR',JSON.stringify(local_data))
+          order();
+        });
+      {%endfor%}
+      $('#cus_name').on('input',function(e){
+        $('#name_error').text('')
+      })
+      $('#table_no').on('input',function(e){
+        $('#table_error').text('')
+      })
+      $('#placeorder_btn').click(function(){
+        if($('#cus_name').val()=='' && $('#table_no').val()==''){
+          //validate the input field.
+          $('#name_error').text('Name is Required');
+          $('#table_error').text('Table No. is Required');
+          return 0;
+        }
+          $.ajax({
+            type:'POST',
+            url:"{%url 'qrmenu-place_order'%}",
+            data:{
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+              cus_name:$('#cus_name').val(),
+              table_no:$('#table_no').val(),
+              total_price:order(),//returns total price of order
+              unique_id:'{{restaurant.unique_id}}',
+              ordered_menus:localStorage.getItem('restaurantQR')
+            },
+            success:function(json){
+              $('#orderModal').modal('hide');
+            }
+          })
+      });
+      $('#call_table_no').on('input',function(e){
+        $('#call_table_error').text('')
+      })
+      $('.call_waiter').click(function(){
+        if($('#call_table_no').val()==''){
+          $('#call_table_error').text('Table No. is Required');
+          return 0;
+        }
+        $.ajax({
+          type:'POST',
+          url:"{%url 'qrmenu-call_waiter'%}",
+          data:{
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            unique_id:'{{restaurant.unique_id}}',
+            table_no:$('#call_table_no').val(),
+          },
+          success:function(json){
+            $('#callModal').modal('hide');
+          }
+        })
+      })
+    </script>
+{%endblock%}

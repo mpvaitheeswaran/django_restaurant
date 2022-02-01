@@ -1,0 +1,62 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{% load notifications_tags %}
+{%block content%}
+    <div class="container-fluid pt-4">
+        <h1>Notifications</h1>
+        
+        {%for notification in unread_notifications%}
+            {%if notification.level == 'success'%}
+            <div class="card mb-2">
+                <div class="card-header">
+                    {{notification.actor.customer_name}}
+                    <small class="float-right">{{notification.timestamp}}</small>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Orders</h5>
+                  <div class="row">
+                    {%for order in notification.actor.ordered_menu.all%}
+                    <div class="col-sm-4">
+                        <div class="card mb-2">
+                            <div class="card-body p-2">
+                                <div class="d-flex">
+                                    <img id="" src="{{order.menu.img.url}}" alt="Item img" style="object-fit: cover; width: 30px; height: 30px;">
+                                    <p class="ml-2 mb-0">{{order.menu.name}}</p>
+                                    <p class="mb-0 ml-auto">{{order.quantity}}</p>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div> 
+                    {%endfor%}
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            {%endif%}
+        {%endfor%}
+        <div class="card">
+            <div class="card-header">
+              Vaitheeswaran
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Orders</h5>
+              <div class="row">
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-body">
+                          Item 1
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+{%endblock%}
+{%block script%}
+    <script>
+        function notification_callback(data){
+        }
+    </script>
+{%endblock%}
