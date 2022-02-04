@@ -1,0 +1,32 @@
+<!-- Navbar -->
+<header class="header body-pd" id="header">
+    <nav class="navbar navbar-default navbar-expand-lg navbar-light bg-light pl-0">
+      <div class="header_toggle mr-3 p-2"> <i class='bx bx-menu bx-x' id="header-toggle"></i> </div>
+      <a class="navbar-brand mr-auto" href="#">RestaurantQR Admin</a>
+      
+      
+    </nav>
+</header>
+<!-- Navbar end -->
+{%url 'qradmin-accounts' as accounts%}
+{%url 'qradmin-enquiry' as enquiry%}
+<!-- Sidebar -->
+<div class="l-navbar show shadow px-0" id="nav-bar">
+      <nav class="navb" >
+          <div> 
+              <a href="#" class="nav_logo" style="text-decoration: none;"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">RestaurantQR Admin</span> </a>
+              <div class="nav_list">
+                <a title="Accounts" href="{%url 'qradmin-accounts'%}" class="nav_link {%if request.path == accounts%}active{%endif%}"> <i class="bi bi-speedometer2"></i> <span class="nav_name">Accounts</span> 
+                </a> 
+                <a title="Enquiry" href="{%url 'qradmin-enquiry'%}" class="nav_link {%if request.path == enquiry%}active{%endif%}"> <i class="bi bi-shop"></i> <span class="nav_name">Enquiry</span> 
+                </a> 
+                
+                
+                <a href="{%url 'accounts-logout'%}" class="nav_link" data-bs-toggle="tooltip" data-bs-placement="left" title="Sign Out"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> 
+                </a>
+              </div>
+          </div> 
+          
+      </nav>
+</div>
+<!-- Sidebar end -->

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'qrmenu.apps.QrmenuConfig',
     'accounts.apps.AccountsConfig',
+    'qradmin.apps.QradminConfig',
     'crispy_forms',
     'notifications',
     'currencies',

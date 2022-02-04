@@ -10,11 +10,13 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from accounts.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User
-from django.contrib.auth import login as login_auth
+from django.contrib.auth import authenticate,login as login_auth
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 
 # Create your views here.
-@unauthenticated_user
+@unauthenticated_user()
 def register(request):
     context = {}
     if request.method=='POST':
@@ -69,3 +71,22 @@ def activate(request, uidb64, token):
     else:
         # return HttpResponse('Activation link is invalid!')
         return render(request,'invalid_link.html')
+
+@unauthenticated_user(redirect_url='qradmin-accounts')
+def adminLogin(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_superuser:
+                    login_auth(request, user)
+                    return redirect('qradmin-accounts')
+                else:
+                    messages.error(request,"Unauthenticated User!")
+        else:
+            return render(request,'accounts/admin_login.html',{'form':form})
+    form = AuthenticationForm()
+    return render(request,'accounts/admin_login.html',{'form':form})

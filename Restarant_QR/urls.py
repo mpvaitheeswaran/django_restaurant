@@ -22,8 +22,9 @@ from django.conf.urls import url
 import notifications.urls
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('dadmin/', admin.site.urls),
     path('', include('qrmenu.urls')),
+    path('admin/', include('qradmin.urls')),
     path('accounts/', include('accounts.urls')),
     url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
     url(r'^currencies/', include('currencies.urls'))

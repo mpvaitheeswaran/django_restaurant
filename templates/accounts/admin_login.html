@@ -1,0 +1,35 @@
+{%extends 'base/non_auth_base.html'%}
+{%load static%}
+{%block title%}Login{%endblock%}
+{%block stylesheet%}
+{%endblock%}
+{%block content%}
+    <div class="container">
+        {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+        {% endif %}
+        <form method="post">
+            {%csrf_token%}
+            {{form.as_p}}
+            <small class="mx-2 text-danger">
+                {%for error in form.password.errors%}
+                    {{error|escape}}
+                {%endfor%}
+            </small>
+            <small class="mx-2 text-danger">
+                {%for error in form.username.errors%}
+                  {{error}}
+                {%endfor%}
+                {% for error in form.non_field_errors %}
+                  {{error}}
+                {% endfor %}
+            </small>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+{%endblock%}
+{%block script%}
+{%endblock%}
