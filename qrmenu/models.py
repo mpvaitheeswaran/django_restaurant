@@ -21,6 +21,8 @@ class RestaurantDetail(models.Model):
     allowCalltoWaiter = models.BooleanField(default=True,blank=True,choices=BOOL_CHOICES)
     allowCustomerOrder = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
     pickup = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
+    is_packactive = models.BooleanField(default=False,blank=True,null=True)
+    pack_type = models.CharField(max_length=15,default='Free Trial',blank=True,null=True)
     def __str__(self) -> str:
         return f'{self.name}'
 # Signal
@@ -124,8 +126,8 @@ class AccountSetting(models.Model):
         ('box','Box Layout'),
     )
     languages = (
-        ('tamil','Tamil'),
         ('english','English'),
+        ('tamil','Tamil'),
         ('sakovia','Sakovia'),
     )
     restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE)

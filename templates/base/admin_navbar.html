@@ -8,6 +8,7 @@
     </nav>
 </header>
 <!-- Navbar end -->
+{%url 'qradmin-dashboard' as dashboard%}
 {%url 'qradmin-accounts' as accounts%}
 {%url 'qradmin-enquiry' as enquiry%}
 <!-- Sidebar -->
@@ -16,9 +17,11 @@
           <div> 
               <a href="#" class="nav_logo" style="text-decoration: none;"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">RestaurantQR Admin</span> </a>
               <div class="nav_list">
-                <a title="Accounts" href="{%url 'qradmin-accounts'%}" class="nav_link {%if request.path == accounts%}active{%endif%}"> <i class="bi bi-speedometer2"></i> <span class="nav_name">Accounts</span> 
+                <a title="Dashboard" href="{%url 'qradmin-dashboard'%}" class="nav_link {%if request.path == dashboard%}active{%endif%}"> <i style="font-size: 20px;" class='bx bxs-dashboard'></i> <span class="nav_name">Dashboard</span> 
                 </a> 
-                <a title="Enquiry" href="{%url 'qradmin-enquiry'%}" class="nav_link {%if request.path == enquiry%}active{%endif%}"> <i class="bi bi-shop"></i> <span class="nav_name">Enquiry</span> 
+                <a title="Accounts" href="{%url 'qradmin-accounts'%}" class="nav_link {%if request.path == accounts%}active{%endif%}"> <i style="font-size: 20px;" class='bx bxs-message-square-detail' ></i> <span class="nav_name">Accounts</span> 
+                </a> 
+                <a title="Enquiry" href="{%url 'qradmin-enquiry'%}" class="nav_link {%if request.path == enquiry%}active{%endif%}"> <i style="font-size: 20px;" class='bx bxs-file'></i> <span class="nav_name">Enquiry</span> 
                 </a> 
                 
                 

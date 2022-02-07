@@ -387,8 +387,10 @@ def addItem(request):
             responce_data['img'] = item.img.url
             responce_data['food_type'] = item.food_type
             responce_data['display'] = item.display
-            responce_data['start_time'] = item.start_time.strftime("%H:%M")
-            responce_data['end_time'] = item.end_time.strftime("%H:%M")
+            # for available time blank issue.
+            if item.start_time and item.end_time:
+                responce_data['start_time'] = item.start_time.strftime("%H:%M")
+                responce_data['end_time'] = item.end_time.strftime("%H:%M")
             return HttpResponse(json.dumps(responce_data), content_type="application/json")
         # If error.
         else:
