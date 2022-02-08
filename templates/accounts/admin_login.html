@@ -1,33 +1,42 @@
 {%extends 'base/non_auth_base.html'%}
 {%load static%}
-{%block title%}Login{%endblock%}
+{%load crispy_forms_tags%}
+{%block title%}Login | Admin{%endblock%}
 {%block stylesheet%}
 {%endblock%}
 {%block content%}
-    <div class="container">
-        {% if messages %}
+    <div class="container d-flex align-items-center min-vh-100">
+        <div class="mx-auto bg-white rounded-lg shadow p-4 w-50">
+            <h1 class="text-center mb-4">Admin Login</h1>
+            {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-danger">{{ message }}</div>
                 {% endfor %}
-        {% endif %}
-        <form method="post">
-            {%csrf_token%}
-            {{form.as_p}}
-            <small class="mx-2 text-danger">
-                {%for error in form.password.errors%}
-                    {{error|escape}}
-                {%endfor%}
-            </small>
-            <small class="mx-2 text-danger">
-                {%for error in form.username.errors%}
-                  {{error}}
-                {%endfor%}
-                {% for error in form.non_field_errors %}
-                  {{error}}
-                {% endfor %}
-            </small>
-            <input type="submit" value="Submit">
-        </form>
+            {% endif %}
+            <form method="post" autocomplete="off">
+                {%csrf_token%}
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-lg" name="{{form.username.name}}" id="id_email" placeholder="Email">
+                    <small class="mx-2 text-danger">
+                        {%for error in form.username.errors%}
+                        {{error}}
+                        {%endfor%}
+                        {% for error in form.non_field_errors %}
+                        {{error}}
+                        {% endfor %}
+                    </small>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-lg" name="{{form.password.name}}" id="id_password" placeholder="Password">
+                    <small class="mx-2 text-danger">
+                        {%for error in form.password.errors%}
+                            {{error|escape}}
+                        {%endfor%}
+                    </small>
+                </div>
+                <button class="btn btn-lg btn-primary w-100" type="submit">Login <i class='bx bxs-paper-plane'></i></button>
+            </form>
+        </div>
     </div>
 
 {%endblock%}

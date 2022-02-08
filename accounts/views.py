@@ -72,7 +72,7 @@ def activate(request, uidb64, token):
         # return HttpResponse('Activation link is invalid!')
         return render(request,'invalid_link.html')
 
-@unauthenticated_user(redirect_url='qradmin-accounts')
+@unauthenticated_user(redirect_url='qradmin-dashboard')
 def adminLogin(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -83,7 +83,7 @@ def adminLogin(request):
             if user is not None:
                 if user.is_superuser:
                     login_auth(request, user)
-                    return redirect('qradmin-accounts')
+                    return redirect('qradmin-dashboard')
                 else:
                     messages.error(request,"Unauthenticated User!")
         else:
