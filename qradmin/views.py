@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from qrmenu.models import RestaurantDetail
+from qrmenu.models import RestaurantDetail,Pack
 from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import user_passes_test
 @user_passes_test(lambda u: u.is_superuser,redirect_field_name=None)
 def admin_dashboard(request):
     total_users = RestaurantDetail.objects.filter(~Q(user__is_superuser=True)).count()
-    active_users = RestaurantDetail.objects.filter(~Q(user__is_superuser=True) & Q(is_packactive=True)).count()
-    inactive_users = RestaurantDetail.objects.filter(~Q(user__is_superuser=True) & ~Q(is_packactive=True)).count()
+    active_users = Pack.objects.filter(pack_type__gt = 0).count()
+    inactive_users = Pack.objects.filter(pack_type = 0).count()
     context = {
         'total_users':total_users,
         'active_users':active_users,

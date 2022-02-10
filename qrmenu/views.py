@@ -1,8 +1,9 @@
+from ctypes import util
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import View,TemplateView,DetailView
 from .forms import AccountSettingForm, RestaurantForm,MenuCategoryForm,MenuItemForm,BillingDetailForm
-from .models import AccountSetting, BillingDetail, CustomerOrder, MenuCategory, MenuItem, OrderedMenu, RestaurantDetail, ScanCount
+from .models import AccountSetting, BillingDetail, CustomerOrder, MenuCategory, MenuItem, OrderedMenu, Pack, RestaurantDetail, ScanCount
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -21,14 +22,15 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.utils import timezone
 import datetime
+from qrmenu.utils import checkMenuLimit, checkScanLimit
 # Create your views here.
 @login_required
 def dashboard(request):
     restaurant = RestaurantDetail.objects.get(user=request.user)
-    menu_count = 0
-    for category in MenuCategory.objects.filter(restaurant=restaurant):
-        for menu in MenuItem.objects.filter(category=category):
-            menu_count += 1
+    menu_count = MenuItem.objects.filter(category__restaurant=restaurant).count()
+    # for category in MenuCategory.objects.filter(restaurant=restaurant):
+    #     for menu in MenuItem.objects.filter(category=category):
+    #         menu_count += 1
 
     total_scan = ScanCount.objects.filter(restaurant=restaurant).count()
     context ={
@@ -234,13 +236,13 @@ def changePassword(request):
 # for customers
 class CustomerView(TemplateView):
     template_name = 'qrmenu/customer_view/customer_menu.html'
-    def get_client_ip(request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
+    def get(self, request, *args, **kwargs):
+        unique_id = self.kwargs['unique_id']
+        restaurant = RestaurantDetail.objects.get(unique_id=unique_id)
+        pack = Pack.objects.get(restaurant=restaurant)
+        if not checkScanLimit(pack):
+            self.template_name = 'qrmenu/customer_view/outofscans.html'
+        return super().get(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
         def get_client_ip(request):
             x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -271,6 +273,13 @@ class CustomerView(TemplateView):
 # for customers
 class MenuItemView(TemplateView):
     template_name = 'qrmenu/customer_view/customer_menu_item.html'
+    def get(self, request, *args, **kwargs):
+        unique_id = self.kwargs['unique_id']
+        restaurant = RestaurantDetail.objects.get(unique_id=unique_id)
+        pack = Pack.objects.get(restaurant=restaurant)
+        if not checkScanLimit(pack):
+            self.template_name = 'qrmenu/customer_view/outofscans.html'
+        return super().get(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
         unique_id = self.kwargs['unique_id']
         
@@ -364,6 +373,8 @@ def reorderCategory(request):
 
 @csrf_protect
 def addItem(request):
+    restaurant = RestaurantDetail.objects.get(user=request.user)
+    pack = Pack.objects.get(restaurant=restaurant)
     if request.method=='POST' and request.is_ajax():
         responce_data ={}
         category_id = int(request.POST.get('id'))
@@ -373,29 +384,35 @@ def addItem(request):
         else:
             display = False
         form = MenuItemForm(request.POST,request.FILES)
-        if form.is_valid():
-            category = MenuCategory.objects.get(pk=category_id)
-            item = form.save(commit=False)
-            item.category = category
-            item.display = display
-            item.save()
-            responce_data['error'] = False
-            responce_data['id'] = item.id
-            responce_data['name'] = item.name
-            responce_data['price'] = item.price
-            responce_data['desc'] = item.desc
-            responce_data['img'] = item.img.url
-            responce_data['food_type'] = item.food_type
-            responce_data['display'] = item.display
-            # for available time blank issue.
-            if item.start_time and item.end_time:
-                responce_data['start_time'] = item.start_time.strftime("%H:%M")
-                responce_data['end_time'] = item.end_time.strftime("%H:%M")
-            return HttpResponse(json.dumps(responce_data), content_type="application/json")
-        # If error.
+        print(checkMenuLimit(pack))
+        if checkMenuLimit(pack):
+            if form.is_valid():
+                category = MenuCategory.objects.get(pk=category_id)
+                item = form.save(commit=False)
+                item.category = category
+                item.display = display
+                item.save()
+                responce_data['error'] = False
+                responce_data['id'] = item.id
+                responce_data['name'] = item.name
+                responce_data['price'] = item.price
+                responce_data['desc'] = item.desc
+                responce_data['img'] = item.img.url
+                responce_data['food_type'] = item.food_type
+                responce_data['display'] = item.display
+                # for available time blank issue.
+                if item.start_time and item.end_time:
+                    responce_data['start_time'] = item.start_time.strftime("%H:%M")
+                    responce_data['end_time'] = item.end_time.strftime("%H:%M")
+                return HttpResponse(json.dumps(responce_data), content_type="application/json")
+            # If error.
+            else:
+                responce_data['error'] = True
+                responce_data['errors'] = form.errors
+                return HttpResponse(json.dumps(responce_data), content_type="application/json")
         else:
-            responce_data['error'] = True
-            responce_data['errors'] = form.errors
+            # Can't add menus.
+            responce_data['out_of_menus'] = True
             return HttpResponse(json.dumps(responce_data), content_type="application/json")
 
 @csrf_protect

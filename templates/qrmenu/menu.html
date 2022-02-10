@@ -10,6 +10,26 @@
             <a href="#" class="btn btn-dark">Menus</a>
         </div> -->
     </div>
+    <!-- user can't add menus model -->
+    <div class="modal fade" id="out_of_menus" tabindex="-1" aria-labelledby="out_of_menusLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="out_of_menusLabel">Can't add</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            You can't add menus. If you want to add menus Buy the Pack.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
       <!-- Add Category modal -->
       <div class="modal fade" id="add_category" tabindex="-1" aria-labelledby="add_categoryLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -675,6 +695,11 @@
                         error = '<small class="text-danger error">' + error + '</small>'
                         $form.find('[name=' + name + ']').after(error);
                     })
+                }
+                else if(response.out_of_menus){
+                  //can't add menus.
+                  $('#add_item'+category_id).modal('hide');
+                  $('#out_of_menus').modal('show')
                 }
                 else{
                   //No errors

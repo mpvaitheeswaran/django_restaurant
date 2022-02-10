@@ -1,4 +1,5 @@
 import datetime
+from struct import pack
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -21,8 +22,6 @@ class RestaurantDetail(models.Model):
     allowCalltoWaiter = models.BooleanField(default=True,blank=True,choices=BOOL_CHOICES)
     allowCustomerOrder = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
     pickup = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
-    is_packactive = models.BooleanField(default=False,blank=True,null=True)
-    pack_type = models.CharField(max_length=15,default='Free Trial',blank=True,null=True)
     def __str__(self) -> str:
         return f'{self.name}'
 # Signal
@@ -36,8 +35,15 @@ def create_billing_detail(sender,instance,created,*args,**kwargs):
     if created:
         BillingDetail.objects.create(restaurant=instance)
         AccountSetting.objects.create(restaurant=instance)
+        Pack.objects.create(restaurant=instance)
 pre_save.connect(unique_id_generator, sender=RestaurantDetail)
 post_save.connect(create_billing_detail,sender=RestaurantDetail)
+
+class Pack(models.Model):
+    restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE,null=True)
+    total_menus = models.PositiveIntegerField(default=0,blank=True)
+    total_scans = models.PositiveBigIntegerField(default=0,blank=True)
+    pack_type = models.PositiveBigIntegerField(default=0,blank=True) # 0 -> Free pack
 
 class MenuCategory(models.Model):
     restaurant = models.ForeignKey(RestaurantDetail,on_delete=models.CASCADE,null=True)
@@ -60,6 +66,14 @@ class MenuItem(models.Model):
     end_time = models.TimeField(auto_now=False,null=True,blank=True)
     def __str__(self) -> str:
         return f'{self.name}'
+def count_total_menu(sender,instance,created,*args,**kwargs):
+    restaurant = instance.category.restaurant
+    if created:
+        pack = Pack.objects.get(restaurant=restaurant)
+        pack.total_scans = ScanCount.objects.filter(restaurant=restaurant).count()
+        pack.total_menus = MenuItem.objects.filter(category__restaurant=restaurant).count()
+        pack.save()
+post_save.connect(count_total_menu,sender=MenuItem)
 
 # For Customer's Orders
 class OrderedMenu(models.Model):
@@ -139,3 +153,10 @@ class AccountSetting(models.Model):
 class ScanCount(models.Model):
     restaurant = models.ForeignKey(RestaurantDetail,on_delete=models.CASCADE,null=True)
     ip = models.CharField(max_length=20,unique=True)
+def count_total_scan(sender,instance,created,*args,**kwargs):
+    restaurant = instance.restaurant
+    if created:
+        pack = Pack.objects.get(restaurant=restaurant)
+        pack.total_scans = sender.objects.filter(restaurant=restaurant).count()
+        pack.save()
+post_save.connect(count_total_scan,sender=ScanCount)

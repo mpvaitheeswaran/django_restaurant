@@ -2,7 +2,7 @@ from datetime import datetime
 from django import template
 from django.utils import timezone
 
-from qrmenu.models import AccountSetting,MenuCategory,MenuItem,ScanCount
+from qrmenu.models import AccountSetting,MenuCategory,MenuItem, Pack,ScanCount
 register = template.Library()
 
 @register.filter()
@@ -34,3 +34,13 @@ def total_menu(value):
 def total_scan(value):
     scan_count = ScanCount.objects.filter(restaurant=value).count()
     return scan_count
+
+@register.filter()
+def pack_type(value):
+    pack_id = Pack.objects.get(restaurant=value).pack_type
+    if pack_id == 0:
+        return 'Free Tial'
+    elif pack_id == 1:
+        return 'Monthly Pack'
+    else:
+        return 'Yearly Pack'
