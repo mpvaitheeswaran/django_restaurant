@@ -6,7 +6,8 @@ from crispy_forms.layout import Layout, Submit, Row, Column,Field,HTML,Div
 class RestaurantForm(forms.ModelForm):
     class Meta:
         model = RestaurantDetail
-        fields = ['name','gstin','desc','location','image','logo','allowCalltoWaiter','allowCustomerOrder','pickup']
+        fields = ['name','gstin','desc','location','image','logo',
+        'allowCalltoWaiter','allowCustomerOrder','pickup','total_tables']
     def __init__(self,*args,**kargs):
         super(RestaurantForm,self).__init__(*args,**kargs)
         self.fields['name'].label = 'Restaurant Name'
@@ -68,6 +69,7 @@ class RestaurantForm(forms.ModelForm):
                     css_class='col-md col-sm pl-4'
                 ),
             ),
+            Field('total_tables'),
             Div(
                 Div('allowCalltoWaiter',css_class='w-100'),
                 HTML("""

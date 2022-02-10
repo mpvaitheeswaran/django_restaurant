@@ -28,7 +28,12 @@
           </div>
           <div class="form-group">
             <label for="table_no">Table No.</label>
-            <input type="number" class="form-control w-50" id="table_no" name="table_no">
+            <!-- <input type="number" class="form-control w-50" id="table_no" name="table_no"> -->
+            <select class="form-control" id="table_no" name="table_no">
+              {%for i in restaurant.total_tables|toList:1%}
+              <option value="{{i}}">{{i}}</option>
+              {%endfor%}
+            </select>
             <small id="table_error" class="form-text text-danger"></small>
           </div>
         </form>
@@ -329,10 +334,10 @@
         $('#table_error').text('')
       })
       $('#placeorder_btn').click(function(){
-        if($('#cus_name').val()=='' && $('#table_no').val()==''){
+        if($('#cus_name').val()=='' || $('#table_no').val()==''){
           //validate the input field.
           $('#name_error').text('Name is Required');
-          $('#table_error').text('Table No. is Required');
+          //$('#table_error').text('Table No. is Required');
           return 0;
         }
           $.ajax({
