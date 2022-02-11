@@ -44,7 +44,11 @@ class Pack(models.Model):
     restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE,null=True)
     total_menus = models.PositiveIntegerField(default=0,blank=True)
     total_scans = models.PositiveBigIntegerField(default=0,blank=True)
-    pack_type = models.PositiveBigIntegerField(default=0,blank=True) # 0 -> Free pack
+    pack_type = models.PositiveBigIntegerField(default=0,blank=True)    # 0 -> Free pack
+                                                                        # 1 -> monthly pack
+                                                                        # 2 -> yearly pack
+    def __str__(self) -> str:
+        return f'{self.restaurant.name} pack {self.pack_type}'
 
 class MenuCategory(models.Model):
     restaurant = models.ForeignKey(RestaurantDetail,on_delete=models.CASCADE,null=True)

@@ -2,7 +2,7 @@
 {%load static%}
 {%load custom_filters%}
 {%block content%}
-
+{%csrf_token%}
 
     <div class="container-fluid pt-4">
         <div class="d-flex align-items-center mb-5">
@@ -50,16 +50,30 @@
                     </div>
                     <div class="card mb-2 border-0 shadow-sm">
                         <div class="card-body p-2">
-                            <div class="d-flex">
+                            <div class="d-flex aligin-items-center">
                                 <p class="m-0">Pack Type</p>
-                                <p class="m-0 ml-auto">{{rest_user|pack_type}}</p>
+                                <select id="pack{{rest_user.id}}" class="form-control ml-auto w-50">
+                                    <option value="0" 
+                                    {% if rest_user|pack_type == 'Free Pack' %}selected="selected"{% endif %}>
+                                        Free Pack
+                                    </option>
+                                    <option value="1" 
+                                    {% if rest_user|pack_type == 'Monthly Pack' %}selected="selected"{% endif %}>
+                                        Monthly Pack
+                                    </option>
+                                    <option value="2"
+                                    {% if rest_user|pack_type == 'Yearly Pack' %}selected="selected"{% endif %}>
+                                        Yearly Pack
+                                    </option>
+                                </select>
+                                <!-- <p class="m-0 ml-auto">{{rest_user|pack_type}}</p> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                <button type="button" class="btnChangePack btn btn-primary" data-id="{{rest_user.id}}">Save changes</button>
                 </div>
             </div>
             </div>
@@ -91,4 +105,25 @@
         {%endfor%}
         </div>
     </div>
+{%endblock%}
+{%block script%}
+<script>
+    var csrf = $('input[name=csrfmiddlewaretoken]').val();
+    $('.btnChangePack').click(function(){
+        user_id = $(this).data('id')
+        var pack_type = $('#pack'+user_id).find(":selected").val();
+        $.ajax({
+            url:"{%url 'qradmin-change_pack'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+                'pack_type':pack_type
+              },
+              success:function(responce){
+                $('#restaurant'+user_id).modal('hide')
+              }
+        })
+    })
+</script>
 {%endblock%}

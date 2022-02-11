@@ -5,7 +5,8 @@ from django.views.generic import View,TemplateView,DetailView
 from .forms import AccountSettingForm, RestaurantForm,MenuCategoryForm,MenuItemForm,BillingDetailForm
 from .models import AccountSetting, BillingDetail, CustomerOrder, MenuCategory, MenuItem, OrderedMenu, Pack, RestaurantDetail, ScanCount
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth import get_user_model
 import json
 import qrcode
@@ -25,6 +26,7 @@ import datetime
 from qrmenu.utils import checkMenuLimit, checkScanLimit
 # Create your views here.
 @login_required
+@user_passes_test(lambda u: not u.is_superuser,redirect_field_name=None, login_url='/admin/')
 def dashboard(request):
     restaurant = RestaurantDetail.objects.get(user=request.user)
     menu_count = MenuItem.objects.filter(category__restaurant=restaurant).count()
@@ -40,7 +42,15 @@ def dashboard(request):
     }
     return render(request,'qrmenu/dashboard.html',context)
 
-class RestaurantView(View):
+class RestaurantView(UserPassesTestMixin,View):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+    
     template_name = 'qrmenu/restaurant.html'
     form_class = RestaurantForm
     context = {}
@@ -66,7 +76,15 @@ class RestaurantView(View):
         self.context['form'] = form
         return render(request,self.template_name,self.context)
 
-class MenuView(TemplateView):
+class MenuView(UserPassesTestMixin,TemplateView):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
     template_name = 'qrmenu/menu.html'
     form_menucategory = MenuCategoryForm
     form_menuitem = MenuItemForm
@@ -82,7 +100,15 @@ class MenuView(TemplateView):
         context['currency'] = account_setting.currency_model
         return context
 
-class NotificationView(TemplateView):
+class NotificationView(UserPassesTestMixin,TemplateView):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
     template_name = 'qrmenu/notifications.html'
     unread_notifications = None
     def get(self, request, *args, **kwargs):
@@ -93,7 +119,15 @@ class NotificationView(TemplateView):
         context['unread_notifications'] = self.unread_notifications
         return context
 
-class OrdersView(TemplateView):
+class OrdersView(UserPassesTestMixin,TemplateView):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
     template_name = 'qrmenu/orders.html'
     notifications = None
     def get(self, request, *args, **kwargs):
@@ -143,11 +177,12 @@ class MembershipView(TemplateView):
     template_name = 'qrmenu/membership.html'
 
 @login_required
+@user_passes_test(lambda u: not u.is_superuser,redirect_field_name=None, login_url='/admin/')
 def qrBuilder(request):
     context = {}
-    
+    host_name = request.META['HTTP_HOST']
     restaurant = RestaurantDetail.objects.get(user=request.user)
-    url = f'http://127.0.0.1:8000/restaurant/{restaurant.unique_id}/{restaurant.name}'
+    url = f'http://{host_name}/restaurant/{restaurant.unique_id}/{restaurant.name}'
     # factory = qrcode.image.svg.SvgImage
     # img = qrcode.make(url,image_factory=factory,box_size=20)
     # stream = BytesIO()
@@ -169,10 +204,26 @@ def qrBuilder(request):
     context['restaurant'] = restaurant
     return render(request,'qrmenu/qrbuilder.html',context)
 
-class TransactionView(TemplateView):
+class TransactionView(UserPassesTestMixin,TemplateView):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
     template_name = 'qrmenu/transactions.html'
 
-class AccountSettingsView(View):
+class AccountSettingsView(UserPassesTestMixin,View):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
     template_name = 'qrmenu/accountsettings.html'
     form_class1 = BillingDetailForm
     form_class2 = AccountSettingForm
