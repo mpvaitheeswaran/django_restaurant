@@ -7,4 +7,5 @@ urlpatterns = [
    path('accounts/',views.accounts,name='qradmin-accounts'),
    path('enquiry/',views.enquiry,name='qradmin-enquiry'),
    path('change_pack/',views.changePack,name='qradmin-change_pack'),
+   path('change_status/',views.changeStatus,name='qradmin-change_status'),
 ]

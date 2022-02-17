@@ -1,5 +1,5 @@
 from django import forms
-from .models import AccountSetting, RestaurantDetail,MenuCategory,MenuItem,BillingDetail
+from .models import AccountSetting, Enquiry, RestaurantDetail,MenuCategory,MenuItem,BillingDetail
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column,Field,HTML,Div
 
@@ -190,3 +190,8 @@ class BillingDetailForm(forms.ModelForm):
                 Submit('submit','Save Changes',disabled=True,css_class='btn btn-primary disabled mt-2')
             )
         )
+
+class EnquiryForm(forms.ModelForm):
+    class Meta:
+        model = Enquiry
+        fields = ['question']

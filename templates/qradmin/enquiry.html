@@ -11,6 +11,92 @@
                 <a href="#" class="btn btn-dark">Dashboard</a>
             </div> -->
         </div>
-        
+        {%for enquiry in enquiries%}
+            <!-- Restaurant detail Modal -->
+            <div class="modal fade" id="restaurant{{enquiry.id}}" tabindex="-1" aria-labelledby="restaurant{{enquiry.id}}Label" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                    <h5 class="modal-title" id="restaurant{{rest_user.id}}Label">{{enquiry.restaurant}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card mb-2 border-0 shadow-sm">
+                            <div class="card-body p-2">
+                                <p>{{enquiry.question}}</p>
+                            </div>
+                        </div>
+                        <div class="card mb-2 border-0 shadow-sm">
+                            <div class="card-body p-2">
+                                <div class="d-flex aligin-items-center">
+                                    <p class="m-0">Change Status</p>
+                                    {%csrf_token%}
+                                    <select id="status{{enquiry.id}}" class="form-control ml-auto w-50">
+                                        <option value="initiate" 
+                                        {% if enquiry.status == 'initiate' %}selected="selected"{% endif %}>
+                                            Initiate
+                                        </option>
+                                        <option value="pending" 
+                                        {% if enquiry.status == 'pending' %}selected="selected"{% endif %}>
+                                            Pending
+                                        </option>
+                                        <option value="resolved"
+                                        {% if enquiry.status == 'resolved' %}selected="selected"{% endif %}>
+                                            Resolved
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btnChangeStatus btn btn-primary" data-id="{{enquiry.id}}">Save changes</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow">
+                <div class="card-body p-2">
+                    <div class="row align-items-center text-center p-1">
+                        <div class="col-sm col-md">
+                        <h6 class="m-0 ">{{enquiry.restaurant}}</h6>
+                        </div>
+                        <div class="col-sm col-md">
+                        <p class="m-0 py-1">{{enquiry.restaurant.user.email}}</p>
+                        </div>
+                        <div class="col-sm col-md"><p class="m-0 py-1">{{enquiry.date}}</p></div>
+                        <div class="col-sm col-md">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#restaurant{{enquiry.id}}">
+                                <i class="bi bi-person-lines-fill"></i> View
+                            </button>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        {%endfor%}
     </div>
+{%endblock%}
+{%block script%}
+<script>
+    var csrf = $('input[name=csrfmiddlewaretoken]').val();
+    $('.btnChangeStatus').click(function(){
+        enquiry_id = $(this).data('id')
+        var status = $('#status'+enquiry_id).find(":selected").val();
+        $.ajax({
+            url:"{%url 'qradmin-change_status'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'enquiry_id':enquiry_id,
+                'status':status
+              },
+              success:function(responce){
+                $('#restaurant'+enquiry_id).modal('hide')
+              }
+        })
+    })
+</script>
 {%endblock%}

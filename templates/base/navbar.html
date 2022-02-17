@@ -49,6 +49,7 @@
 {%url 'qr-builder' as qr_builder%}
 {%url 'transactions' as transactions%}
 {%url 'accountsettings' as accountsettings%}
+{%url 'support' as support%}
 <!-- Sidebar -->
 <div class="l-navbar show shadow px-0" id="nav-bar">
       <nav class="navb" >
@@ -71,6 +72,8 @@
                 <a title="Account Settings" href="{%url 'transactions'%}" class="nav_link {%if request.path == transactions%}active{%endif%}">  <i class='bx bx-spreadsheet'></i> <span class="nav_name">Transactions</span>
                 </a>
                 <a title="Account Settings" href="{%url 'accountsettings'%}" class="nav_link {%if request.path == accountsettings%}active{%endif%}"> <i class='bx bxs-cog'></i> <span class="nav_name">Account Settings</span>
+                </a>
+                <a title="Support" href="{%url 'support'%}" class="nav_link {%if request.path == support%}active{%endif%}"> <i class='bx bx-help-circle'></i> <span class="nav_name">Support</span>
                 </a>
                 
                 <a href="{%url 'accounts-logout'%}" class="nav_link" data-bs-toggle="tooltip" data-bs-placement="left" title="Sign Out"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> 

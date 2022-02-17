@@ -1,9 +1,10 @@
 from ctypes import util
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.views.generic import View,TemplateView,DetailView
-from .forms import AccountSettingForm, RestaurantForm,MenuCategoryForm,MenuItemForm,BillingDetailForm
-from .models import AccountSetting, BillingDetail, CustomerOrder, MenuCategory, MenuItem, OrderedMenu, Pack, RestaurantDetail, ScanCount
+from django.urls import reverse_lazy
+from django.views.generic import View,TemplateView,DetailView,FormView
+from .forms import AccountSettingForm, EnquiryForm, RestaurantForm,MenuCategoryForm,MenuItemForm,BillingDetailForm
+from .models import AccountSetting, BillingDetail, CustomerOrder, Enquiry, MenuCategory, MenuItem, OrderedMenu, Pack, RestaurantDetail, ScanCount
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -260,6 +261,32 @@ class AccountSettingsView(UserPassesTestMixin,View):
             return redirect('accountsettings')
         self.context['form'] = form
         return render(request,self.template_name,self.context)
+
+class SupportView(UserPassesTestMixin,FormView):
+    # Redirect when user was superuser.
+    login_url='/admin/'
+    redirect_field_name = None 
+    def test_func(self):
+        return not self.request.user.is_superuser
+    def handle_no_permission(self):
+        return redirect(self.login_url)
+
+    template_name = 'qrmenu/support.html'
+    form_class = EnquiryForm
+    success_url = reverse_lazy('support')
+
+    def get_context_data(self, **kwargs):
+        restaurant = RestaurantDetail.objects.get(user=self.request.user)
+        enquiries = Enquiry.objects.filter(restaurant=restaurant)
+        context = super().get_context_data(**kwargs)
+        context['enquiries'] = enquiries
+        return context
+    def form_valid(self, form):
+        restaurant = RestaurantDetail.objects.get(user=self.request.user)
+        enquiry = form.save(commit=False)
+        enquiry.restaurant = restaurant
+        enquiry.save()
+        return super().form_valid(form)
 
 def changePassword(request):
     if request.method == 'POST':

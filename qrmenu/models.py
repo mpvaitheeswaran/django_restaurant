@@ -165,3 +165,18 @@ def count_total_scan(sender,instance,created,*args,**kwargs):
         pack.total_scans = sender.objects.filter(restaurant=restaurant).count()
         pack.save()
 post_save.connect(count_total_scan,sender=ScanCount)
+
+class Enquiry(models.Model):
+    STATUS_CHOICE = (
+        ('initiate','Initiate'),
+        ('pending','Pending'),
+        ('resolved','Resolved'),
+    )
+    restaurant = models.ForeignKey(RestaurantDetail,on_delete=models.CASCADE,null=True)
+    question = models.TextField(max_length=200)
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20,default=STATUS_CHOICE[0][0],choices=STATUS_CHOICE)
+    def __str__(self):
+        return f'{self.restaurant.name}\'s enquiry'
+    class Meta:
+        ordering = ['-date',]

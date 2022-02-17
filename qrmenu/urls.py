@@ -16,6 +16,7 @@ urlpatterns = [
     path('qr_builder/', views.qrBuilder,name='qr-builder'),
     path('transactions/', login_required(views.TransactionView.as_view()),name='transactions'),
     path('settings/', login_required(views.AccountSettingsView.as_view()),name='accountsettings'),
+    path('support/', login_required(views.SupportView.as_view()),name='support'),
     path('changepassword/', views.changePassword,name='changepassword'),
     path('add_category/', views.addCategory,name='add_category'),
     path('edit_category/', views.editCategory,name='edit_category'),
