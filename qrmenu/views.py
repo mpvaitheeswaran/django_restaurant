@@ -25,6 +25,7 @@ from django.contrib import messages
 from django.utils import timezone
 import datetime
 from qrmenu.utils import checkMenuLimit, checkScanLimit
+from accounts.models import CustomUser
 # Create your views here.
 @login_required
 @user_passes_test(lambda u: not u.is_superuser,redirect_field_name=None, login_url='/admin/')
@@ -286,6 +287,13 @@ class SupportView(UserPassesTestMixin,FormView):
         enquiry = form.save(commit=False)
         enquiry.restaurant = restaurant
         enquiry.save()
+        admin = CustomUser.objects.filter(is_superuser=True)
+        print(admin)
+        notify.send(enquiry, 
+            recipient=admin, 
+            verb='Query',
+            description=f'{enquiry.title}',
+            level='success')
         return super().form_valid(form)
 
 def changePassword(request):

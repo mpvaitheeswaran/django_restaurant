@@ -25,6 +25,7 @@
                     <div class="modal-body">
                         <div class="card mb-2 border-0 shadow-sm">
                             <div class="card-body p-2">
+                                <h3>{{enquiry.title}}</h3>
                                 <p>{{enquiry.question}}</p>
                             </div>
                         </div>
@@ -34,9 +35,9 @@
                                     <p class="m-0">Change Status</p>
                                     {%csrf_token%}
                                     <select id="status{{enquiry.id}}" class="form-control ml-auto w-50">
-                                        <option value="initiate" 
-                                        {% if enquiry.status == 'initiate' %}selected="selected"{% endif %}>
-                                            Initiate
+                                        <option value="initiated" 
+                                        {% if enquiry.status == 'initiated' %}selected="selected"{% endif %}>
+                                            Initiated
                                         </option>
                                         <option value="pending" 
                                         {% if enquiry.status == 'pending' %}selected="selected"{% endif %}>
@@ -61,6 +62,9 @@
             <div class="card mb-3 border-0 shadow">
                 <div class="card-body p-2">
                     <div class="row align-items-center text-center p-1">
+                        <div class="col-sm col-md">
+                            <h6 class="m-0 ">{{enquiry.restaurant.id}}</h6>
+                            </div>
                         <div class="col-sm col-md">
                         <h6 class="m-0 ">{{enquiry.restaurant}}</h6>
                         </div>

@@ -5,6 +5,8 @@ from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 import json
 from django.http.response import HttpResponse
+from notifications.signals import notify
+from notifications.models import Notification
 # Create your views here.
 
 @user_passes_test(lambda u: u.is_superuser,redirect_field_name=None)

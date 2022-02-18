@@ -194,4 +194,4 @@ class BillingDetailForm(forms.ModelForm):
 class EnquiryForm(forms.ModelForm):
     class Meta:
         model = Enquiry
-        fields = ['question']
+        fields = ['title','question']

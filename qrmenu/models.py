@@ -168,12 +168,13 @@ post_save.connect(count_total_scan,sender=ScanCount)
 
 class Enquiry(models.Model):
     STATUS_CHOICE = (
-        ('initiate','Initiate'),
+        ('initiated','Initiated'),
         ('pending','Pending'),
         ('resolved','Resolved'),
     )
     restaurant = models.ForeignKey(RestaurantDetail,on_delete=models.CASCADE,null=True)
-    question = models.TextField(max_length=200)
+    title = models.CharField(max_length=50,null=True)
+    question = models.TextField(max_length=500)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20,default=STATUS_CHOICE[0][0],choices=STATUS_CHOICE)
     def __str__(self):

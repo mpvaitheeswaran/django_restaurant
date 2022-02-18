@@ -3,7 +3,11 @@
     <div class="container-fluid pt-4">
         <div class="d-flex align-items-center mb-5">
             <h3 class="mr-auto">Support</h3>
-            <button class="btn btn-primary"  data-toggle="modal" data-target="#enquiryModal">Add Enquiry</button>
+            <button class="btn btn-primary" 
+                data-toggle="modal" 
+                data-target="#enquiryModal">
+                Add Enquiry
+            </button>
         </div>
         <!--Query Modal Form-->
         <div class="modal fade" id="enquiryModal" tabindex="-1" aria-labelledby="enquiryModalLabel" aria-hidden="true">
@@ -18,8 +22,17 @@
                         </div>
                         <div class="modal-body">
                             {%csrf_token%}
+                            <input type="text" name="title" 
+                                id="id_title"
+                                maxlength="50"
+                                class="form-control"
+                                placeholder="Title">
                             <label for="id_question">Enter your Query</label>
-                            <textarea name="question" id="id_question" class="form-control" maxlength="200" cols="30" rows="5" style="resize: none;"></textarea>
+                            <textarea name="question" 
+                                id="id_question" 
+                                class="form-control" 
+                                maxlength="500" cols="30" rows="5" 
+                                style="resize: none;"></textarea>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -41,10 +54,50 @@
                 </thead>
                 <tbody>
                     {%for enquiry in enquiries%}
+                    <!-- Question Modal -->
+                    <div class="modal fade" id="questionModal{{enquiry.id}}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Your Query</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                                <h3>{{enquiry.title}}</h3>
+                                <p>{{enquiry.question}}</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                     <tr>
                         <th>{{enquiry.date}}</th>
-                        <td>{{enquiry.question}}</td>
-                        <td>{{enquiry.status}}</td>
+                        <td>
+                            <button class="btn" 
+                                data-toggle="modal" 
+                                data-target="#questionModal{{enquiry.id}}">
+                                {{enquiry.title}}
+                            </button>
+                        </td>
+                        <td>
+                            <strong class="
+                                {%if enquiry.status == 'initiated'%}
+                                    text-info
+                                {%elif enquiry.status == 'pending'%}
+                                    text-warning
+                                {%else%}
+                                    text-success
+                                {%endif%}
+                            ">
+                                {{enquiry.status|title}}
+                            </strong>
+                        </td>
                     </tr>
                     {%endfor%}
                 </tbody>
