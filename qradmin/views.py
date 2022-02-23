@@ -1,3 +1,4 @@
+from datetime import datetime
 import django
 from django.shortcuts import render
 from qrmenu.models import Enquiry, RestaurantDetail,Pack
@@ -7,6 +8,8 @@ import json
 from django.http.response import HttpResponse
 from notifications.signals import notify
 from notifications.models import Notification
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 # Create your views here.
 
 @user_passes_test(lambda u: u.is_superuser,redirect_field_name=None)
@@ -23,17 +26,77 @@ def admin_dashboard(request):
 
 @user_passes_test(lambda u: u.is_superuser,redirect_field_name=None)
 def accounts(request):
-    context = {
-        'users':RestaurantDetail.objects.filter(~Q(user__is_superuser=True))
-    }
+    context = {}
+    url_parameter = request.GET.get("q")
+    url_parameter_str = str(request.GET.get("q"))
+    # url_parameter_date = request.GET.get("date")
+    
+    if url_parameter:
+        # For searching packs.
+        if url_parameter_str.lower() in 'free pack':
+            url_parameter = '0'
+        elif url_parameter_str.lower() in 'monthly pack':
+            url_parameter = '1'
+        elif url_parameter_str.lower() in 'yearly pack':
+            url_parameter = '2'
+            
+        users = RestaurantDetail.objects.filter(Q(user__email__icontains=url_parameter)|
+            Q(name__icontains=url_parameter)|
+             Q(pack__pack_type__icontains=url_parameter)|
+            Q(accountsetting__phone__contains=url_parameter))
+        
+    else:
+        users = RestaurantDetail.objects.filter(~Q(user__is_superuser=True))
+    if request.is_ajax():
+        html = render_to_string(
+            template_name="qradmin/user_list.html", 
+            context={"users": users}
+        )
+
+        data_dict = {"user_list": html}
+
+        return JsonResponse(data=data_dict, safe=False)
+
+    context['users'] = users
     return render(request,'qradmin/accounts.html',context)
 
 @user_passes_test(lambda u: u.is_superuser,redirect_field_name=None)
 def enquiry(request):
-    enquiries = Enquiry.objects.filter(~Q(restaurant__user__is_superuser=True))
-    context = {
-        'enquiries':enquiries
-    }
+    context = {}
+    url_parameter = request.GET.get("q")
+    url_parameter_date = request.GET.get("date")
+    print(url_parameter_date)
+    if url_parameter or url_parameter_date:
+        if url_parameter and url_parameter_date:
+            print('both true')
+            enquiries = Enquiry.objects.filter(Q(date__date=url_parameter_date)).filter(
+                Q(restaurant__name__icontains=url_parameter)|
+                Q(restaurant__user__email__icontains=url_parameter)|
+                Q(restaurant__id__icontains=url_parameter)|
+                Q(status__icontains=url_parameter))
+        elif url_parameter_date:
+            print('date true')
+            enquiries = Enquiry.objects.filter(Q(date__date=url_parameter_date))
+            print(enquiries)
+        elif url_parameter:
+            print('search true')
+            enquiries = Enquiry.objects.filter(Q(restaurant__name__icontains=url_parameter)|
+                Q(restaurant__user__email__icontains=url_parameter)|
+                Q(restaurant__id__icontains=url_parameter)|
+                Q(status__icontains=url_parameter))
+    else:
+        enquiries = Enquiry.objects.filter(~Q(restaurant__user__is_superuser=True))
+    if request.is_ajax():
+        html = render_to_string(
+            template_name="qradmin/enquiry_list.html", 
+            context={"enquiries": enquiries}
+        )
+
+        data_dict = {"enquiry_list": html}
+
+        return JsonResponse(data=data_dict, safe=False)
+
+    context['enquiries'] = enquiries
     return render(request,'qradmin/enquiry.html',context)
 
 def changePack(request):

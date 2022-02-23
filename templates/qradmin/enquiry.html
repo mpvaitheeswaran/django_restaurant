@@ -6,81 +6,12 @@
     <div class="container-fluid pt-4">
         <div class="d-flex align-items-center mb-5">
             <h3 class="mr-auto">Enquiry</h3>
-            <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
-                <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
-                <a href="#" class="btn btn-dark">Dashboard</a>
-            </div> -->
+            <input id="search-input" type="text" class="form-control w-25" placeholder="Search">
+            <input id="date-input" type="date" class="form-control w-25 ml-2">
         </div>
-        {%for enquiry in enquiries%}
-            <!-- Restaurant detail Modal -->
-            <div class="modal fade" id="restaurant{{enquiry.id}}" tabindex="-1" aria-labelledby="restaurant{{enquiry.id}}Label" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                    <h5 class="modal-title" id="restaurant{{rest_user.id}}Label">{{enquiry.restaurant}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card mb-2 border-0 shadow-sm">
-                            <div class="card-body p-2">
-                                <h3>{{enquiry.title}}</h3>
-                                <p>{{enquiry.question}}</p>
-                            </div>
-                        </div>
-                        <div class="card mb-2 border-0 shadow-sm">
-                            <div class="card-body p-2">
-                                <div class="d-flex aligin-items-center">
-                                    <p class="m-0">Change Status</p>
-                                    {%csrf_token%}
-                                    <select id="status{{enquiry.id}}" class="form-control ml-auto w-50">
-                                        <option value="initiated" 
-                                        {% if enquiry.status == 'initiated' %}selected="selected"{% endif %}>
-                                            Initiated
-                                        </option>
-                                        <option value="pending" 
-                                        {% if enquiry.status == 'pending' %}selected="selected"{% endif %}>
-                                            Pending
-                                        </option>
-                                        <option value="resolved"
-                                        {% if enquiry.status == 'resolved' %}selected="selected"{% endif %}>
-                                            Resolved
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btnChangeStatus btn btn-primary" data-id="{{enquiry.id}}">Save changes</button>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="card mb-3 border-0 shadow">
-                <div class="card-body p-2">
-                    <div class="row align-items-center text-center p-1">
-                        <div class="col-sm col-md">
-                            <h6 class="m-0 ">{{enquiry.restaurant.id}}</h6>
-                            </div>
-                        <div class="col-sm col-md">
-                        <h6 class="m-0 ">{{enquiry.restaurant}}</h6>
-                        </div>
-                        <div class="col-sm col-md">
-                        <p class="m-0 py-1">{{enquiry.restaurant.user.email}}</p>
-                        </div>
-                        <div class="col-sm col-md"><p class="m-0 py-1">{{enquiry.date}}</p></div>
-                        <div class="col-sm col-md">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#restaurant{{enquiry.id}}">
-                                <i class="bi bi-person-lines-fill"></i> View
-                            </button>
-                        </div>
-                    </div> 
-                </div>
-            </div>
-        {%endfor%}
+        <div id="replaceable-content">
+            {%include 'qradmin/enquiry_list.html'%}
+        </div>
     </div>
 {%endblock%}
 {%block script%}
@@ -101,6 +32,75 @@
                 $('#restaurant'+enquiry_id).modal('hide')
               }
         })
+    })
+
+    const search_input = $("#search-input")
+    const date_input = $("#date-input")
+    const enquiry_list_div = $('#replaceable-content')
+    const url = "{%url 'qradmin-enquiry'%}"
+    const delay_by_in_ms = 700
+    let scheduled_function = false
+
+    let ajax_call = function (url, request_parameters) {
+        $.getJSON(url, request_parameters)
+            .done(response => {
+                // fade out the artists_div, then:
+                enquiry_list_div.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    enquiry_list_div.html(response['enquiry_list'])
+                    // fade-in the div with new contents
+                    enquiry_list_div.fadeTo('fast', 1)
+                    
+                })
+            })
+    }
+    //For changing date format to YYYY-MM-DD
+    function formatDate(d) {
+        if(!isNaN(d)){
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        return "";
+    }
+    date_input.on('change',function(){
+        date = new Date($(this).val())
+        formated_date = formatDate(date)
+        const request_parameters = {
+            q:search_input.val(),
+            date: formated_date
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, url, request_parameters)
+    })
+    search_input.on('keyup', function () {
+        date = new Date(date_input.val())
+        formated_date = formatDate(date)
+        const request_parameters = {
+            q: $(this).val(), // value of user_input: the HTML element with ID user-input
+            date: formated_date
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, url, request_parameters)
     })
 </script>
 {%endblock%}
