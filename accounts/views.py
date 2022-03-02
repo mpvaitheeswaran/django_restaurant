@@ -8,12 +8,16 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from accounts.tokens import account_activation_token
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login as login_auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.conf import settings
+from qrmenu.process import html_to_pdf
+from io import BytesIO
+from django.core.files import File
 
 # Create your views here.
 @unauthenticated_user()
@@ -32,7 +36,7 @@ def register(request):
             billing_detail.gstin = gstin
             billing_detail.save()
             current_site = get_current_site(request)
-            mail_subject = 'Activate your blog account.'
+            mail_subject = 'Activate your RestaurantQR account.'
             message = render_to_string('accounts/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -65,12 +69,33 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        # Send invoice to email.
+        restaurant = RestaurantDetail.objects.get(user=user)
+        context = {
+             'STATIC_ROOT':settings.STATIC_ROOT,
+             'restaurant':restaurant
+         }
+        pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+        if pdf:
+            filename = 'purchase_%s.pdf' % (user.id)
+            invoice_file = File(BytesIO(pdf.content),filename)
+            restaurant.invoice_pdf = invoice_file
+            restaurant.save()
+            email_pdf = EmailMultiAlternatives(
+                subject='Wellcome to the RestaurantQR',
+                body='The Invoice for your RestaurantQR account.',
+                from_email='',
+                to=[user.email],
+            )
+            email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
+            email_pdf.send()
+
         login_auth(request,user)
         return redirect('dashboard')
         # return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         # return HttpResponse('Activation link is invalid!')
-        return render(request,'invalid_link.html')
+        return render(request,'accounts/invalid_link.html')
 
 @unauthenticated_user(redirect_url='qradmin-dashboard')
 def adminLogin(request):

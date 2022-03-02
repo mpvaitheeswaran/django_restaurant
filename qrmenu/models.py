@@ -23,6 +23,7 @@ class RestaurantDetail(models.Model):
     allowCustomerOrder = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
     pickup = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
     total_tables = models.PositiveIntegerField(default=5,blank=True)
+    invoice_pdf = models.FileField(upload_to='invoice_pdfs',null=True,blank=True)
     def __str__(self) -> str:
         return f'{self.name}'
 # Signal

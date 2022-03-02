@@ -1,0 +1,185 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <style>
+        body{
+            margin: 27mm 16mm 27mm 16mm;
+            /* change the margins as you want them to be. */
+       } 
+        .bg-light{
+            background-color: white !important;
+        }
+        .invoice-container{
+            border: 2px solid black;
+            border-bottom-width:2px;
+            border-bottom-color: black;
+            border-bottom-style: solid;
+            padding: 20px;
+        }
+        .text-center{
+            text-align: center;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        h3, .h3 {
+            font-size: 1.75rem;
+        }
+        .m-0 {
+            margin: 0 !important;
+        }
+        .font-weight-bold {
+            font-weight: 700 !important;
+        }
+        .text-right {
+            text-align: right !important;
+        }
+        .row {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            
+        }
+        .col{
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: auto;
+            max-width: 100%;
+        }
+        .col-4 {
+            -ms-flex: 0 0 33.333333%;
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+        .w-100 {
+            width: 100% !important;
+        }
+        .img-fluid {
+            max-width: 180%;
+            height: auto;
+        }
+        table{
+            margin: 0;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        table td, table td * {
+            vertical-align: top;
+        }
+        h3,tr,td{
+            border: none;
+        }
+        
+    </style>
+    
+    <title>Invoice</title>
+</head>
+<body>
+        <div>
+            <h3 class="text-center">Tax Invoice</h3>
+            <hr>
+            <table class="w-100">
+                <tr style="margin: 0; padding: 0;">
+                    <td>
+                        <img style="height: auto; width: 200px;" src="{{STATIC_ROOT}}/imgs/buyp.png" alt="Buyp">
+                    </td>
+                    <td class="text-right">
+                        <h6 class="m-0">Buyp Technologies Private Limited</h6>
+                        <p class="m-0">No. 158-P, 2nd Floor Western wing,</p>
+                        <p class="m-0">S.M. Complex, Railway Road,</p>
+                        <p class="m-0">Tenkasi District-627811</p>
+                        <p class="m-0">Tamil Nadu, India</p>
+                        <p class="m-0"><span class="font-weight-bold">GSTIN : </span>33AAJCB693381ZZ</p>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <h3 class="text-center">Billing Information</h3>
+            <hr>
+            <table class="w-100">
+                <tr>
+                    <td>
+                        <h6 class="m-0">Buyp Technologies Private Limited</h6>
+                        <p class="m-0">No. 158-P, 2nd Floor Western wing,</p>
+                        <p class="m-0">S.M. Complex, Railway Road,</p>
+                        <p class="m-0">Tenkasi District-627811</p>
+                        <p class="m-0">Tamil Nadu, India</p>
+                        <p class="m-0"><span class="font-weight-bold">GSTIN : </span>33AAJCB693381ZZ</p>
+                    </td>
+                    <td class="text-right">
+                        <p class="m-0"><span class="font-weight-bold">ORDER No. : </span>3454356556</p>
+                        <p class="m-0">MARCH 4 2022</p>
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+        <div>
+            <table class="w-100">
+                <thead style="border-bottom: 2px solid black;">
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col" class="text-right">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody style="border-bottom: 2px solid black;">
+                  <tr>
+                    <td style="width: 25%;">{{restaurant.name}}</td>
+                    <td style="width: 25%;">{{restaurant.user.email}}</td>
+                    <td >1</td>
+                    <td class="text-right">4000</td>
+                    <td class="text-right">4000</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-right">Subtotal</td>
+                        <td class="text-right">455</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right">SGST</td>
+                        <td class="text-right">34</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right">CGST</td>
+                        <td class="text-right">34</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right font-weight-bold">Grand Total (Incl.Tax)</td>
+                        <td class="text-right font-weight-bold">456</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <hr>
+        <table style="margin-bottom: 100px;">
+                <tr>
+                    <td>
+                        <h5>PAYMENT METHOD</h5>
+                        <p class="m-0">Credit Card</p>
+                        <p class="m-0">Credit Card Type : Visa</p>
+                        <p class="m-0">Worldpay Transaction ID : 343dsf4</p>
+                    </td>
+                    <td>
+                        <h5>Notes</h5>
+                        <p>Thanks for your business. Terms & conditions Not applicable for major
+                            modifications support available from 9.30 to 5.30 except sunday.
+                        </p>
+                    </td>
+                </tr>
+        </table>
+        <hr>
+    <p class="text-center">*This is Computer generated invoice.</p>
+    
+</body>
+</html>

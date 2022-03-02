@@ -1,4 +1,3 @@
-from ctypes import util
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -26,7 +25,27 @@ from django.utils import timezone
 import datetime
 from qrmenu.utils import checkMenuLimit, checkScanLimit
 from accounts.models import CustomUser
+from .process import html_to_pdf
+from django.conf import settings
+from django.core.files import File
 # Create your views here.
+class GeneratePdf(View):
+     def get(self, request, *args, **kwargs):
+        context = {
+             'STATIC_ROOT':settings.STATIC_ROOT
+         }
+        # getting the template
+        pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = 'purchase_%s.pdf' % (request.user.id)
+        download = request.GET.get('download')
+        content = "attachment; filename=%s " % (filename)
+        response['Content-Disposition'] = content
+        receipt_file = File(BytesIO(pdf.content))
+        print(receipt_file)
+        # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+
 @login_required
 @user_passes_test(lambda u: not u.is_superuser,redirect_field_name=None, login_url='/admin/')
 def dashboard(request):

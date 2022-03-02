@@ -31,4 +31,5 @@ urlpatterns = [
     path('restaurant/call/', views.callWaiter,name='qrmenu-call_waiter'),
     # Notifications
     path('read_notification/', views.readNotification,name='qrmenu-read_notification'),
+    path('invoice/',views.GeneratePdf.as_view(),name='invoice')
 ]
