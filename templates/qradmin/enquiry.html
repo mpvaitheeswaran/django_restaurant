@@ -1,13 +1,49 @@
 {%extends 'base/admin_base.html'%}
 {%load static%}
+{%block style%}
+<style>
+    @media only screen and (max-width: 600px) {
+        #list-heading{
+            display: none;
+        }
+        #heading{
+            display: block !important;
+        }
+        .filter-input{
+            width: 100% !important;
+            margin: 5px 0 !important;
+        }
+    }
+</style>
+{%endblock%}
 {%block content%}
 
 
     <div class="container-fluid pt-4">
-        <div class="d-flex align-items-center mb-5">
+        <div id="heading" class="d-flex align-items-center mb-5">
             <h3 class="mr-auto">Enquiry</h3>
-            <input id="search-input" type="text" class="form-control w-25" placeholder="Search">
-            <input id="date-input" type="date" class="form-control w-25 ml-2">
+            <input id="search-input" style="width: 200px;" type="text" class="filter-input form-control" placeholder="Search">
+            <input id="date-input" style="width: 200px;" type="date" class="filter-input form-control ml-2">
+        </div>
+        <!-- List heading -->
+        <div id="list-heading" class="card mb-3 border-0 shadow">
+            <div class="card-body p-2">
+                <div class="row align-items-center text-center p-1">
+                    <div class="col-sm col-md">
+                        <h6 class="m-0 ">Restaurant ID</h6>
+                        </div>
+                    <div class="col-sm col-md">
+                    <h6 class="m-0 ">Name</h6>
+                    </div>
+                    <div class="col-sm col-md">
+                    <h6 class="m-0 py-1">Email</h6>
+                    </div>
+                    <div class="col-sm col-md"><h6 class="m-0 py-1">Date</h6></div>
+                    <div class="col-sm col-md">
+                        <h6 class="m-0 py-1">More</h6>
+                    </div>
+                </div> 
+            </div>
         </div>
         <div id="replaceable-content">
             {%include 'qradmin/enquiry_list.html'%}

@@ -17,10 +17,12 @@ def admin_dashboard(request):
     total_users = RestaurantDetail.objects.filter(~Q(user__is_superuser=True)).count()
     active_users = Pack.objects.filter(pack_type__gt = 0).count()
     inactive_users = Pack.objects.filter(pack_type = 0).count()
+    users = RestaurantDetail.objects.filter(~Q(user__is_superuser=True))[:10]
     context = {
         'total_users':total_users,
         'active_users':active_users,
         'inactive_users':inactive_users,
+        'users':users
     }
     return render(request,'qradmin/dashboard.html',context)
 

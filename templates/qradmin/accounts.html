@@ -1,13 +1,26 @@
 {%extends 'base/admin_base.html'%}
 {%load static%}
 {%load custom_filters%}
+{%block style%}
+<style>
+    @media only screen and (max-width: 600px) {
+        #heading{
+            display: block !important;
+        }
+        .filter-input{
+            width: 100% !important;
+            margin: 5px 0 !important;
+        }
+    }
+</style>
+{%endblock%}
 {%block content%}
 {%csrf_token%}
 
     <div class="container-fluid pt-4">
-        <div class="d-flex align-items-center mb-5">
+        <div id="heading" class="d-flex align-items-center mb-5">
             <h3 class="mr-auto">Accounts</h3>
-            <input id="search-input" type="text" class="form-control w-25" placeholder="Search">
+            <input id="search-input" style="width: 200px;" type="text" class="filter-input form-control" placeholder="Search">
         </div>
         <div id="replaceable-content">
             {%include 'qradmin/user_list.html'%}

@@ -1,5 +1,6 @@
 {%extends 'base/admin_base.html'%}
 {%load static%}
+{%load custom_filters%}
 {%block title%}Dashboard | Admin{%endblock%}
 {%block content%}
     <div class="container-fluid pt-4">
@@ -50,6 +51,36 @@
                 
             </div>
             
+        </div>
+        <div class="table-responsive mt-5 bg-white shadow-sm p-2">
+            <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Restaurant Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Total menus</th>
+                    <th scope="col">Total scans</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%for rest_user in users%}
+                    <tr>
+                        <td>{{rest_user.name}}</td>
+                        <td>{{rest_user.user.email}}</td>
+                        <td>{{rest_user|total_menu}}</td>
+                        <td>{{rest_user|total_scan}}</td>
+                    </tr>
+                  {%endfor%}
+                  
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <a href="{%url 'qradmin-accounts'%}" class="btn btn-outline-primary">Show more</a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 {%endblock%}
