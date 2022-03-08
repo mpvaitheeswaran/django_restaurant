@@ -38,7 +38,9 @@ def total_scan(value):
 @register.filter()
 def pack_type(value):
     pack_id = Pack.objects.get(restaurant=value).pack_type
-    if pack_id == 0:
+    if pack_id == -1:
+         return 'No Pack'
+    elif pack_id == 0:
         return 'Free Pack'
     elif pack_id == 1:
         return 'Monthly Pack'

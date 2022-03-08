@@ -25,6 +25,28 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a href="{%url 'qrmenu-pack'%}" class="btn btn-success">Buy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- user has no pack or pack expired model -->
+    <div class="modal fade" id="no_pack" tabindex="-1" aria-labelledby="no_packLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="no_packLabel">Package Expired.</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Your pack is expired, You should buy any package.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a href="{%url 'qrmenu-pack'%}" class="btn btn-success">Buy</a>
           </div>
         </div>
       </div>
@@ -700,6 +722,12 @@
                   //can't add menus.
                   $('#add_item'+category_id).modal('hide');
                   $('#out_of_menus').modal('show')
+                }
+                else if(response.no_pack){
+                  //can't add menus and show the pack details. 
+                  $('#add_item'+category_id).modal('hide');
+                  $('#no_pack').modal('show')
+                  console.log('pack not selected.')
                 }
                 else{
                   //No errors

@@ -24,6 +24,7 @@ class RestaurantDetail(models.Model):
     pickup = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
     total_tables = models.PositiveIntegerField(default=5,blank=True)
     invoice_pdf = models.FileField(upload_to='invoice_pdfs',null=True,blank=True)
+    is_free_pack_used = models.BooleanField(default=False,blank=True)
     def __str__(self) -> str:
         return f'{self.name}'
 # Signal
@@ -44,10 +45,10 @@ post_save.connect(create_billing_detail,sender=RestaurantDetail)
 class Pack(models.Model):
     restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE,null=True)
     total_menus = models.PositiveIntegerField(default=0,blank=True)
-    total_scans = models.PositiveBigIntegerField(default=0,blank=True)
-    pack_type = models.PositiveBigIntegerField(default=0,blank=True)    # 0 -> Free pack
-                                                                        # 1 -> monthly pack
-                                                                        # 2 -> yearly pack
+    total_scans = models.PositiveIntegerField(default=0,blank=True)
+    pack_type = models.IntegerField(default=-1,blank=True)    # -1->No Pack or pack expired  0 -> Free pack, 1 -> monthly pack, 2 -> yearly pack
+    start_date = models.DateField(blank=True,null=True)
+    expiry_date = models.DateField(blank=True,null=True)
     def __str__(self) -> str:
         return f'{self.restaurant.name} pack {self.pack_type}'
 

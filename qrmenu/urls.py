@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 from . import views
@@ -31,5 +32,7 @@ urlpatterns = [
     path('restaurant/call/', views.callWaiter,name='qrmenu-call_waiter'),
     # Notifications
     path('read_notification/', views.readNotification,name='qrmenu-read_notification'),
-    path('invoice/',views.GeneratePdf.as_view(),name='invoice')
+    path('invoice/',views.GeneratePdf.as_view(),name='invoice'),
+    path('pack/',views.select_pack,name='qrmenu-pack'),
+    path('activate_trial/',views.activateTrial,name='qrmenu-activate_trial')
 ]

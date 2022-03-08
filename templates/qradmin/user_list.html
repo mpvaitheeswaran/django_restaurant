@@ -40,6 +40,10 @@
                             <div class="d-flex aligin-items-center">
                                 <p class="m-0">Pack Type</p>
                                 <select id="pack{{rest_user.id}}" class="form-control ml-auto w-50">
+                                    <option value="-1" 
+                                    {% if rest_user|pack_type == 'No Pack' %}selected="selected"{% endif %}>
+                                        No Pack
+                                    </option>
                                     <option value="0" 
                                     {% if rest_user|pack_type == 'Free Pack' %}selected="selected"{% endif %}>
                                         Free Pack

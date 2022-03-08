@@ -27,8 +27,47 @@ from qrmenu.utils import checkMenuLimit, checkScanLimit
 from accounts.models import CustomUser
 from .process import html_to_pdf
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage,EmailMultiAlternatives
+from django.core.files import File
 # Create your views here.
+def select_pack(request):
+    context = {}
+    if not request.user.is_anonymous:
+        restaurant = RestaurantDetail.objects.get(user=request.user)
+        context['restaurant'] = restaurant
+    return render(request,'qrmenu/select_pack.html',context)
+@login_required
+def activateTrial(request):
+    restaurant = RestaurantDetail.objects.get(user=request.user)
+    restaurant.is_free_pack_used = True
+    restaurant.save()
+    pack = Pack.objects.get(restaurant=restaurant)
+    pack.pack_type = 0
+    start_date = datetime.datetime.now()
+    expiry_date = start_date + datetime.timedelta(days=30)
+    pack.start_date = start_date
+    pack.expiry_date = expiry_date
+    pack.save()
+    # Send invoice to email.
+    context = {
+        'STATIC_ROOT':settings.STATIC_ROOT,
+        'restaurant':restaurant
+    }
+    pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+    if pdf:
+        filename = 'purchase_%s.pdf' % (restaurant.user.id)
+        invoice_file = File(BytesIO(pdf.content),filename)
+        restaurant.invoice_pdf = invoice_file
+        restaurant.save()
+        email_pdf = EmailMultiAlternatives(
+            subject='Wellcome to the RestaurantQR',
+            body='The Invoice for your RestaurantQR account.',
+            from_email='',
+            to=[restaurant.user.email],
+        )
+        email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
+        email_pdf.send()
+    return redirect('dashboard')
 class GeneratePdf(View):
      def get(self, request, *args, **kwargs):
         context = {
@@ -43,10 +82,11 @@ class GeneratePdf(View):
 @user_passes_test(lambda u: not u.is_superuser,redirect_field_name=None, login_url='/admin/')
 def dashboard(request):
     restaurant = RestaurantDetail.objects.get(user=request.user)
+    # Redirect to pack page when user not selected any package.
+    if restaurant.pack.pack_type==-1:
+        return redirect('qrmenu-pack')
+    print(restaurant.pack.pack_type)
     menu_count = MenuItem.objects.filter(category__restaurant=restaurant).count()
-    # for category in MenuCategory.objects.filter(restaurant=restaurant):
-    #     for menu in MenuItem.objects.filter(category=category):
-    #         menu_count += 1
 
     total_scan = ScanCount.objects.filter(restaurant=restaurant).count()
     context ={
@@ -185,6 +225,14 @@ def delete_old_orders(request):
         orders = CustomerOrder.objects.filter(restaurant=restaurant,timestamp__lt=d)
         #delete them
         orders.delete()
+        # Change pack type after user pack expired.
+        pack = Pack.objects.get(restaurant=restaurant)
+        if pack.expiry_date < timezone.now().date():
+            print('pack Expired')
+            pack.pack_type = -1
+            pack.start_date = None
+            pack.expiry_date = None
+            pack.save()
         return HttpResponse(json.dumps(responce_data), content_type="application/json")
 
 class MembershipView(TemplateView):
@@ -345,7 +393,8 @@ class CustomerView(TemplateView):
         unique_id = self.kwargs['unique_id']
         restaurant = RestaurantDetail.objects.get(unique_id=unique_id)
         pack = Pack.objects.get(restaurant=restaurant)
-        if not checkScanLimit(pack):
+        # Change the template when user plan expired or out of scan limit.
+        if not checkScanLimit(pack) or pack.pack_type==-1:
             self.template_name = 'qrmenu/customer_view/outofscans.html'
         return super().get(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
@@ -382,7 +431,8 @@ class MenuItemView(TemplateView):
         unique_id = self.kwargs['unique_id']
         restaurant = RestaurantDetail.objects.get(unique_id=unique_id)
         pack = Pack.objects.get(restaurant=restaurant)
-        if not checkScanLimit(pack):
+        # Change the template when user plan expired or out of scan limit.
+        if not checkScanLimit(pack) or pack.pack_type==-1:
             self.template_name = 'qrmenu/customer_view/outofscans.html'
         return super().get(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
@@ -489,7 +539,10 @@ def addItem(request):
         else:
             display = False
         form = MenuItemForm(request.POST,request.FILES)
-        print(checkMenuLimit(pack))
+        if pack.pack_type==-1:
+            # if user didn't select the pack.
+            responce_data['no_pack'] = True
+            return HttpResponse(json.dumps(responce_data), content_type="application/json")
         if checkMenuLimit(pack):
             if form.is_valid():
                 category = MenuCategory.objects.get(pk=category_id)
