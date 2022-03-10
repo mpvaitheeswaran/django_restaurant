@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'notifications',
     'currencies',
+    'payments',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -185,3 +186,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'username@gmail.com'
 # EMAIL_HOST_PASSWORD = 'your_password'
+
+# PayTm Payment Gateway
+PAYTM_COMPANY_NAME = "BUYP Technologies"   # For representation purposes 
+# PAYTM_MERCHANT_KEY = "VaVxV@xUiPTJ6%Kx"
+# PAYTM_MERCHANT_ID = "lSLEKI68544857587304"
+PAYTM_MERCHANT_KEY = "bI5q_AgRQVCkQVm5"
+PAYTM_MERCHANT_ID = "CJhAzb77364189315875"
+PAYTM_CALLBACK_URL = "http://localhost:8000/payments/response/" # Hardcode
+# PAYTM_WEBSITE = "WEBSTAGING"
+PAYTM_WEBSITE = "DEFAULT"
+# PAYTM_PAYMENT_GATEWAY_URL = "https://securegw-stage.paytm.in/order/process"
+# PAYTM_TRANSACTION_STATUS_URL = "https://securegw-stage.paytm.in/order/status"
+PAYTM_PAYMENT_GATEWAY_URL = "https://securegw.paytm.in/theia/processTransaction"
+PAYTM_TRANSACTION_STATUS_URL = "https://securegw.paytm.in/order/status"
