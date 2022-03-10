@@ -8,6 +8,10 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import datetime
+from django.core.mail import EmailMultiAlternatives
+from django.core.files import File
+from qrmenu.process import html_to_pdf
+from io import BytesIO
 
 @login_required
 def payment(request):
@@ -75,6 +79,7 @@ def response(request):
             # after successfull payment we will make Activate the pack.
             pack_order.isPaid = True
             pack_order.save()
+            restaurant = RestaurantDetail.objects.get(user = pack_order.restaurant.user)
             pack = Pack.objects.get(restaurant = pack_order.restaurant)
             start_date = datetime.datetime.now()
             if pack_order.pack_type == '1':
@@ -87,6 +92,26 @@ def response(request):
             pack.start_date = start_date
             pack.expiry_date = expiry_date
             pack.save()
+            # Send invoice to email.
+            context = {
+                'STATIC_ROOT':settings.STATIC_ROOT,
+                'restaurant':restaurant,
+                'pack_order':pack_order,
+            }
+            pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+            if pdf:
+                filename = 'purchase_%s.pdf' % (restaurant.user.id)
+                invoice_file = File(BytesIO(pdf.content),filename)
+                restaurant.invoice_pdf = invoice_file
+                restaurant.save()
+                email_pdf = EmailMultiAlternatives(
+                    subject='Wellcome to the RestaurantQR',
+                    body='The Invoice for your RestaurantQR account.',
+                    from_email='',
+                    to=[restaurant.user.email],
+                )
+                email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
+                email_pdf.send()
 
             return render(request, 'payments/payment_status.html', {'response': response_dict})
         else:
