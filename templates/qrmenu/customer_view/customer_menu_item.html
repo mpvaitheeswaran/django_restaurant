@@ -87,7 +87,12 @@
           </div> -->
           <div class="form-group">
             <label for="call_table_no">Table No.</label>
-            <input type="number" class="form-control" id="call_table_no" name="table_no">
+            <!-- <input type="number" class="form-control" id="call_table_no" name="table_no"> -->
+            <select class="form-control" id="table_no" name="table_no">
+              {%for i in restaurant.total_tables|toList:1%}
+              <option value="{{i}}">{{i}}</option>
+              {%endfor%}
+            </select>
             <small id="call_table_error" class="form-text text-danger"></small>
           </div>
         </form>

@@ -6,6 +6,49 @@
             <h3 class="mr-auto">Transactions</h3>
             
         </div>
+
+        <div class="table-responsive mt-5 bg-white shadow-sm p-2">
+            <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Pack Type</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Payment</th>
+                    <th scope="col">Amount (Rs)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {%for order in pack_orders%}
+                    <tr>
+                        <td>{{order.order_id}}</td>
+                        <td>
+                            {%if order.pack_type == '1'%}
+                                Monthly Pack
+                            {%else%}
+                                Yearly Pack
+                            {%endif%}
+                        </td>
+                        <td>{{order.order_date}}</td>
+                        <td>
+                            {%if order.isPaid%}
+                                <span class="text-success">Success</span>
+                            {%else%}
+                            <span class="text-danger">Faild</span>
+                            {%endif%}
+                        </td>
+                        <td>{{order.order_amount}}</td>
+                    </tr>
+                    {%empty%}
+                    <tr>
+                        <td colspan="5" class="text-center">No Transactions</td>
+                    </tr>
+                    {%endfor%}
+                  
+                </tbody>
+
+            </table>
+        </div>
         
     </div>
 {%endblock%}

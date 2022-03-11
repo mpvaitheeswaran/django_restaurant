@@ -52,7 +52,7 @@ def register(request):
             # return HttpResponse('Please confirm your email address to complete the registration')
             # login_auth(request,user)
             # return redirect('dashboard')
-        context['old_email'] = form.cleaned_data['email']
+        # context['old_email'] = form.cleaned_data['email']
         context['old_name'] = request.POST['restaurant_name']
         context['old_gstin'] = request.POST['gstin']
         context['form'] = form

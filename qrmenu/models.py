@@ -124,7 +124,7 @@ class BillingDetail(models.Model):
         ('usa','United State of America'),
         ('uae','United Arab Emirates'),
         ('uk','United Kingdom'),
-
+        ('sa','Saudi Arabia')
     )
     restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE,null=True)
     name = models.CharField(max_length=30,null=True)

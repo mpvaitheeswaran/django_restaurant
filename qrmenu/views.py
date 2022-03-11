@@ -2,6 +2,8 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import View,TemplateView,DetailView,FormView
+
+from payments.models import PackOrder
 from .forms import AccountSettingForm, EnquiryForm, RestaurantForm,MenuCategoryForm,MenuItemForm,BillingDetailForm
 from .models import AccountSetting, BillingDetail, CustomerOrder, Enquiry, MenuCategory, MenuItem, OrderedMenu, Pack, RestaurantDetail, ScanCount
 from django.views.decorators.csrf import csrf_protect
@@ -39,6 +41,9 @@ def select_pack(request):
 @login_required
 def activateTrial(request):
     restaurant = RestaurantDetail.objects.get(user=request.user)
+    # Return back is used already used free pack.
+    if restaurant.is_free_pack_used:
+        return redirect('dashboard')
     restaurant.is_free_pack_used = True
     restaurant.save()
     pack = Pack.objects.get(restaurant=restaurant)
@@ -276,6 +281,12 @@ class TransactionView(UserPassesTestMixin,TemplateView):
         return redirect(self.login_url)
 
     template_name = 'qrmenu/transactions.html'
+
+    def get_context_data(self, **kwargs):
+        restaurant = RestaurantDetail.objects.get(user=self.request.user)
+        context = super().get_context_data(**kwargs)
+        context['pack_orders'] = PackOrder.objects.filter(restaurant=restaurant)
+        return context
 
 class AccountSettingsView(UserPassesTestMixin,View):
     # Redirect when user was superuser.
