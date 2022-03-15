@@ -11,6 +11,13 @@
     .pack-head{
         background-color: #D6E6F2;
     }
+    input[type=radio] {
+        width: 30px;
+        height: 30px;
+    }
+    .form-check-label{
+        font-size: 30px;
+    }
 </style>
 {%endblock%}
 {%block content%}
@@ -82,7 +89,7 @@
                     Just own the night like the 4th of July! I’m gon’ put her in a coma. What you're waiting for, it's time for you to show it off. Can't replace you with a million rings. You open my eyes and I'm ready to go, lead me into the light. And here you are. I’m gon’ put her in a coma. Come on, let your colours burst. So cover your eyes, I have a surprise. As I march alone to a different beat. Glitter all over the room pink flamingos in the pool.
                     
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer" id="monthly_modal_foot">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <form action="{%url 'payments-pay'%}">
                     <input type="hidden" name="pack_type" id="pack_type" value="1">
@@ -124,7 +131,7 @@
                     Just own the night like the 4th of July! I’m gon’ put her in a coma. What you're waiting for, it's time for you to show it off. Can't replace you with a million rings. You open my eyes and I'm ready to go, lead me into the light. And here you are. I’m gon’ put her in a coma. Come on, let your colours burst. So cover your eyes, I have a surprise. As I march alone to a different beat. Glitter all over the room pink flamingos in the pool.
                     
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer" id="yearly_modal_foot">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <form action="{%url 'payments-pay'%}">
                     <input type="hidden" name="pack_type" id="pack_type" value="2">
@@ -139,7 +146,17 @@
     <!--SELECT PACK MODAL END -->
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="container-fluid mx-5">
-            <h1 class="text-center mb-5">Package plan</h1>
+            <div class="text-center mb-5">
+                <h1 class="text-center ">Package plan</h1>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="currency" type="radio" id="currency_inr" checked value="inr">
+                    <label class="form-check-label" for="currency_inr">INR</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" name="currency" type="radio" id="currency_usd" value="usd">
+                    <label class="form-check-label" for="currency_usd">USD</label>
+                </div>
+            </div>
             <div class="row" style="margin: auto;">
                 <!-- Free Tial -->
                 <div class="col-sm col-md mt-2 p-0 bg-white rounded shadow">
@@ -147,7 +164,7 @@
                         <h2 class="text-center text-primary">Free Trial</h2>
                     </div>
                     <div class="pack-price d-flex align-items-top py-4 bg-light">
-                        <div class="pack-currency fs-5 text-muted ml-auto"></div>
+                        <div class="pack-currenc fs-5 text-muted ml-auto"></div>
                         <div class="pack-value d-flex align-items-end mr-auto">
                             <div class="value">Free</div>
                             <div class="period">/ 30 Days only</div>
@@ -179,7 +196,7 @@
                     <div class="pack-price d-flex align-items-top py-4 bg-light">
                         <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
                         <div class="pack-value d-flex align-items-end mr-auto">
-                            <div class="value">199</div>
+                            <div id="monthly_value" class="value">199</div>
                             <div class="period">/ Month</div>
                         </div>
                     </div>
@@ -205,7 +222,7 @@
                     <div class="pack-price d-flex align-items-top py-4 bg-light">
                         <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
                         <div class="pack-value d-flex align-items-end mr-auto">
-                            <div class="value">999</div>
+                            <div id="yearly_value" class="value">999</div>
                             <div class="period">/ Year</div>
                         </div>
                     </div>
@@ -226,4 +243,209 @@
     </div>
 {%endblock%}
 {%block script%}
+<script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+
+
+    <!-- Set up a container element for the button -->
+
+    
+
+
+    <script>
+        var csrf = $('input[name=csrfmiddlewaretoken]').val();
+        //Curency change event.
+        $('input[type=radio][name=currency]').change(function() {
+            if (this.value == 'inr') {
+                $('#monthly_modal_foot').html(`
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{%url 'payments-pay'%}">
+                    <input type="hidden" name="pack_type" id="pack_type" value="1">
+                    <input type="submit" class="btn btn-primary" value="Accept & Pay">
+                </form>
+                `)
+                $('#yearly_modal_foot').html(`
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{%url 'payments-pay'%}">
+                    <input type="hidden" name="pack_type" id="pack_type" value="2">
+                    <input type="submit" class="btn btn-primary" value="Accept & Pay">
+                </form>
+                `)
+                $('.pack-currency').text('Rs');
+                $('#monthly_value').text('199');
+                $('#yearly_value').text('999');
+            }
+            else if (this.value == 'usd') {
+                $('#monthly_modal_foot').html(`
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div id="paypal-monthly-container"></div>
+                `)
+                $('#yearly_modal_foot').html(`
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div id="paypal-yearly-container"></div>
+                `)
+                $('.pack-currency').text('$');
+                $('#monthly_value').text('2.50');
+                $('#yearly_value').text('13');
+                monthlyPayment();
+                yearlyPayment();
+                
+            }
+        });
+
+    function monthlyPayment(){
+    //For Monthly Pack
+    const pack_type = '1'
+    const amount = '2.50'
+      paypal.Buttons({
+
+        style: {
+
+            layout:  'horizontal',
+        
+            color:   'blue',
+        
+            shape:   'rect',
+        
+            label:   'paypal',
+
+            tagline:  false
+        
+          },
+        // Sets up the transaction when a payment button is clicked
+
+        createOrder: function(data, actions) {
+
+          return actions.order.create({
+
+            purchase_units: [{
+
+              amount: {
+
+                value: amount // Can reference variables or functions. Example: `value: document.getElementById('...').value`
+
+              }
+
+            }]
+
+          });
+
+        },
+
+
+        // Finalize the transaction after payer approval
+
+        onApprove: function(data, actions) {
+
+          return actions.order.capture().then(function(orderData) {
+
+            // Successful capture! For dev/demo purposes:
+
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+
+                //alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                $.ajax({
+                    url:"{%url 'payments-paypal'%}",
+                    method:'post',
+                    data:{
+                      csrfmiddlewaretoken:csrf,
+                      'transaction_id':transaction.id,
+                      'pack_type':pack_type,
+                      'amount' : amount,
+                    
+                    },
+                    success:function(responce){
+                        location.reload()
+                    }
+                });
+          });
+
+        }
+
+      }).render('#paypal-monthly-container');
+
+
+    }
+    monthlyPayment();
+   
+    function yearlyPayment(){
+        //For Yearly Pack paypal payment
+        const pack_type = '2'
+        const amount = '13.00'
+      paypal.Buttons({
+
+        style: {
+
+            layout:  'horizontal',
+        
+            color:   'blue',
+        
+            shape:   'rect',
+        
+            label:   'paypal',
+
+            tagline:  false
+        
+          },
+        // Sets up the transaction when a payment button is clicked
+
+        createOrder: function(data, actions) {
+
+          return actions.order.create({
+
+            purchase_units: [{
+
+              amount: {
+
+                value: amount // Can reference variables or functions. Example: `value: document.getElementById('...').value`
+
+              }
+
+            }]
+
+          });
+
+        },
+
+
+        // Finalize the transaction after payer approval
+
+        onApprove: function(data, actions) {
+
+          return actions.order.capture().then(function(orderData) {
+
+            // Successful capture! For dev/demo purposes:
+
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+
+                //alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                $.ajax({
+                    url:"{%url 'payments-paypal'%}",
+                    method:'post',
+                    data:{
+                      csrfmiddlewaretoken:csrf,
+                      'transaction_id':transaction.id,
+                      'pack_type':pack_type,
+                      'amount':amount,
+                    
+                    },
+                    success:function(responce){
+                      location.reload()
+                    }
+                });
+          });
+
+        }
+
+      }).render('#paypal-yearly-container');
+
+
+    }
+    yearlyPayment()
+    </script>
 {%endblock%}

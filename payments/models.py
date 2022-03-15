@@ -9,5 +9,6 @@ class PackOrder(models.Model):
     order_amount = models.CharField(max_length=25)
     isPaid = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now=True)
+    currency = models.CharField(max_length=5,default='inr',blank=True,null=True)
     class Meta:
         ordering = ['-order_date',]

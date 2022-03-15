@@ -1,4 +1,5 @@
 
+import json
 from payments.models import PackOrder
 from qrmenu.models import Pack, RestaurantDetail
 from . import Checksum
@@ -27,7 +28,8 @@ def payment(request):
     pack_order = PackOrder.objects.create(order_id=order_id,
         restaurant = restaurant,
         pack_type = pack_type,
-        order_amount = bill_amount)
+        order_amount = bill_amount,
+        currency = 'usd',)
     pack_order.save()
     param_dict = {
         'MID': settings.PAYTM_MERCHANT_ID,
@@ -84,8 +86,10 @@ def response(request):
             start_date = datetime.datetime.now()
             if pack_order.pack_type == '1':
                 expiry_date = start_date + datetime.timedelta(days=30)
+                item = 'Monthly Pack'
             elif pack_order.pack_type == '2':
                 expiry_date = start_date + datetime.timedelta(days=365)
+                item = 'Yearly Pack'
             else:
                 expiry_date = None
             pack.pack_type = int(pack_order.pack_type)
@@ -94,9 +98,10 @@ def response(request):
             pack.save()
             # Send invoice to email.
             context = {
-                'STATIC_ROOT':settings.STATIC_ROOT,
-                'restaurant':restaurant,
+               'restaurant':restaurant,
                 'pack_order':pack_order,
+                'item':item,
+                'paywith':'Paytm Business'
             }
             pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
             if pdf:
@@ -117,3 +122,53 @@ def response(request):
         else:
             
             return render(request, 'payments/payment_status.html', {'response': response_dict})
+
+def paymentPaypal(request):
+    order_id = request.POST.get('transaction_id')
+    pack_type = request.POST.get('pack_type')
+    order_amount = request.POST.get('amount')
+    restaurant = RestaurantDetail.objects.get(user = request.user)
+    pack_order = PackOrder.objects.create(order_id=order_id,
+        restaurant=restaurant,
+        pack_type=pack_type,
+        order_amount=order_amount,
+        currency = 'usd',
+        isPaid = True
+        )
+    pack_order.save()
+    pack = Pack.objects.get(restaurant = restaurant)
+    start_date = datetime.datetime.now()
+    if pack_type == '1':
+        expiry_date = start_date + datetime.timedelta(days=30)
+        item = 'Monthly Pack'
+    elif pack_type == '2':
+        expiry_date = start_date + datetime.timedelta(days=365)
+        item = 'Yearly Pack'
+    else:
+        expiry_date = None
+    pack.pack_type = int(pack_type)
+    pack.start_date = start_date
+    pack.expiry_date = expiry_date
+    pack.save()
+     # Send invoice to email.
+    context = {
+        'restaurant':restaurant,
+        'pack_order':pack_order,
+        'item':item,
+        'paywith':'Paypal'
+    }
+    pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+    if pdf:
+        filename = 'purchase_%s.pdf' % (restaurant.user.id)
+        invoice_file = File(BytesIO(pdf.content),filename)
+        restaurant.invoice_pdf = invoice_file
+        restaurant.save()
+        email_pdf = EmailMultiAlternatives(
+            subject='Wellcome to the RestaurantQR',
+            body='The Invoice for your RestaurantQR account.',
+            from_email='',
+            to=[restaurant.user.email],
+        )
+        email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
+        email_pdf.send()
+    return HttpResponse(json.dumps({}), content_type="application/json")

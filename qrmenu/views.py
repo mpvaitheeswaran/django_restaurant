@@ -32,6 +32,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage,EmailMultiAlternatives
 from django.core.files import File
 # Create your views here.
+@login_required
 def select_pack(request):
     context = {}
     if not request.user.is_anonymous:
@@ -53,25 +54,6 @@ def activateTrial(request):
     pack.start_date = start_date
     pack.expiry_date = expiry_date
     pack.save()
-    # Send invoice to email.
-    context = {
-        'STATIC_ROOT':settings.STATIC_ROOT,
-        'restaurant':restaurant
-    }
-    pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
-    if pdf:
-        filename = 'purchase_%s.pdf' % (restaurant.user.id)
-        invoice_file = File(BytesIO(pdf.content),filename)
-        restaurant.invoice_pdf = invoice_file
-        restaurant.save()
-        email_pdf = EmailMultiAlternatives(
-            subject='Wellcome to the RestaurantQR',
-            body='The Invoice for your RestaurantQR account.',
-            from_email='',
-            to=[restaurant.user.email],
-        )
-        email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
-        email_pdf.send()
     return redirect('dashboard')
 class GeneratePdf(View):
      def get(self, request, *args, **kwargs):
