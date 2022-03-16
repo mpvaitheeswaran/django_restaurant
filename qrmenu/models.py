@@ -22,7 +22,7 @@ class RestaurantDetail(models.Model):
     allowCalltoWaiter = models.BooleanField(default=True,blank=True,choices=BOOL_CHOICES)
     allowCustomerOrder = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
     pickup = models.BooleanField(default=False,blank=True,choices=BOOL_CHOICES)
-    total_tables = models.PositiveIntegerField(default=5,blank=True)
+    total_tables = models.PositiveIntegerField(default=5,null=True)
     invoice_pdf = models.FileField(upload_to='invoice_pdfs',null=True,blank=True)
     is_free_pack_used = models.BooleanField(default=False,blank=True)
     def __str__(self) -> str:

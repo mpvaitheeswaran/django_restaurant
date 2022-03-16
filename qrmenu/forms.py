@@ -27,7 +27,7 @@ class RestaurantForm(forms.ModelForm):
                     Field('name'),
                     Field('desc'),
                     Field('location'),
-                    css_class='col-md col-sm pr-5'
+                    css_class='col-md col-sm'
                 ),
                 Column(
                     HTML("""
@@ -66,7 +66,7 @@ class RestaurantForm(forms.ModelForm):
                         </div>
                         """, 
                         ),
-                    css_class='col-md col-sm pl-4'
+                    css_class='col-md col-sm offset-sm-1'
                 ),
             ),
             Field('total_tables'),

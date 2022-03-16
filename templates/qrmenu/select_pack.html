@@ -18,9 +18,44 @@
     .form-check-label{
         font-size: 30px;
     }
+    @media only screen and (max-width: 768px) {
+      .period, .pack-currency{
+        font-size: 20px;
+      }
+      .value{
+          font-size: 30px;
+      }
+      input[type=radio] {
+          width: 25px;
+          height: 25px;
+      }
+      .form-check-label{
+          font-size: 25px;
+      }
+      h3{
+        font-size: 25px;
+      }
+      .container-fluid.mx-5{
+        margin: 0 !important;
+      }
+    }
 </style>
 {%endblock%}
 {%block content%}
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm ">
+    <a class="navbar-brand" href="{%url 'dashboard'%}">RestaurantQR</a>
+
+    <div class="ml-auto">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="btn btn-primary" href="{%url 'restaurant'%}">Continue <i class='bx bxs-chevrons-right'></i><span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Navbar End -->
+
     <!--SELECT PACK MODAL  -->
     <!-- Trial Pack -->
     <div class="modal fade" id="trial_pack_modal" tabindex="-1" aria-hidden="true">
@@ -144,7 +179,7 @@
           </div>
     </div>
     <!--SELECT PACK MODAL END -->
-    <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="d-flex justify-content-center align-items-center mt-5">
         <div class="container-fluid mx-5">
             <div class="text-center mb-5">
                 <h1 class="text-center ">Package plan</h1>
@@ -159,7 +194,7 @@
             </div>
             <div class="row" style="margin: auto;">
                 <!-- Free Tial -->
-                <div class="col-sm col-md mt-2 p-0 bg-white rounded shadow">
+                <div class="col-sm col-md mt-4 p-0 bg-white rounded shadow">
                     <div class="pack-head p-4">
                         <h2 class="text-center text-primary">Free Trial</h2>
                     </div>
@@ -189,7 +224,7 @@
                     </div>
                 </div>
                 <!-- Monthly Pack -->
-                <div class="col-sm col-md  offset-sm-1 mt-2 p-0 bg-white rounded shadow">
+                <div class="col-sm col-md  offset-sm-1 mt-4 p-0 bg-white rounded shadow">
                     <div class="pack-head p-4">
                         <h2 class="text-center text-primary">Monthly Pack</h2>
                     </div>
@@ -215,7 +250,7 @@
                 </div>
                 
                 <!-- Yearly Pack -->
-                <div class="col-sm col-md  offset-sm-1 mt-2 p-0 bg-white rounded shadow">
+                <div class="col-sm col-md  offset-sm-1 mt-4 p-0 bg-white rounded shadow">
                     <div class="pack-head p-4">
                         <h2 class="text-center text-primary">Yearly Pack</h2>
                     </div>

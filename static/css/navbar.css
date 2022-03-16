@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
 :root {
-    --header-height: 3rem;
+    --header-height: 4rem;
     --nav-width: 60px;
     --first-color: #A6B6F2;
     --first-color-light: #D6E6F2;
@@ -38,7 +38,7 @@ a{
 
 .header {
     width: 100%;
-    height: var(--header-height);
+    height: calc(var(--header-height) + 1rem);
     position: fixed;
     top: 0;
     left: 0;
