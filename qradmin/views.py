@@ -10,6 +10,7 @@ from notifications.signals import notify
 from notifications.models import Notification
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from accounts.models import CustomUser
 # Create your views here.
 
 @user_passes_test(lambda u: u.is_superuser,redirect_field_name=None)
@@ -123,4 +124,13 @@ def changeStatus(request):
         enquiry.status = status
         enquiry.save()
 
+        return HttpResponse(json.dumps(responce_data), content_type="application/json")
+
+def deleteUser(request):
+    responce_data ={}
+    if request.method == 'POST' and request.is_ajax():
+        user_id = request.POST.get('user_id')
+        user = CustomUser.objects.get(pk=user_id)
+        user.delete()
+        
         return HttpResponse(json.dumps(responce_data), content_type="application/json")

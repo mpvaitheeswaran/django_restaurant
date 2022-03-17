@@ -46,6 +46,22 @@
               }
         })
     })
+    //Deleting the user.
+    $('.btnDeleteUser').click(function(){
+        user_id = $(this).data('id')
+        $.ajax({
+            url:"{%url 'qradmin-delete_user'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+              },
+              success:function(responce){
+                $('#restaurantdelete'+user_id).modal('hide')
+                ajax_call(url,{q:''})
+              }
+        })
+    })
 
     //for date filter and search.
     const search_input = $("#search-input")
@@ -68,38 +84,6 @@
                 })
             })
     }
-    //For changing date format to YYYY-MM-DD
-    /*function formatDate(d) {
-        if(!isNaN(d)){
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-            if (month.length < 2) 
-                month = '0' + month;
-            if (day.length < 2) 
-                day = '0' + day;
-
-            return [year, month, day].join('-');
-        }
-        return "";
-    }
-    date_input.on('change',function(){
-        date = new Date($(this).val())
-        formated_date = formatDate(date)
-        const request_parameters = {
-            q:search_input.val(),
-            date: formated_date
-        }
-
-        // if scheduled_function is NOT false, cancel the execution of the function
-        if (scheduled_function) {
-            clearTimeout(scheduled_function)
-        }
-
-        // setTimeout returns the ID of the function to be executed
-        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, url, request_parameters)
-    })*/
     search_input.on('keyup', function () {
         //date = new Date(date_input.val())
         //formated_date = formatDate(date)

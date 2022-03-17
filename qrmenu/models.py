@@ -84,7 +84,7 @@ post_save.connect(count_total_menu,sender=MenuItem)
 
 # For Customer's Orders
 class OrderedMenu(models.Model):
-    menu = models.ForeignKey(MenuItem,on_delete=models.PROTECT,null=True)
+    menu = models.ForeignKey(MenuItem,on_delete=models.CASCADE,null=True)
     quantity = models.IntegerField(null=True)
     def __str__(self) -> str:
         return f'Order {self.menu.name} Qt{self.quantity}'
