@@ -61,7 +61,24 @@
                 ajax_call(url,{q:''})
               }
         })
-    })
+    });
+    //Get user invoice
+    $('.btnGetOrders').click(function(){
+        user_id = $(this).data('id')
+        console.log('Invoice clicked.')
+        $.ajax({
+            url:"{%url 'qradmin-get_orders'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+              },
+              success:function(responce){
+                  $('#invoice_modal').html(responce.modal)
+                  $('#restaurant_invoice').modal('show')
+              }
+        })
+    });
 
     //for date filter and search.
     const search_input = $("#search-input")

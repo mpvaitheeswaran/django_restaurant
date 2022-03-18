@@ -29,7 +29,7 @@ def payment(request):
         restaurant = restaurant,
         pack_type = pack_type,
         order_amount = bill_amount,
-        currency = 'usd',)
+        currency = 'inr',)
     pack_order.save()
     param_dict = {
         'MID': settings.PAYTM_MERCHANT_ID,
@@ -109,6 +109,8 @@ def response(request):
                 invoice_file = File(BytesIO(pdf.content),filename)
                 restaurant.invoice_pdf = invoice_file
                 restaurant.save()
+                pack_order.invoice_pdf = invoice_file
+                pack_order.save()
                 email_pdf = EmailMultiAlternatives(
                     subject='Wellcome to the RestaurantQR',
                     body='The Invoice for your RestaurantQR account.',
@@ -163,6 +165,8 @@ def paymentPaypal(request):
         invoice_file = File(BytesIO(pdf.content),filename)
         restaurant.invoice_pdf = invoice_file
         restaurant.save()
+        pack_order.invoice_pdf = invoice_file
+        pack_order.save()
         email_pdf = EmailMultiAlternatives(
             subject='Wellcome to the RestaurantQR',
             body='The Invoice for your RestaurantQR account.',

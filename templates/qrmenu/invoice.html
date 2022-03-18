@@ -124,8 +124,9 @@
                     <thead>
                       <tr style="padding-top: 5px; border-bottom: 1px solid black;">
                         <th scope="col" style="text-align: left; padding-left: 5px;">Item</th>
-                        <th scope="col" style="text-align: left;">HSN</th>
-                        <th scope="col" style="text-align: left;">Quantity</th>
+                        <th scope="col" style="text-align: left;">Start Date</th>
+                        <th scope="col" style="text-align: left;">Expiry Date</th>
+                        <th scope="col" style="text-align: left;">Duration</th>
                         <th scope="col" class="text-right">Price</th>
                         <th scope="col" class="text-right" style="padding-right: 5px;">Subtotal</th>
                       </tr>
@@ -133,27 +134,22 @@
                     <tbody style="border-bottom: 2px solid black;">
                       <tr style="padding-top: 5px;">
                         <td style="width: 25%; text-align: left; padding-left: 5px;">{{item}}</td>
-                        <td style="width: 25%; text-align: left;">gt56re</td>
-                        <td >1</td>
+                        <td style="width: 25%; text-align: left;">{{pack_order.restaurant.pack.start_date}}</td>
+                        <td >{{pack_order.restaurant.pack.expiry_date}}</td>
+                        <td >
+                            {%if pack_order.pack_type == '1'%}
+                                30 Days
+                            {%else%}
+                                1 Year
+                            {%endif%}
+                        </td>
                         <td class="text-right">{{pack_order.order_amount}}</td>
                         <td class="text-right" style="padding-right: 5px;">{{pack_order.order_amount}}</td>
                       </tr>
                     </tbody>
                     <tfoot>
-                        <!-- <tr>
-                            <td colspan="4" class="text-right">Subtotal</td>
-                            <td class="text-right">455</td>
-                        </tr>
                         <tr>
-                            <td colspan="4" class="text-right">SGST</td>
-                            <td class="text-right">34</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" class="text-right">CGST</td>
-                            <td class="text-right">34</td>
-                        </tr> -->
-                        <tr>
-                            <td colspan="4" class="text-right font-weight-bold">Grand Total (Incl.Tax)</td>
+                            <td colspan="5" class="text-right font-weight-bold">Grand Total (Incl.Tax)</td>
                             <td class="text-right font-weight-bold">{{pack_order.order_amount}}</td>
                         </tr>
                     </tfoot>

@@ -1,4 +1,12 @@
 {%load custom_filters%}
+<!-- Restaurant User Invoice list Modal -->
+<div class="modal fade" id="restaurant_invoice" tabindex="-1" aria-labelledby="restaurant_invoiceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div id="invoice_modal" class="modal-content">
+            
+        </div>
+    </div>
+</div>
 {%for rest_user in users%}
         <!-- Restaurant detail Modal -->
         <div class="modal fade" id="restaurant{{rest_user.id}}" tabindex="-1" aria-labelledby="restaurant{{rest_user.id}}Label" aria-hidden="true">
@@ -90,6 +98,7 @@
             </div>
             </div>
         </div>
+        
         <div class="card mb-3 border-0 shadow">
             <div class="card-body p-2">
                 <div class="row align-items-center text-center p-1">
@@ -100,6 +109,11 @@
                       <p class="m-0 py-1">{{rest_user.user.email}}</p>
                     </div>
                     <div class="col-sm col-md"><p class="m-0 py-1">{{rest_user|phone}}</p></div>
+                    <div class="col-sm col-md py-1">
+                        <button class="btnGetOrders btn btn-primary" data-id="{{rest_user.id}}">
+                            <i class='bx bx-note'></i> Invoices
+                        </button>
+                    </div>
                     <div class="col-sm col-md py-1">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#restaurant{{rest_user.id}}">
                             <i class="bi bi-person-lines-fill"></i> View
@@ -116,3 +130,22 @@
         {%empty%}
             <h4 class="text-center">No data Found</h4>
 {%endfor%}
+<script>
+    //Get user invoice
+    $('.btnGetOrders').click(function(){
+        user_id = $(this).data('id')
+        console.log('Invoice clicked.')
+        $.ajax({
+            url:"{%url 'qradmin-get_orders'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+              },
+              success:function(responce){
+                  $('#invoice_modal').html(responce.modal)
+                  $('#restaurant_invoice').modal('show')
+              }
+        })
+    });
+</script>

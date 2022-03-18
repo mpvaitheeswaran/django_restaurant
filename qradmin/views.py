@@ -1,6 +1,7 @@
 from datetime import datetime
 import django
 from django.shortcuts import render
+from payments.models import PackOrder
 from qrmenu.models import Enquiry, RestaurantDetail,Pack
 from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
@@ -71,18 +72,15 @@ def enquiry(request):
     print(url_parameter_date)
     if url_parameter or url_parameter_date:
         if url_parameter and url_parameter_date:
-            print('both true')
             enquiries = Enquiry.objects.filter(Q(date__date=url_parameter_date)).filter(
                 Q(restaurant__name__icontains=url_parameter)|
                 Q(restaurant__user__email__icontains=url_parameter)|
                 Q(restaurant__id__icontains=url_parameter)|
                 Q(status__icontains=url_parameter))
         elif url_parameter_date:
-            print('date true')
             enquiries = Enquiry.objects.filter(Q(date__date=url_parameter_date))
             print(enquiries)
         elif url_parameter:
-            print('search true')
             enquiries = Enquiry.objects.filter(Q(restaurant__name__icontains=url_parameter)|
                 Q(restaurant__user__email__icontains=url_parameter)|
                 Q(restaurant__id__icontains=url_parameter)|
@@ -119,7 +117,6 @@ def changeStatus(request):
     if request.method == 'POST' and request.is_ajax():
         enquiry_id = request.POST.get('enquiry_id')
         status = request.POST.get('status')
-        print(status)
         enquiry = Enquiry.objects.get(pk=enquiry_id)
         enquiry.status = status
         enquiry.save()
@@ -133,4 +130,17 @@ def deleteUser(request):
         user = CustomUser.objects.get(pk=user_id)
         user.delete()
         
+        return HttpResponse(json.dumps(responce_data), content_type="application/json")
+    
+def getOrders(request):
+    responce_data ={}
+    if request.method == 'POST' and request.is_ajax():
+        user_id = request.POST.get('user_id')
+        restaurant = RestaurantDetail.objects.get(pk=user_id)
+        pack_orders = PackOrder.objects.filter(restaurant=restaurant)
+        html_modal = render_to_string(
+            template_name='qradmin/user_invoice_list_modal.html',
+            context={'orders':pack_orders,'restaurant':restaurant}
+        )   
+        responce_data['modal'] = html_modal 
         return HttpResponse(json.dumps(responce_data), content_type="application/json")

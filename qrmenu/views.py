@@ -215,7 +215,6 @@ def delete_old_orders(request):
         # Change pack type after user pack expired.
         pack = Pack.objects.get(restaurant=restaurant)
         if pack.expiry_date < timezone.now().date():
-            print('pack Expired')
             pack.pack_type = -1
             pack.start_date = None
             pack.expiry_date = None
@@ -268,6 +267,7 @@ class TransactionView(UserPassesTestMixin,TemplateView):
         restaurant = RestaurantDetail.objects.get(user=self.request.user)
         context = super().get_context_data(**kwargs)
         context['pack_orders'] = PackOrder.objects.filter(restaurant=restaurant)
+        context['restaurant'] = restaurant
         return context
 
 class AccountSettingsView(UserPassesTestMixin,View):
