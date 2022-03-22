@@ -1,0 +1,187 @@
+{%extends 'base/non_auth_base.html'%}
+{%load static%}
+{%block title%}Registeration{%endblock%}
+{%block stylesheet%}
+<link rel="stylesheet" href="{%static 'css/login.css'%}">
+{%endblock%}
+{%block content%}
+<!-- <div class="login-page">
+    <h1>Login</h1>
+    <div class="form">
+      <form class="register-form" method="post" autocomplete="off">
+        {%csrf_token%}
+        <div class="field">
+          <input type="text" name="{{form.email.name}}" placeholder="Email"/>
+          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
+            {%for error in form.email.errors%}
+              {{error}}
+            {%endfor%}
+            {% for error in form.non_field_errors %}
+              {{error}}
+            {% endfor %}
+          </p>
+        </div>
+        <div class="field">
+          <input type="text" name="restaurant_name" placeholder="Restaurant Name (optional)"/>
+        </div>
+        <div class="field">
+          <input type="text" name="gstin" placeholder="GSTIN (optional)" maxlength="15" style="text-transform:uppercase"/>
+        </div>
+        <div class="field">
+          <input type="password" name="{{form.password1.name}}" placeholder="password"/>
+          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
+            {%for error in form.password1.errors%}
+              {{error}}
+            {%endfor%}
+          </p>
+        </div>
+        <div class="field">
+          <input type="password" name="{{form.password2.name}}" placeholder="Confirm password"/>
+          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
+            {%for error in form.password2.errors%}
+              {{error}}
+            {%endfor%}
+          </p>
+        </div>
+        <button type="submit">create</button>
+        <p class="message">Already registered? <a href="{%url 'accounts-login'%}">Sign In</a></p>
+      </form>
+      
+    </div>
+</div> -->
+
+<!-- Wrapper Area -->
+<div class="wrapper__area" id="wrapper_Area">
+  <!-- Forms Area -->
+  <div class="forms__area">
+  
+    <!-- Login Form -->
+    <form class="login__form" id="loginForm" style="opacity: 0; top: -250px;">
+      <!-- Form Title -->
+      <h1 class="form__title">Sign In!</h1>
+      <!-- inputs Groups -->
+      <div class="input__group">
+        <label class="field">
+          <input type="text" name="username" placeholder="Username" id="loginUsername">
+        </label>
+        <span class="input__icon"><i class="bx bx-user"></i></span>
+        <small class="input__error_message"></small>
+      </div>
+      <div class="input__group">
+        <label class="field">
+          <input type="password" name="password" placeholder="Password" id="loginPassword">
+        </label>
+        <span class="input__icon"><i class="bx bx-lock"></i></span>
+        <span class="showHide__Icon"><i class="bx bx-hide"></i></span>
+        <small class="input__error_message"></small>
+      </div>
+      <!-- <div class="form__actions">
+        <label for="checkboxInput" class="remeber_me">
+          <input type="checkbox" id="checkboxInput">
+          <span class="checkmark"></span>
+          <span>Remeber Me</span>
+        </label>
+        <div class="forgot_password">Forgot Password?</div>
+      </div> -->
+      <!-- Login Button -->
+      <button type="submit" class="submit-button" id="loginSubmitBtn">Sign in</button>
+      
+    </form> <!-- End Login Form -->
+
+    <!-- Sign Up Form -->
+    <form class="sign-up__form" id="signUpForm" method="post" autocomplete="off">
+      {%csrf_token%}
+      <!-- Form Title -->
+      <h1 class="form__title">Sign Up!</h1>
+      <!-- inputs Groups -->
+      
+      <div class="input__group">
+        <label class="field">
+          <input type="text" name="{{form.email.name}}" value="{{old_email}}" placeholder="Email@example.com" id="signUpEmail">
+        </label>
+        <span class="input__icon"><i class="bx bx-user"></i></span>
+        <small class="input__error_message"></small>
+        {%if form.email.errors%}
+        <small class="mx-2 text-danger">
+          {%for error in form.email.errors%}
+            {{error}}
+          {%endfor%}
+          {% for error in form.non_field_errors %}
+            {{error}}
+          {% endfor %}
+        </small>
+        {%endif%}
+      </div>
+      <div class="input__group">
+        <label class="field">
+          <input type="text" name="restaurant_name" value="{{old_name}}" placeholder="Restaurant Name" id="">
+        </label>
+        <span class="input__icon"><i class='bx bx-restaurant'></i></span>
+        <small class="input__error_message"></small>
+      </div>
+      <div class="input__group">
+        <label class="field">
+          <input type="text" name="gstin" value="{{old_gstin}}" placeholder="GSTIN (Optional)" id="" maxlength="15" style="text-transform:uppercase">
+        </label>
+        <span class="input__icon"><i class='bx bx-receipt'></i></span>
+        <small class="input__error_message"></small>
+      </div>
+      <div class="input__group">
+        <label class="field">
+          <input type="password" name="{{form.password1.name}}" placeholder="Password" id="signUpPassword">
+        </label>
+        <span class="input__icon"><i class="bx bx-lock"></i></span>
+        <span class="showHide__Icon"><i class="bx bx-hide"></i></span>
+        <small class="input__error_message"></small>
+        {%if form.password2.errors%}
+          <small class="mx-2 text-danger">
+            {%for error in form.password1.errors%}
+                {{error}}
+            {%endfor%}
+          </small>
+        {%endif%}
+      </div>
+      <div class="input__group confirm__group">
+        <label class="field">
+          <input type="password" name="{{form.password2.name}}" placeholder="Confirm Password" id="signUpConfirmPassword">
+        </label>
+        <span class="input__icon"><i class="bx bx-lock"></i></span>
+        <span class="showHide__Icon"><i class="bx bx-hide"></i></span>
+        <small class="input__error_message"></small>
+        {%if form.password2.errors%}
+          <small class="mx-2 text-danger">
+            {%for error in form.password2.errors%}
+                {{error}}
+            {%endfor%}
+          </small>
+        {%endif%}
+      </div>
+      <!-- Sign Up Button -->
+      <button type="submit" class="submit-button" id="signUpSubmitBtn">Sign Up</button>
+      
+      <p class="sign-in-up text-center mt-4">Already have an account <a href="{%url 'accounts-login'%}">Sign In</a></p>
+    </form> <!-- End Sign Up Form -->
+  </div><!-- End Forms Area -->
+
+  <!-- Aside Area -->
+  <div class="aside__area" id="aside_Area">
+    <div class="login__aside-info d-flex flex-column">
+      <img class="mt-5 mb-auto" src="{%static 'imgs/restaurant.png'%}" alt="Image">
+      <p class="m-0 pb-1">Already user</p>
+      <button class="mt-0" id="" onclick="location.href= '{%url 'accounts-login'%}'">Sign In</button>
+    </div>
+    <div class="sign-up__aside-info">
+      <h4>Welcome</h4>
+      <img src="https://e.top4top.io/p_1945sidbp2.png" alt="Image">
+      <p>To Keep connected with us please login with your personal info</p>
+      <button id="">Sign In</button>
+    </div>
+  </div>
+</div>
+<!-- End Wrapper Area -->
+
+{%endblock%}
+
+{%block script%}
+  <script src="{%static 'js/login.js'%}"></script>
+{%endblock%}

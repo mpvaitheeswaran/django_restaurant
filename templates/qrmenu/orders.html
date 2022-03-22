@@ -1,0 +1,166 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{% load notifications_tags %}
+{%block content%}
+
+    <div class="container-fluid pt-4"> 
+        <div class="d-flex align-items-center mb-5">
+            <h3 class="mr-auto">Orders</h3>
+            <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+                <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
+                <a href="#" class="btn btn-dark">Orders</a>
+            </div> -->
+        </div>       
+          <div class="tab-content mt-2" id="myTabContent">
+            <!-- New orders tab -->
+            <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
+                
+            </div>
+            <!-- Completed tab -->
+            <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                
+            </div>
+          </div>
+       {%csrf_token%}
+        {%for order in orders%}
+        <div class="card mb-3 border-0 shadow">
+            <div class="card-header bg-white border-0">
+                <div class="d-flex align-items-center">
+                    <h3>{{order.customer_name}}</h3>
+                    <h6 class="ml-auto">{{order.timestamp}}</h6>
+                </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{order.order_type}}</h5>
+              <div class="row">
+                
+                {%for order in order.ordered_menu.all%}
+                <div class="col-sm-4">
+                    <div class="card mb-2 border-0 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex">
+                                <img id="" src="{{order.menu.img.url}}" alt="Item img" style="object-fit: cover; width: 30px; height: 30px;">
+                                <p style="font-size: 18px;" class="ml-2 mb-0">{{order.menu.name}}</p>
+                                <p style="font-size: 18px;" class="mb-0 ml-auto">{{order.quantity}}</p>
+                            </div>                                
+                        </div>
+                    </div>
+                </div> 
+                {%endfor%}
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm-6">
+                    <p style="font-size: 16px;" class="m-0">Table No : {{order.table_no}}</p>
+                </div> 
+                <div class="col-sm-6 text-right">
+                    <p style="font-size: 16px;" class="m-0">Total : {{currency.symbol}}{{order.total_price}}</p>
+                </div> 
+              </div>
+            </div>
+            <div class="card-footer bg-white border-0">
+                {%if order.status == 'pending'%}
+                <div class="d-flex">
+                    <h6 class="text-warning"><small><i class='bx bx-sync'></i></small> Pending</h6>
+                    <button class="aprove_btn btn btn-primary ml-auto" data-id="{{order.id}}">Aprove <i class='bx bx-printer'></i></button>
+                    <!-- <a href="{%url 'bill_print' order.id %}" target="_blank" class="btn btn-primary print" >Print <i class='bx bx-printer'></i></a> -->
+                    <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#delete_orderModal{{order.id}}">
+                        Remove
+                    </button>
+                    <!--Delete Order Modal -->
+                    <div class="modal fade" id="delete_orderModal{{order.id}}" tabindex="-1" aria-labelledby="delete_orderModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="delete_orderModalLabel">Delete Order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                            Are you want to delete {{order.customer_name}}'s order?
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger delete_order_btn" data-order_id="{{order.id}}">Delete</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                {%else%}
+                    <div class="d-flex">
+                        <h6 class="text-success mr-auto"><small><i class='bx bxs-check-circle'></i> Success</h6>
+                        <!-- <button class="btn btn-info">Info <i class='bx bx-message-square-detail'></i></button> -->
+                        <a href="{%url 'bill_print' order.id %}" target="_blank" class="btn btn-primary print ml-2" >Print <i class='bx bx-printer'></i></a>
+                    </div>
+                {%endif%}
+            </div>
+        </div>
+        {%empty%}
+        <h1 class="text-center text-muted">No Orders.</h1>
+        {%endfor%} 
+{%endblock%}
+{%block script%}
+    <script>
+        function notification_callback(data){
+        }
+        function printExternal(url) {
+            var printWindow = window.open( url, 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+
+            printWindow.addEventListener('load', function() {
+                if (Boolean(printWindow.chrome)) {
+                    printWindow.print();
+                    setTimeout(function(){
+                        printWindow.close();
+                    }, 500);
+                } else {
+                    printWindow.print();
+                    printWindow.close();
+                }
+            }, true);
+        }
+
+        $(document).ready(function(){
+            var csrf = $('input[name=csrfmiddlewaretoken]').val();
+            $('.aprove_btn').click(function(){
+                //console.log($(this).data('id'))
+                var id = $(this).data('id')
+                $.ajax({
+                    url:"{%url 'aprove_order'%}",
+                    method:'post',
+                    data:{
+                        csrfmiddlewaretoken:csrf,
+                        id:id,
+                    },
+                    success:function(responce){
+                        //Print and reload
+                        var print_url = "/print/"+id+"/";
+                        
+                        printExternal(print_url);
+                        location.reload()
+                    } 
+                })
+            })
+            $('.delete_order_btn').click(function(){
+                var order_id = $(this).data('order_id')
+                $.ajax({
+                    url:"{%url 'delete_order'%}",
+                    method:'post',
+                    data:{
+                        csrfmiddlewaretoken:csrf,
+                        id:order_id,
+                    },
+                    success:function(responce){
+                        $('#delete_orderModal'+order_id).modal('hide');
+                        location.reload()
+                    } 
+                })
+            })
+            $('.print').click(function(e){
+                e.preventDefault()
+                var url = $(this).attr('href');
+                printExternal(url);
+            })
+        })
+    </script>
+{%endblock%}

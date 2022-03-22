@@ -1,0 +1,142 @@
+{%extends 'base/admin_base.html'%}
+{%load static%}
+{%block style%}
+<style>
+    @media only screen and (max-width: 600px) {
+        #list-heading{
+            display: none;
+        }
+        #heading{
+            display: block !important;
+        }
+        .filter-input{
+            width: 100% !important;
+            margin: 5px 0 !important;
+        }
+    }
+</style>
+{%endblock%}
+{%block content%}
+
+
+    <div class="container-fluid pt-4">
+        <div id="heading" class="d-flex align-items-center mb-5">
+            <h3 class="mr-auto">Enquiry</h3>
+            <input id="search-input" style="width: 200px;" type="text" class="filter-input form-control" placeholder="Search">
+            <input id="date-input" style="width: 200px;" type="date" class="filter-input form-control ml-2">
+        </div>
+        <!-- List heading -->
+        <div id="list-heading" class="card mb-3 border-0 shadow">
+            <div class="card-body p-2">
+                <div class="row align-items-center text-center p-1">
+                    <div class="col-sm col-md">
+                        <h6 class="m-0 ">Restaurant ID</h6>
+                        </div>
+                    <div class="col-sm col-md">
+                    <h6 class="m-0 ">Name</h6>
+                    </div>
+                    <div class="col-sm col-md">
+                    <h6 class="m-0 py-1">Email</h6>
+                    </div>
+                    <div class="col-sm col-md"><h6 class="m-0 py-1">Date</h6></div>
+                    <div class="col-sm col-md">
+                        <h6 class="m-0 py-1">More</h6>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div id="replaceable-content">
+            {%include 'qradmin/enquiry_list.html'%}
+        </div>
+    </div>
+{%endblock%}
+{%block script%}
+<script>
+    var csrf = $('input[name=csrfmiddlewaretoken]').val();
+    $('.btnChangeStatus').click(function(){
+        enquiry_id = $(this).data('id')
+        var status = $('#status'+enquiry_id).find(":selected").val();
+        $.ajax({
+            url:"{%url 'qradmin-change_status'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'enquiry_id':enquiry_id,
+                'status':status
+              },
+              success:function(responce){
+                $('#restaurant'+enquiry_id).modal('hide')
+              }
+        })
+    })
+
+    const search_input = $("#search-input")
+    const date_input = $("#date-input")
+    const enquiry_list_div = $('#replaceable-content')
+    const url = "{%url 'qradmin-enquiry'%}"
+    const delay_by_in_ms = 700
+    let scheduled_function = false
+
+    let ajax_call = function (url, request_parameters) {
+        $.getJSON(url, request_parameters)
+            .done(response => {
+                // fade out the artists_div, then:
+                enquiry_list_div.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    enquiry_list_div.html(response['enquiry_list'])
+                    // fade-in the div with new contents
+                    enquiry_list_div.fadeTo('fast', 1)
+                    
+                })
+            })
+    }
+    //For changing date format to YYYY-MM-DD
+    function formatDate(d) {
+        if(!isNaN(d)){
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        return "";
+    }
+    date_input.on('change',function(){
+        date = new Date($(this).val())
+        formated_date = formatDate(date)
+        const request_parameters = {
+            q:search_input.val(),
+            date: formated_date
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, url, request_parameters)
+    })
+    search_input.on('keyup', function () {
+        date = new Date(date_input.val())
+        formated_date = formatDate(date)
+        const request_parameters = {
+            q: $(this).val(), // value of user_input: the HTML element with ID user-input
+            date: formated_date
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, url, request_parameters)
+    })
+</script>
+{%endblock%}

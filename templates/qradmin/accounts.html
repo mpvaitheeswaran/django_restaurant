@@ -1,0 +1,121 @@
+{%extends 'base/admin_base.html'%}
+{%load static%}
+{%load custom_filters%}
+{%block style%}
+<style>
+    @media only screen and (max-width: 600px) {
+        #heading{
+            display: block !important;
+        }
+        .filter-input{
+            width: 100% !important;
+            margin: 5px 0 !important;
+        }
+    }
+</style>
+{%endblock%}
+{%block content%}
+{%csrf_token%}
+
+    <div class="container-fluid pt-4">
+        <div id="heading" class="d-flex align-items-center mb-5">
+            <h3 class="mr-auto">Accounts</h3>
+            <input id="search-input" style="width: 200px;" type="text" class="filter-input form-control" placeholder="Search">
+        </div>
+        <div id="replaceable-content">
+            {%include 'qradmin/user_list.html'%}
+        </div>
+    </div>
+{%endblock%}
+{%block script%}
+<script>
+    var csrf = $('input[name=csrfmiddlewaretoken]').val();
+    $('.btnChangePack').click(function(){
+        user_id = $(this).data('id')
+        var pack_type = $('#pack'+user_id).find(":selected").val();
+        $.ajax({
+            url:"{%url 'qradmin-change_pack'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+                'pack_type':pack_type
+              },
+              success:function(responce){
+                $('#restaurant'+user_id).modal('hide')
+              }
+        })
+    })
+    //Deleting the user.
+    $('.btnDeleteUser').click(function(){
+        user_id = $(this).data('id')
+        $.ajax({
+            url:"{%url 'qradmin-delete_user'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+              },
+              success:function(responce){
+                $('#restaurantdelete'+user_id).modal('hide')
+                ajax_call(url,{q:''})
+              }
+        })
+    });
+    //Get user invoice
+    $('.btnGetOrders').click(function(){
+        user_id = $(this).data('id')
+        console.log('Invoice clicked.')
+        $.ajax({
+            url:"{%url 'qradmin-get_orders'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+              },
+              success:function(responce){
+                  $('#invoice_modal').html(responce.modal)
+                  $('#restaurant_invoice').modal('show')
+              }
+        })
+    });
+
+    //for date filter and search.
+    const search_input = $("#search-input")
+    //const date_input = $("#date-input")
+    const user_list_div = $('#replaceable-content')
+    const url = "{%url 'qradmin-accounts'%}"
+    const delay_by_in_ms = 700
+    let scheduled_function = false
+
+    let ajax_call = function (url, request_parameters) {
+        $.getJSON(url, request_parameters)
+            .done(response => {
+                // fade out the artists_div, then:
+                user_list_div.fadeTo('fast', 0).promise().then(() => {
+                    // replace the HTML contents
+                    user_list_div.html(response['user_list'])
+                    // fade-in the div with new contents
+                    user_list_div.fadeTo('fast', 1)
+                    
+                })
+            })
+    }
+    search_input.on('keyup', function () {
+        //date = new Date(date_input.val())
+        //formated_date = formatDate(date)
+        const request_parameters = {
+            q: $(this).val(), // value of user_input: the HTML element with ID user-input
+            //date: formated_date
+        }
+
+        // if scheduled_function is NOT false, cancel the execution of the function
+        if (scheduled_function) {
+            clearTimeout(scheduled_function)
+        }
+
+        // setTimeout returns the ID of the function to be executed
+        scheduled_function = setTimeout(ajax_call, delay_by_in_ms, url, request_parameters)
+    })
+</script>
+{%endblock%}

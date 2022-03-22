@@ -1,0 +1,89 @@
+{% load notifications_tags %}
+<!-- Navbar -->
+<header class="header body-pd bg-white shadow-sm" id="header">
+    <nav class="navbar navbar-default navbar-expand-lg navbar-light bg-white pl-0">
+      <div class="header_toggle mr-3 p-2"> <i class='bx bx-menu bx-x' id="header-toggle"></i> </div>
+      <a class="navbar-brand mr-auto" href="#">RestaurantQR</a>
+      {% comment "Optional note" %}
+      <!-- Notification menu -->
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a href="{%url 'notifications'%}" class="btn btn-primary rounded-circle position-relative" style="width: 30px; height: 30px;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {% notifications_unread  as unread_count %}
+            <span class="position-absolute" style="left: 50%; top: 50%; transform: translate(-50%,-35%);"><i class='bx bxs-bell'></i></span>
+              {% if unread_count %}
+                <div class="position-absolute rounded-circle bg-warning" style="width: 8px; height: 8px; top: 0; right: 0;">
+                </div>
+              {% endif %}
+          </a>
+          <ul class="dropdown-menu position-absolute dropdown-menu-right notify-drop">
+            <div class="notify-drop-title">
+            	<div class="row">
+            		<div class="col-md-6 col-sm-6 col-xs-6">Notifications</div>
+            		<div class="col-md-6 col-sm-6 col-xs-6 text-right"><a href="#" class="rIcon allRead" data-tooltip="tooltip" data-placement="bottom" title="Close"><i class='bx bx-x-circle'></i></a></div>
+            	</div>
+            </div>
+            <!-- end notify title -->
+            <!-- notify content -->
+            <div id="unread-notifications" class="drop-content">
+            		<div class="card">
+                  <div class="card-body">
+                    <p>This is some text within a card body.</p>
+                    <small class="float-right">23 dec </small>
+                  </div>
+                </div>
+            </div>
+            <div class="notify-drop-footer text-center">
+            	<a href=""><i class="fa fa-eye"></i> Read All</a>
+            </div>
+          </ul>
+        </li>
+      </ul>
+      {% endcomment %}
+    </nav>
+</header>
+
+<!-- Navbar end -->
+{%url 'dashboard' as dashboard%}
+{%url 'restaurant' as restaurant%}
+{%url 'menu' as menu%}
+{%url 'orders' as orders%}
+{%url 'membership' as membership%}
+{%url 'qr-builder' as qr_builder%}
+{%url 'transactions' as transactions%}
+{%url 'accountsettings' as accountsettings%}
+{%url 'support' as support%}
+<!-- Sidebar -->
+<div class="l-navbar show shadow px-0" id="nav-bar">
+      <nav class="navb" >
+          <div> 
+              <a href="#" class="nav_logo" style="text-decoration: none;"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">RestaurantQR</span> </a>
+              <div class="nav_list">
+                <a title="Dashboard" href="{%url 'dashboard'%}" class="nav_link {%if request.path == dashboard%}active{%endif%}"> <i class="bi bi-speedometer2"></i> <span class="nav_name">Dashboard</span> 
+                </a> 
+                <a title="Restaurants" href="{%url 'restaurant'%}" class="nav_link {%if request.path == restaurant%}active{%endif%}"> <i class="bi bi-shop"></i> <span class="nav_name">Restaurant Profile</span> 
+                </a> 
+                <a title="Menu" href="{%url 'menu'%}" class="nav_link {%if request.path == menu%}active{%endif%}"> <i class="bi bi-menu-button-wide"></i> <span class="nav_name">Menu</span> 
+                </a>
+                <a title="Orders" href="{%url 'orders'%}" class="nav_link {%if request.path == orders%}active{%endif%}"> <i class='bx bx-restaurant'></i> <span class="nav_name">Orders</span> 
+                </a>
+                <a title="Membership" href="{%url 'membership'%}" class="nav_link {%if request.path == membership%}active{%endif%}"> <i class='bx bx-gift'></i> <span class="nav_name">Membership</span> 
+                </a>
+                <a title="QR Builder" href="{%url 'qr-builder'%}" class="nav_link {%if request.path == qr_builder%}active{%endif%}"> <i class='bx bx-qr-scan'></i> <span class="nav_name">QR Builder</span> 
+                </a>
+
+                <a title="Account Settings" href="{%url 'transactions'%}" class="nav_link {%if request.path == transactions%}active{%endif%}">  <i class='bx bx-spreadsheet'></i> <span class="nav_name">Transactions</span>
+                </a>
+                <a title="Account Settings" href="{%url 'accountsettings'%}" class="nav_link {%if request.path == accountsettings%}active{%endif%}"> <i class='bx bxs-cog'></i> <span class="nav_name">Account Settings</span>
+                </a>
+                <a title="Support" href="{%url 'support'%}" class="nav_link {%if request.path == support%}active{%endif%}"> <i class='bx bx-help-circle'></i> <span class="nav_name">Support</span>
+                </a>
+                
+                <a href="{%url 'accounts-logout'%}" class="nav_link" data-bs-toggle="tooltip" data-bs-placement="left" title="Sign Out"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> 
+                </a>
+              </div>
+          </div> 
+          
+      </nav>
+</div>
+<!-- Sidebar end -->

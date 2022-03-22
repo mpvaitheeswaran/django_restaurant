@@ -1,0 +1,146 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{% load crispy_forms_tags %}
+{%block style%}
+  <style>
+    /* The element to hover over */
+  .qs {
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 30px;
+    position: relative;
+    text-align: center;
+    }
+    /*.qs:hover .popover{
+        display: block;
+        animation : fade-in .3s linear 1, move-up .3s linear 1;
+        -webkit-animation: fade-in .3s linear 1, move-up .3s linear 1;
+        -moz-animation: fade-in .3s linear 1, move-up .3s linear 1;
+        -ms-animation: fade-in .3s linear 1, move-up .3s linear 1;
+      
+    }*/
+    .popover-help {
+      background-color: #fff;
+      color: #000;
+      display: none;
+      height: 600px;
+      font-size: 12px;
+      left: -300px;
+      position: absolute;
+      z-index: 4;
+      
+    }
+    .popover-help.show{
+      display: block !important;
+      animation : fade-in .3s linear 1;
+    }
+    
+  @keyframes fade-in{
+    from   { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @-webkit-keyframes fade-in {
+    from   { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @-moz-keyframes fade-in {
+    from   { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @-ms-keyframes fade-in {
+    from   { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes move-up {
+    from   { bottom: 30px; }
+    to { bottom: 42px; }
+  }
+  @-webkit-keyframes move-up {
+    from   { bottom: 30px; }
+    to { bottom: 42px; }
+  }
+  @-moz-keyframes move-up {
+    from   { bottom: 30px; }
+    to { bottom: 42px; }
+  }
+  @-ms-keyframes move-up {
+    from   { bottom: 30px; }
+    to { bottom: 42px; }
+  }
+  @media only screen and (max-width: 768px) {
+    .container-fluid{
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+  </style>
+{%endblock%}
+{%block content%}
+    <div class="container-fluid pt-4">
+      <div class="d-flex align-items-center mb-5">
+        <h3 class="mr-auto">Restaurant</h3>
+        <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+            <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
+            <a href="#" class="btn btn-dark">Restaurant</a>
+        </div> -->
+      </div>
+        <div class="card border-0 shadow">
+            <!-- <h4 class="card-header bg-primary-cus text-light">
+              Restaurant
+            </h4> -->
+            <div class="card-body">
+              <form id="form" method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                {%crispy form%}
+                <!-- 
+
+                <div class="form-group">
+                  <label for="exampleFormControlSelect2">Example multiple select</label>
+                  <select multiple class="form-control form-control-lg" id="exampleFormControlSelect2">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Restarant Description</label>
+                  <textarea class="form-control form-control-lg" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div> -->
+                <!-- <input value="Save Changes" class="btn btn-success float-right" type="submit" name="" id=""> -->
+              </form>
+            </div>
+          </div>
+    </div>
+{%endblock%}
+{%block script%}
+    <script>
+     //Popover
+     $('.qs').click(function(){
+       $(this).find('.popover-help').toggleClass('show')
+     })
+
+      //For loading image into img tag
+      var loadLogo= function (event) {
+        console.log('updated Image logo')
+        console.log(URL.createObjectURL(event.target.files[0]))
+        var image = document.getElementById("output_logo");
+        image.src = URL.createObjectURL(event.target.files[0]);
+      };
+      var loadImage= function (event) {
+        console.log('updated Image bg')
+        console.log(URL.createObjectURL(event.target.files[0]))
+        var image = document.getElementById("output_image");
+        image.src = URL.createObjectURL(event.target.files[0]);
+      };
+
+      //For enable submit btn when form value change.
+      $(document).ready(function() {
+        $('#form').on('input change', function() {
+          $('#submit-id-submit').attr('disabled', false);
+          $('#submit-id-submit').removeClass('disabled');
+        });
+      })
+    </script>
+{%endblock%}

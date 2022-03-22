@@ -1,0 +1,4 @@
+/media/*
+/asset/*
+# exclude /media/default
+!/media/default/

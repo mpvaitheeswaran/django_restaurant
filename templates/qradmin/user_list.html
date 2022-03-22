@@ -1,0 +1,151 @@
+{%load custom_filters%}
+<!-- Restaurant User Invoice list Modal -->
+<div class="modal fade" id="restaurant_invoice" tabindex="-1" aria-labelledby="restaurant_invoiceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div id="invoice_modal" class="modal-content">
+            
+        </div>
+    </div>
+</div>
+{%for rest_user in users%}
+        <!-- Restaurant detail Modal -->
+        <div class="modal fade" id="restaurant{{rest_user.id}}" tabindex="-1" aria-labelledby="restaurant{{rest_user.id}}Label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                <h5 class="modal-title" id="restaurant{{rest_user.id}}Label">{{rest_user.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mb-2 border-0 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex">
+                                <p class="m-0">Total Menus</p>
+                                <p class="m-0 ml-auto">{{rest_user|total_menu}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-2 border-0 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex">
+                                <p class="m-0">Total Scans</p>
+                                <p class="m-0 ml-auto">{{rest_user|total_scan}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-2 border-0 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex">
+                                <p class="m-0">Last Login</p>
+                                <p class="m-0 ml-auto">{{rest_user.user.last_login}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-2 border-0 shadow-sm">
+                        <div class="card-body p-2">
+                            <div class="d-flex aligin-items-center">
+                                <p class="m-0">Pack Type</p>
+                                <select id="pack{{rest_user.id}}" class="form-control ml-auto w-50">
+                                    <option value="-1" 
+                                    {% if rest_user|pack_type == 'No Pack' %}selected="selected"{% endif %}>
+                                        No Pack
+                                    </option>
+                                    <option value="0" 
+                                    {% if rest_user|pack_type == 'Free Pack' %}selected="selected"{% endif %}>
+                                        Free Pack
+                                    </option>
+                                    <option value="1" 
+                                    {% if rest_user|pack_type == 'Monthly Pack' %}selected="selected"{% endif %}>
+                                        Monthly Pack
+                                    </option>
+                                    <option value="2"
+                                    {% if rest_user|pack_type == 'Yearly Pack' %}selected="selected"{% endif %}>
+                                        Yearly Pack
+                                    </option>
+                                </select>
+                                <!-- <p class="m-0 ml-auto">{{rest_user|pack_type}}</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btnChangePack btn btn-primary" data-id="{{rest_user.id}}">Save changes</button>
+                </div>
+            </div>
+            </div>
+        </div>
+         <!-- Restaurant User Delete Modal -->
+         <div class="modal fade" id="restaurantdelete{{rest_user.user.id}}" tabindex="-1" aria-labelledby="restaurantdelete{{rest_user.user.id}}Label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                <h5 class="modal-title" id="restaurantdelete{{rest_user.user.id}}Label">Delete {{rest_user.name}}?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    Are You Want to Delete "{{rest_user.name}}" Restaurant?
+                    <h6 class="font-weight-bolder text-warning">User will lose all data.</h6>
+                </div>
+                <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btnDeleteUser btn btn-danger" data-id="{{rest_user.user.id}}">Delete</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <div class="card mb-3 border-0 shadow">
+            <div class="card-body p-2">
+                <div class="row align-items-center text-center p-1">
+                    <div class="col-sm col-md">
+                      <h6 class="m-0 ">{{rest_user.name}}</h6>
+                    </div>
+                    <div class="col-sm col-md">
+                      <p class="m-0 py-1">{{rest_user.user.email}}</p>
+                    </div>
+                    <div class="col-sm col-md"><p class="m-0 py-1">{{rest_user|phone}}</p></div>
+                    <div class="col-sm col-md py-1">
+                        <button class="btnGetOrders btn btn-primary" data-id="{{rest_user.id}}">
+                            <i class='bx bx-note'></i> Invoices
+                        </button>
+                    </div>
+                    <div class="col-sm col-md py-1">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#restaurant{{rest_user.id}}">
+                            <i class="bi bi-person-lines-fill"></i> View
+                        </button>
+                    </div>
+                    <div class="col-sm col-md py-1">
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#restaurantdelete{{rest_user.user.id}}">
+                            <i class='bx bx-trash' ></i> Delete
+                        </button>
+                    </div>
+                  </div> 
+            </div>
+        </div>
+        {%empty%}
+            <h4 class="text-center">No data Found</h4>
+{%endfor%}
+<script>
+    //Get user invoice
+    $('.btnGetOrders').click(function(){
+        user_id = $(this).data('id')
+        console.log('Invoice clicked.')
+        $.ajax({
+            url:"{%url 'qradmin-get_orders'%}",
+            method:'post',
+              data:{
+                csrfmiddlewaretoken:csrf,
+                'user_id':user_id,
+              },
+              success:function(responce){
+                  $('#invoice_modal').html(responce.modal)
+                  $('#restaurant_invoice').modal('show')
+              }
+        })
+    });
+</script>

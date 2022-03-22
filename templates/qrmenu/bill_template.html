@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill</title>
+    <!-- <style>
+        .bill{
+            padding: 3mm;
+            width: 80mm;
+            border: 1px solid black;
+        }
+        h3{
+            margin: 0;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 12px;
+            margin-top: 18px;
+        }
+        td:nth-child(2) {
+            padding-left: 20px;
+        }
+       
+    </style> -->
+    <style>
+        @page{       
+          margin: 0;  
+        } 
+        body{
+        /* counter-reset: Serial;   */
+        font-family:Calibri;
+        height: auto; 
+        }
+        /* tbody tr td:first-child:before{
+          counter-increment: Serial;     
+          content: counter(Serial);
+          font-size: .7em;
+        } */
+        #invoice-POS{
+          /* box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); */
+          padding:1mm;
+          margin: 0 auto;
+          width: 68mm;
+          background: #FFF;
+        } 
+        ::selection{
+          background: #f31544;
+          color: #FFF;}
+    
+        ::moz-selection {background: #f31544; color: #FFF;}
+    
+        h1{
+          font-size: 1.8em;
+          color: #222;
+          margin: 2px 0px 2px 0px;
+        }
+        h2{font-size: 1.3em;
+          margin: 2px 0px 2px 0px;}
+        h3{
+          font-size: 1.2em;
+          font-weight: 300;
+          line-height: 2em;
+        }
+        p{
+          font-size: 0.9em;
+          color: #666;
+          line-height: 1.2em;
+          margin: 2px 0px 2px 0px;
+        }
+         
+        #top, #mid,#bot{ /* Targets all id with 'col-' */
+          border-bottom: 1px dashed rgb(0, 0, 0);
+        }
+        
+        #top{min-height: 100px;}
+        /* #mid{min-height: 80px;}  */
+        #bot{min-height: 50px;}
+        
+        #top .logo{
+          float: center;
+          height: 60px;
+          width: 60px;
+          /*background: url('/static/dist/img/chief.jpg') no-repeat;*/
+          background-size: 60px 60px;
+        }
+        .clientlogo{
+          float: left;
+          height: 60px;
+          width: 60px;
+          background: url('/static/dist/img/chief.jpg') no-repeat;
+          background-size: 60px 60px;
+          border-radius: 50px;
+        }
+        .info{
+          display: block;
+          float: center;
+          margin-left: 0;
+        }
+        .title{
+          float: right;
+        }
+        .title p{text-align: right;} 
+        table{
+          width: 100%;
+          border-collapse: collapse;
+          font-family:Calibri;
+        }
+        td{
+          padding: 0;
+          /*border: 1px solid #EEE*/
+        }
+        .tabletitle{
+          /*padding: 5px;*/
+          font-size: .6em;
+          background: #EEE;
+          border-bottom: 1px dashed rgb(0, 0, 0);
+        }
+        .tabletotal{
+          float: right;
+          font-size: .8em;
+        }
+        .service{border-bottom: 1px dashed rgb(0, 0, 0);}
+        .item{width: 35mm;}
+        .itemtext{
+          /* font-size: .5em; */
+          font-size: 0.8em;
+        }
+        #table{
+          margin-bottom: 5px;
+        }
+        #legalcopy{
+          /* margin-top: 5mm; */
+          text-align: center;
+          font-size: large;
+        }
+      </style>
+</head>
+<body>
+    <div id="invoice-POS">
+        <h1 style="text-align: center; text-transform: uppercase;">{{order.order_type}} Order</h1>
+        <div id="mid">
+          <div class="info row" style="display: flex;">
+            <div class="col-6">
+              <p>Table No: {{order.table_no}}</p>
+            </div>
+            <div class="col-6" style="margin-left: auto;">
+              <p >Name: {{order.customer_name}}</p>
+            </div>
+          </div>
+          <div class="info row" style="display: flex;">
+            <div class="col-6">
+              <p>Date: {{order.timestamp|date:"d/m/Y"}}</p>
+            </div>
+            <div class="col-6" style="margin-left: auto;">
+              <p >Time: {{order.timestamp|date:"g.i a"}}</p>
+            </div>
+          </div>
+          
+        </div> 
+        <div class="service"></div>
+        <div id="bot">
+              <div id="table">
+                <table>
+                  <thead>
+                  <tr class="tabletitle">
+                    <td class="item"><h2>Item</h2></td>
+                    <td class=""><h2>Price</h2></td>
+                    <td class="Hours"><h2>Qty</h2></td>
+                    <td class="Rate" style="text-align: right;"><h2>Amount</h2></td>
+                  </tr>
+                  </thead>
+                  <tbody class="service">
+                    {%for item in order.ordered_menu.all%}        
+                    <tr>
+                      <td class="tableitem"><p class="itemtext">{{item.menu.name}}</p></td>
+                      <td class="tableitem"><p class="itemtext"><b>{{item.menu.price}}</b></p></td>
+                      <td class="tableitem"><p class="itemtext"><b>{{item.quantity}}</b></p></td>
+                      {%load custom_filters%}
+                      <td class="tabletotal"><p><b>{{item.quantity|mul:item.menu.price}}</b></p></td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                <!-- <tfoot>
+                  <tr class="service">
+                    <td class="Rate"><p class="itemtext">Count</p></td>
+                    <td><p><b>0</b></p></td>
+                    <td></td>
+                    <td class="tabletotal"><p><b>₹ 0</b></p></td> 
+                  </tr>
+                  <tr class="service">
+                    <td class="Rate"><p class="itemtext">Discount Amount</p></td>
+                    <td class="tableitem"><p class="itemtext"><b>&nbsp; ₹ 0</b></p></td>
+                    <td></td>
+                    <td class="tabletotal"><p><b>₹ 0</b></p></td> 
+                  </tr>
+                  
+                </tfoot> -->
+                </table>
+              </div><!--End Table-->
+              <div style="text-align: center;"><h1>Total:&nbsp; ₹ {{order.total_price}}</h1></div>
+              <div class="service"></div>
+                <!-- <div id="legalcopy">
+                  <p style="font-size: medium;">Return will not be Acceptable</p>
+                  <p class="legal"><strong>THANK YOU - COME AGAIN</strong></p>
+                  <div style="text-align: center;font-size: small;"><p><b>Technology Partner - SR SoftTech - +91 9677825298</b></p></div>
+                </div> -->
+        </div><!--End InvoiceBot-->
+      </div><!--End Invoice-->
+    <!-- <div class="bill">
+        <h3>{{order.order_type}} order</h3>
+        <table style="width: 100%;">
+            <tr>
+                <td>Table No : {{order.table_no}}</td>
+                <td>Name : {{order.customer_name}}</td>
+            </tr>
+            <tr>
+                <td>Date : {{order.timestamp|date:"d/m/Y"}}</td>
+                <td>Time : {{order.timestamp|date:"g.i a"}}</td>
+            </tr>
+           
+        </table>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+            <tr style="border-top: 2px dashed #000; border-bottom: 2px dashed #000;">
+                <td><b>Item</b></td>
+                <td><b>Qty</b></td>
+            </tr>
+            {%for item in order.ordered_menu.all%}
+            <tr>
+                <td>{{item.menu.name}}</td>
+                <td>{{item.quantity}}</td>
+            </tr>
+            {%endfor%}
+            <tr style="border-top: 2px dashed #000;">
+                <td>Total</td>
+                <td>{{order.total_price}}</td>
+            </tr>
+        </table>
+    </div> -->
+</body>
+</html>

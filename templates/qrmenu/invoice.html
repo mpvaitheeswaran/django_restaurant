@@ -1,0 +1,176 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <style>
+        body{
+            
+            /* change the margins as you want them to be. */
+       } 
+        .bg-light{
+            background-color: white !important;
+        }
+        .invoice-container{
+            border: 2px solid black;
+        }  
+        table{
+            border: none;
+        } 
+        .text-center{
+            text-align: center;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        h3, .h3 {
+            font-size: 1.75rem;
+        }
+        .m-0 {
+            margin: 0 !important;
+        }
+        .font-weight-bold {
+            font-weight: 700 !important;
+        }
+        .text-right {
+            text-align: right !important;
+        }
+        .row {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            
+        }
+        .col{
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: auto;
+            max-width: 100%;
+        }
+        .col-4 {
+            -ms-flex: 0 0 33.333333%;
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+        .w-100 {
+            width: 100% !important;
+        }
+        .img-fluid {
+            max-width: 180%;
+            height: auto;
+        }
+        table{
+            margin: 0;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        table td, table td * {
+            vertical-align: top;
+        }
+        h3,tr{
+            border: none;
+        }
+        h6,p,h5{
+            padding: 0;
+        }
+    </style>
+    
+    <title>Invoice</title>
+</head>
+<body>
+            <div>
+                <h3 class="text-center" style="border: 2px solid black; margin: 0; padding: 10px;">Tax Invoice</h3>
+                <table class="w-100" style="border: 2px solid black; margin: 0; padding: 10px;">
+                    <tr>
+                        <td>
+                            <img style="height: auto; width: 200px;" src="https://buyp.in/wp-content/uploads/2021/04/buyp.png" alt="Buyp">
+                        </td>
+                        <td class="text-right">
+                            <h6 class="m-0">Buyp Technologies Private Limited</h6>
+                            <p class="m-0">No. 158-P, 2nd Floor Western wing,</p>
+                            <p class="m-0">S.M. Complex, Railway Road,</p>
+                            <p class="m-0">Tenkasi District-627811</p>
+                            <p class="m-0">Tamil Nadu, India</p>
+                            <p class="m-0"><span class="font-weight-bold">GSTIN : </span>33AAJCB693381ZZ</p>
+                        </td>
+                    </tr>
+                </table>
+                <h3 class="text-center" style="border: 2px solid black; margin: 0; padding: 10px;">Billing Information</h3>
+                <table class="w-100" style="border: 2px solid black; margin: 0; padding: 10px;">
+                    <tr>
+                        <td>
+                            <h6 class="m-0">Buyp Technologies Private Limited</h6>
+                            <p class="m-0">No. 158-P, 2nd Floor Western wing,</p>
+                            <p class="m-0">S.M. Complex, Railway Road,</p>
+                            <p class="m-0">Tenkasi District-627811</p>
+                            <p class="m-0">Tamil Nadu, India</p>
+                            <p class="m-0"><span class="font-weight-bold">GSTIN : </span>33AAJCB693381ZZ</p>
+                        </td>
+                        <td class="text-right">
+                            <p class="m-0"><span class="font-weight-bold">ORDER No. : </span>{{pack_order.order_id}}</p>
+                            <p class="m-0">{{pack_order.order_date|date:"F j Y"}}</p>
+                        </td>
+                    </tr>
+                </table>
+                
+            </div>
+            <div>
+                <table class="w-100" style="border-left: 2px solid black; border-right: 2px solid black; margin: 0;">
+                    <thead>
+                      <tr style="padding-top: 5px; border-bottom: 1px solid black;">
+                        <th scope="col" style="text-align: left; padding-left: 5px;">Item</th>
+                        <th scope="col" style="text-align: left;">Start Date</th>
+                        <th scope="col" style="text-align: left;">Expiry Date</th>
+                        <th scope="col" style="text-align: left;">Duration</th>
+                        <th scope="col" class="text-right">Price</th>
+                        <th scope="col" class="text-right" style="padding-right: 5px;">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody style="border-bottom: 2px solid black;">
+                      <tr style="padding-top: 5px;">
+                        <td style="width: 25%; text-align: left; padding-left: 5px;">{{item}}</td>
+                        <td style="width: 25%; text-align: left;">{{pack_order.restaurant.pack.start_date}}</td>
+                        <td >{{pack_order.restaurant.pack.expiry_date}}</td>
+                        <td >
+                            {%if pack_order.pack_type == '1'%}
+                                30 Days
+                            {%else%}
+                                1 Year
+                            {%endif%}
+                        </td>
+                        <td class="text-right">{{pack_order.order_amount}}</td>
+                        <td class="text-right" style="padding-right: 5px;">{{pack_order.order_amount}}</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-right font-weight-bold">Grand Total (Incl.Tax)</td>
+                            <td class="text-right font-weight-bold">{{pack_order.order_amount}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <table style=" border: 2px solid black; margin: 0; padding: 10px;">
+                    <tr style="padding-bottom: 100px;">
+                        <td>
+                            <h5>PAYMENT METHOD</h5>
+                            <p class="m-0">{{paywith}}</p>
+    
+                        </td>
+                        <td>
+                            <h5>Notes</h5>
+                            <p>Thanks for your business. Terms & conditions Not applicable for major
+                                modifications support available from 9.30 to 5.30 except sunday.
+                            </p>
+                        </td>
+                    </tr>
+            </table>
+    <p class="text-center">*This is Computer generated invoice.</p>
+    
+</body>
+</html>

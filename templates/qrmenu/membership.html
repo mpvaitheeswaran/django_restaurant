@@ -1,0 +1,62 @@
+{%extends 'base/base.html'%}
+{%load static%}
+{%block style%}
+<style>
+    .pack-head{
+        background-color: #D6E6F2;
+    }
+</style>
+{%endblock%}
+{%block content%}
+    <div class="container-fluid pt-4">
+        <div class="d-flex align-items-center mb-5">
+            <h3 class="mr-auto">Membership</h3>
+            
+        </div>
+        <div class="row">
+            <!-- Monthly Pack -->
+            <div class="col-sm col-md mt-4 p-0 bg-white rounded shadow">
+                <div class="pack-head p-4">
+                    <h2 class="text-center text-primary">Monthly Pack</h2>
+                </div>
+                <div class="pack-price d-flex align-items-top py-4 bg-light">
+                    <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
+                    <div class="pack-value d-flex align-items-end mr-auto">
+                        <h3 id="monthly_value" class="value">199</h3>
+                        <div class="period">/ Month</div>
+                    </div>
+                </div>
+                <div class="future text-center py-4 border-bottom">
+                    <h3>Unlimited Menus</h3>
+                    <h3>Unlimited Scans</h3>
+                </div>
+                <div class="pack-foot text-center py-4">
+                    
+                    <a href="{%url 'qrmenu-pack'%}" class="btn btn-primary btn-lg">Show Details...</a>
+                    
+                </div>
+            </div>
+            
+            <!-- Yearly Pack -->
+            <div class="col-sm col-md  offset-sm-1 mt-4 p-0 bg-white rounded shadow">
+                <div class="pack-head p-4">
+                    <h2 class="text-center text-primary">Yearly Pack</h2>
+                </div>
+                <div class="pack-price d-flex align-items-top py-4 bg-light">
+                    <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
+                    <div class="pack-value d-flex align-items-end mr-auto">
+                        <h3 id="yearly_value" class="value">999</h3>
+                        <div class="period">/ Year</div>
+                    </div>
+                </div>
+                <div class="future text-center py-4 border-bottom">
+                    <h3>Unlimited Menus</h3>
+                    <h3>Unlimited Scans</h3>
+                </div>
+                <div class="pack-foot text-center py-4">
+                    <a href="{%url 'qrmenu-pack'%}" class="btn btn-primary btn-lg">Show Details...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

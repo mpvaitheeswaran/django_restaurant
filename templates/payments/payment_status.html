@@ -1,0 +1,25 @@
+
+
+{%extends 'base/non_auth_base.html'%}
+{%block stylesheet%}
+{%endblock%}
+{%block content%}
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="container">
+            <div class="mx-auto w-25 rounded shadow bg-white text-center p-4">
+                {% if response.STATUS == "TXN_SUCCESS" %}
+                    <h1 class="text-success m-0" style="font-size: 70px;"><i class='bx bxs-badge-check'></i></h1>
+                    <h4>Payment</h4>
+                    <h4>Success</h4>
+                {%else%}
+                    <h1 class="text-danger m-0" style="font-size: 70px;"><i class='bx bxs-x-circle'></i></h1>
+                    <h4>Payment</h4>
+                    <h4>Faild</h4>
+                {%endif%}
+                <a href="{%url 'dashboard'%}" class="btn btn-primary mt-2">Go Home</a>
+            </div>
+        </div>
+    </div>
+{%endblock%}
+{%block script%}
+{%endblock%}
