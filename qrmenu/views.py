@@ -77,8 +77,12 @@ def activateTrial(request):
     return redirect('dashboard')
 class GeneratePdf(View):
      def get(self, request, *args, **kwargs):
+        restaurant = RestaurantDetail.objects.get(user=request.user)
         context = {
-             'STATIC_ROOT':settings.STATIC_ROOT
+             'restaurant':restaurant,
+             'pack_order':{'pack_type':'2','order_amount':'200'},
+             'item':'Yearly Pack',
+             'paywith': 'PayTm Business'
          }
         # getting the template
         pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)

@@ -1,4 +1,5 @@
 {%load static%}
+{%load custom_filters%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,16 +105,17 @@
                 <table class="w-100" style="border: 2px solid black; margin: 0; padding: 10px;">
                     <tr>
                         <td>
-                            <h6 class="m-0">Buyp Technologies Private Limited</h6>
-                            <p class="m-0">No. 158-P, 2nd Floor Western wing,</p>
-                            <p class="m-0">S.M. Complex, Railway Road,</p>
-                            <p class="m-0">Tenkasi District-627811</p>
-                            <p class="m-0">Tamil Nadu, India</p>
-                            <p class="m-0"><span class="font-weight-bold">GSTIN : </span>33AAJCB693381ZZ</p>
+                            <h6 class="m-0">{{restaurant.billingdetail.name}},</h6>
+                            <p class="m-0">{{restaurant.billingdetail.address}},</p>
+                            <p class="m-0">{{restaurant.billingdetail.city}} - {{restaurant.billingdetail.zipcode}},</p>
+                            <p class="m-0">{{restaurant.billingdetail.state}},</p>
+                            <p class="m-0">{{restaurant.billingdetail.country}}.</p>
+                            <p class="m-0"><span class="font-weight-bold">GSTIN : </span>{{restaurant.billingdetail.gstin|upper}}</p>
                         </td>
                         <td class="text-right">
                             <p class="m-0"><span class="font-weight-bold">ORDER No. : </span>{{pack_order.order_id}}{%if not pack_order.order_id%}None{%endif%}</p>
-                            <p class="m-0">{{restaurant.pack.start_date|date:"F j Y"}}</p>
+                            <p class="m-0"><span class="font-weight-bold">Start Date : </span>{{restaurant.pack.start_date|date:"F j Y"}}</p>
+                            <p class="m-0"><span class="font-weight-bold">Expiry Date : </span>{{restaurant.pack.expiry_date|date:"F j Y"}}</p>
                         </td>
                     </tr>
                 </table>
@@ -134,8 +136,8 @@
                     <tbody style="border-bottom: 2px solid black;">
                       <tr style="padding-top: 5px;">
                         <td style="width: 25%; text-align: left; padding-left: 5px;">{{item}}</td>
-                        <td style="width: 25%; text-align: left;">{{restaurant.pack.start_date}}</td>
-                        <td >{{restaurant.pack.expiry_date}}</td>
+                        <td style="width: 25%; text-align: left;">{{restaurant.pack.start_date|date:"F j Y"}}</td>
+                        <td >{{restaurant.pack.expiry_date|date:"F j Y"}}</td>
                         <td >
                             {%if pack_order.pack_type == '1'%}
                                 30 Days
@@ -146,14 +148,22 @@
                             {%endif%}
                         </td>
                         <td class="text-right">{{pack_order.order_amount}}{%if not pack_order.order_amount%}0{%endif%}</td>
-                        <td class="text-right" style="padding-right: 5px;">{{pack_order.order_amount}}{%if not pack_order.order_amount%}0{%endif%}</td>
+                        <td class="text-right" style="padding-right: 5px;">{{pack_order.order_amount|subtractPercent:18}}{%if not pack_order.order_amount%}0{%endif%}</td>
                       </tr>
                     </tbody>
                     <tfoot>
                         {%if pack_order.order_amount%}
                         <tr>
+                            <td colspan="5" class="text-right">SGST (9%)</td>
+                            <td class="text-right font-weight-bold" style="padding-right: 5px;">{{pack_order.order_amount|getPercent:9}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-right">CGST (9%)</td>
+                            <td class="text-right font-weight-bold" style="padding-right: 5px;">{{pack_order.order_amount|getPercent:9}}</td>
+                        </tr>
+                        <tr>
                             <td colspan="5" class="text-right font-weight-bold">Grand Total (Incl.Tax)</td>
-                            <td class="text-right font-weight-bold">{{pack_order.order_amount}}</td>
+                            <td class="text-right font-weight-bold" style="padding-right: 5px;">{{pack_order.order_amount}}</td>
                         </tr>
                         {%endif%}
                     </tfoot>
