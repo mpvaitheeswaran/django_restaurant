@@ -12,9 +12,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth import get_user_model
 import json
 import qrcode
-from qrcode.image.styledpil import StyledPilImage
-from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
-from qrcode.image.styles.colormasks import RadialGradiantColorMask
+# from qrcode.image.styledpil import StyledPilImage
+# from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+# from qrcode.image.styles.colormasks import RadialGradiantColorMask
 import qrcode.image.svg
 from io import BytesIO
 import base64
@@ -54,6 +54,26 @@ def activateTrial(request):
     pack.start_date = start_date
     pack.expiry_date = expiry_date
     pack.save()
+    # Send invoice to email.
+    context = {
+            'restaurant':restaurant,
+            'item':'Free Trial',
+            'paywith':'Free'
+        }
+    pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+    if pdf:
+        filename = 'purchase_%s.pdf' % (request.user.id)
+        invoice_file = File(BytesIO(pdf.content),filename)
+        restaurant.invoice_pdf = invoice_file
+        restaurant.save()
+        email_pdf = EmailMultiAlternatives(
+            subject='Wellcome to the RestaurantQR',
+            body='The Invoice for your RestaurantQR account.',
+            from_email='',
+            to=[request.user.email],
+        )
+        email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
+        email_pdf.send()
     return redirect('dashboard')
 class GeneratePdf(View):
      def get(self, request, *args, **kwargs):
@@ -243,7 +263,8 @@ def qrBuilder(request):
         border=4,
     )
     qr.add_data(url)
-    img = qr.make_image(image_factory=StyledPilImage,module_drawer=RoundedModuleDrawer())
+    # img = qr.make_image(image_factory=StyledPilImage,module_drawer=RoundedModuleDrawer())
+    img = qr.make_image(fill_color="black", back_color="white")
     buffer = BytesIO()
     img.save(buffer,'PNG')
     img_str = base64.b64encode(buffer.getvalue())

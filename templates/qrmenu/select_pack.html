@@ -1,45 +1,7 @@
 {%extends 'base/non_auth_base.html'%}
+{%load static%}
 {%block stylesheet%}
-<style>
-    .period, .pack-currency{
-        font-size: 25px;
-    }
-    .value{
-        font-size: 60px;
-        font-weight: bolder;
-    }
-    .pack-head{
-        background-color: #D6E6F2;
-    }
-    input[type=radio] {
-        width: 30px;
-        height: 30px;
-    }
-    .form-check-label{
-        font-size: 30px;
-    }
-    @media only screen and (max-width: 768px) {
-      .period, .pack-currency{
-        font-size: 20px;
-      }
-      .value{
-          font-size: 30px;
-      }
-      input[type=radio] {
-          width: 25px;
-          height: 25px;
-      }
-      .form-check-label{
-          font-size: 25px;
-      }
-      h3{
-        font-size: 25px;
-      }
-      .container-fluid.mx-5{
-        margin: 0 !important;
-      }
-    }
-</style>
+<link rel="stylesheet" href="{%static 'css/select_pack.css'%}">
 {%endblock%}
 {%block content%}
   <!-- Navbar -->
@@ -179,6 +141,7 @@
           </div>
     </div>
     <!--SELECT PACK MODAL END -->
+    {%comment%}
     <div class="d-flex justify-content-center align-items-center mt-5">
         <div class="container-fluid mx-5">
             <div class="text-center mb-5">
@@ -275,6 +238,108 @@
                 </div>
             </div>
         </div>
+    </div>
+    {%endcomment%}
+    <div class="container-fluid">
+      <div class="d-flex flex-column vh-100">
+        <div class="m-auto w-75">
+          <div class="text-center text-light mb-5">
+            <h1 class="text-center ">SELECT YOUR PACKAGE</h1>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" name="currency" type="radio" id="currency_inr" checked value="inr">
+                <label class="form-check-label" for="currency_inr">INR</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" name="currency" type="radio" id="currency_usd" value="usd">
+                <label class="form-check-label" for="currency_usd">USD</label>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <!-- Free Tial -->
+            <div class="col-sm-12 col-md mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column" style="height: 50vh">
+                <div class="p-4">
+                    <h2 class="text-center text-primary">Free Trial</h2>
+                </div>
+                <div class="pack-price d-flex align-items-top py-4 bg-light">
+                    <div class="pack-currenc fs-5 text-muted ml-auto"></div>
+                    <div class="pack-value d-flex align-items-end mr-auto">
+                        <div class="value">Free</div>
+                        <div class="period">/ 30 Days only</div>
+                    </div>
+                </div>
+                <div class="future text-primary text-center py-4">
+                    <h3>10 Menus</h3>
+                    <h3>10 Scans</h3>
+                </div>
+                <div class="pack-foot text-center p-4 mt-auto border-top">
+                    <!-- <a href="{%url 'qrmenu-activate_trial'%}" class="btn btn-success btn-lg">Try Now</a> -->
+                    {%if restaurant.pack.pack_type == 0%}
+                        <button class="btn btn-success btn-lg disabled">Active</button>
+                    {%else%}
+                        {%if not restaurant.is_free_pack_used%}
+                        <button class="btn btn-primary btn-lg rounded-pill w-100" data-toggle="modal" data-target="#trial_pack_modal">Try Now</button>
+                        {%else%}
+                            <button class="btn btn-danger btn-lg disabled" disabled>Your Pack Expired</button>
+                        {%endif%}
+                    {%endif%}
+                    
+                </div>
+            </div>
+            <!-- Yearly Pack -->
+            <div class="col-sm-12 col-md mx-4 mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column yearly-container" style="height: 60vh">
+                
+
+                <div class="p-4">
+                  <h2 class="text-center text-primary">Yearly Pack</h2>
+                </div>
+                <div class="pack-price d-flex align-items-top py-4 bg-light">
+                    <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
+                    <div class="pack-value d-flex align-items-end mr-auto">
+                        <div id="yearly_value" class="value">999</div>
+                        <div class="period">/ Year</div>
+                    </div>
+                </div>
+                <div class="future text-primary text-center py-4 ">
+                    <h3>Unlimited Menus</h3>
+                    <h3>Unlimited Scans</h3>
+                </div>
+                <div class="pack-foot text-center p-4 mt-auto border-top">
+                    {%if restaurant.pack.pack_type == 2%}
+                        <button class="btn btn-success btn-lg disabled">Active</button>
+                    {%else%}
+                        <button class="btn btn-primary btn-lg rounded-pill w-100" data-toggle="modal" data-target="#yearly_pack_modal">Buy Now</button>
+                    {%endif%}
+                </div>
+              </div>
+            
+            <!-- Monthly Pack -->
+            <div class="col-sm-12 col-md  mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column" style="height: 50vh">
+              <div class="p-4">
+                <h2 class="text-center text-primary">Monthly Pack</h2>
+              </div>
+              <div class="pack-price d-flex align-items-top py-4 bg-light">
+                  <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
+                  <div class="pack-value d-flex align-items-end mr-auto">
+                      <div id="monthly_value" class="value">199</div>
+                      <div class="period">/ Month</div>
+                  </div>
+              </div>
+              <div class="future text-primary text-center py-4">
+                  <h3>Unlimited Menus</h3>
+                  <h3>Unlimited Scans</h3>
+              </div>
+              <div class="pack-foot text-center p-4 mt-auto border-top">
+                  {%if restaurant.pack.pack_type == 1%}
+                      <button class="btn btn-success btn-lg disabled">Active</button>
+                  {%else%}
+                      <button class="btn btn-primary btn-lg rounded-pill w-100" data-toggle="modal" data-target="#monthly_pack_modal">Buy Now</button>
+                  {%endif%}
+                  
+              </div>
+            </div>
+        </div>
+        </div>
+      </div>
     </div>
 {%endblock%}
 {%block script%}

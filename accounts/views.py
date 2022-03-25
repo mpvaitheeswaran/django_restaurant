@@ -20,6 +20,8 @@ from io import BytesIO
 from django.core.files import File
 
 # Create your views here.
+# def testPage(request):
+#     return render(request,'accounts/confirm_mail.html')
 @unauthenticated_user()
 def register(request):
     context = {}
@@ -69,26 +71,6 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        # Send invoice to email.
-        restaurant = RestaurantDetail.objects.get(user=user)
-        context = {
-             'STATIC_ROOT':settings.STATIC_ROOT,
-             'restaurant':restaurant
-         }
-        pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
-        if pdf:
-            filename = 'purchase_%s.pdf' % (user.id)
-            invoice_file = File(BytesIO(pdf.content),filename)
-            restaurant.invoice_pdf = invoice_file
-            restaurant.save()
-            email_pdf = EmailMultiAlternatives(
-                subject='Wellcome to the RestaurantQR',
-                body='The Invoice for your RestaurantQR account.',
-                from_email='',
-                to=[user.email],
-            )
-            email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
-            email_pdf.send()
 
         login_auth(request,user)
         return redirect('dashboard')

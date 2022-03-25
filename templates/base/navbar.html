@@ -4,7 +4,8 @@
     <nav class="navbar navbar-default navbar-expand-lg navbar-light bg-white pl-0">
       <div class="header_toggle mr-3 p-2"> <i class='bx bx-menu bx-x' id="header-toggle"></i> </div>
       <a class="navbar-brand mr-auto" href="#">RestaurantQR</a>
-      
+      {% comment "Optional note" %}
+      <!-- Notification menu -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a href="{%url 'notifications'%}" class="btn btn-primary rounded-circle position-relative" style="width: 30px; height: 30px;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -38,8 +39,10 @@
           </ul>
         </li>
       </ul>
+      {% endcomment %}
     </nav>
 </header>
+
 <!-- Navbar end -->
 {%url 'dashboard' as dashboard%}
 {%url 'restaurant' as restaurant%}

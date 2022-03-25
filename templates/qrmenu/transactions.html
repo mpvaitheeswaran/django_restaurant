@@ -39,7 +39,7 @@
                             <span class="text-danger">Faild</span>
                             {%endif%}
                         </td>
-                        <td>{{order.currency}}</td>
+                        <td>{{order.currency|upper}}</td>
                         <td>{{order.order_amount}}</td>
                         <td>
                             {%if order.invoice_pdf%}
