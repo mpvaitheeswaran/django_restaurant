@@ -54,4 +54,7 @@ h3{
   .container-fluid.mx-5{
     margin: 0 !important;
   }
+  .h-sm-auto{
+      height: auto !important;
+  }
 }
