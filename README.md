@@ -1,0 +1,1 @@
+# RestaurantQR Django Apllication.
