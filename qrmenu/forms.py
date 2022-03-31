@@ -18,7 +18,7 @@ class RestaurantForm(forms.ModelForm):
         self.fields['allowCalltoWaiter'].label = 'Allow Call to Waiter'
         self.fields['allowCustomerOrder'].label = 'Allow on-table order'
         self.fields['pickup'].label = 'Store Pickup'
-        self.fields['pickup'].widget.attrs['disabled'] = True
+        # self.fields['pickup'].widget.attrs['disabled'] = True
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
