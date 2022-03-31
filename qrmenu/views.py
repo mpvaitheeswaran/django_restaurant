@@ -487,7 +487,11 @@ def placeOrder(request):
         user = restaurant.user
         cus_order = CustomerOrder.objects.create(restaurant=restaurant,customer_name=customer_name,
             table_no=table_no,
-            total_price=total_price)
+            total_price=total_price,
+        )
+        if restaurant.pickup:
+            dinein_or_pickup = request.POST.get('dinein_or_pickup')
+            cus_order.order_type = dinein_or_pickup
         cus_order.save()
         for menu in ordered_menu_data:
             menu_item = MenuItem.objects.get(id=ordered_menu_data[menu]['id'])
@@ -495,7 +499,10 @@ def placeOrder(request):
             if not qt == 0:
                 order_menu = OrderedMenu.objects.create(menu=menu_item,quantity=qt)
                 cus_order.ordered_menu.add(order_menu)
-        notify.send(cus_order, recipient=user, verb='Order',description=f'{customer_name} Placing Order from table {table_no}',level='success')
+        if request.POST.get('dinein_or_pickup') == 'pickup':
+            notify.send(cus_order, recipient=user, verb='Order',description=f'{customer_name} Placing Pickup Order',level='success')
+        else:
+            notify.send(cus_order, recipient=user, verb='Order',description=f'{customer_name} Placing Order from table {table_no}',level='success')
         return JsonResponse(response_data)
 def callWaiter(request):
     response_data = {}
