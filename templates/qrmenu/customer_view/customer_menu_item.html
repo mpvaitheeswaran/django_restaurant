@@ -21,12 +21,24 @@
       <div class="modal-body">
         <form method="post" autocomplete="off">
           {%csrf_token%}
+          {%if restaurant.pickup%}
+            <div class="d-flex">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="dinein_or_pickup" id="dinein" value="dinein" checked style="width: 30px; height: 30px;">
+                <label class="form-check-label" for="dinein" style="font-size: 30px;">dinein</label>
+              </div>
+              <div class="form-check form-check-inline ml-auto">
+                <input class="form-check-input" type="radio" name="dinein_or_pickup" id="pickup" value="pickup" style="width: 30px; height: 30px;">
+                <label class="form-check-label" for="pickup" style="font-size: 30px;">Store Pickup</label>
+              </div>
+            </div>
+          {%endif%}
           <div class="form-group">
             <label for="cus_name">Customer Name</label>
             <input type="text" class="form-control" id="cus_name" name="cus_name">
             <small id="name_error" class="form-text text-danger"></small>
           </div>
-          <div class="form-group">
+          <div class="form-group" id="table_input">
             <label for="table_no">Table No.</label>
             <!-- <input type="number" class="form-control w-50" id="table_no" name="table_no"> -->
             <select class="form-control" id="table_no" name="table_no">
@@ -36,6 +48,13 @@
             </select>
             <small id="table_error" class="form-text text-danger"></small>
           </div>
+          {%if restaurant.pickup%}
+            <div class="form-group d-none" id="address_input">
+              <label for="table_no">Address.</label>
+              <textarea class="form-control" name="address" id="" rows="5"></textarea>
+              <small id="table_error" class="form-text text-danger"></small>
+            </div>
+          {%endif%}
         </form>
         <div class="d-flex align-items-center">
           <h3>Your Orders</h3>
@@ -229,6 +248,20 @@
     </script>
     <!-- add items -->
     <script>
+      $('input[type=radio][name=dinein_or_pickup]').change(function() {
+        if (this.value == 'dinein') {
+            //$('#table_input').removeClass('d-none');
+            $('#table_input').show('fast');
+            //$('#address_input').addClass('d-none');
+        }
+        else if (this.value == 'pickup') {
+          //$('#table_input').addClass('d-none');
+          $('#table_input').hide('fast');
+          //$('#address_input').removeClass('d-none');
+        }
+      });
+
+
       $('#clear_orders').click(function(e){
         e.preventDefault();
         localStorage.removeItem('restaurantQR');
@@ -354,6 +387,7 @@
               table_no:$('#table_no').val(),
               total_price:order(),//returns total price of order
               unique_id:'{{restaurant.unique_id}}',
+              dinein_or_pickup:$('input[name="dinein_or_pickup"]:checked').val(),
               ordered_menus:localStorage.getItem('restaurantQR')
             },
             success:function(json){

@@ -20,6 +20,8 @@ from io import BytesIO
 from django.core.files import File
 
 # Create your views here.
+# def testPage(request):
+#     return render(request,'accounts/confirm_mail.html')
 @unauthenticated_user()
 def register(request):
     context = {}
@@ -40,13 +42,9 @@ def register(request):
             message = render_to_string('accounts/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
                 'token':account_activation_token.make_token(user),
             })
-            print('user = ',user)
-            print('uid =',urlsafe_base64_encode(force_bytes(user.pk)))
-            print('uid =',urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'))
-            print('uid =',type(urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8')))
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(
                         mail_subject, message, to=[to_email]
@@ -70,34 +68,9 @@ def activate(request, uidb64, token):
         user = get_user_model().objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    print('uid = ',uidb64)
-    print(type(uidb64))
-    print('user id = ',force_text(urlsafe_base64_decode(uidb64)))
-    print('user = ',user)
-    print('activation = ',account_activation_token.check_token(user, token))
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        # Send invoice to email.
-        # restaurant = RestaurantDetail.objects.get(user=user)
-        # context = {
-        #      'STATIC_ROOT':settings.STATIC_ROOT,
-        #      'restaurant':restaurant
-        #  }
-        # pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
-        # if pdf:
-        #     filename = 'purchase_%s.pdf' % (user.id)
-        #     invoice_file = File(BytesIO(pdf.content),filename)
-        #     restaurant.invoice_pdf = invoice_file
-        #     restaurant.save()
-        #     email_pdf = EmailMultiAlternatives(
-        #         subject='Wellcome to the RestaurantQR',
-        #         body='The Invoice for your RestaurantQR account.',
-        #         from_email='',
-        #         to=[user.email],
-        #     )
-        #     email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
-        #     email_pdf.send()
 
         login_auth(request,user)
         return redirect('dashboard')

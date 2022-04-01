@@ -12,9 +12,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth import get_user_model
 import json
 import qrcode
-from qrcode.image.styledpil import StyledPilImage
-from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
-from qrcode.image.styles.colormasks import RadialGradiantColorMask
+# from qrcode.image.styledpil import StyledPilImage
+# from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+# from qrcode.image.styles.colormasks import RadialGradiantColorMask
 import qrcode.image.svg
 from io import BytesIO
 import base64
@@ -54,11 +54,35 @@ def activateTrial(request):
     pack.start_date = start_date
     pack.expiry_date = expiry_date
     pack.save()
+    # Send invoice to email.
+    context = {
+            'restaurant':restaurant,
+            'item':'Free Trial',
+            'paywith':'Free'
+        }
+    pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
+    if pdf:
+        filename = 'purchase_%s.pdf' % (request.user.id)
+        invoice_file = File(BytesIO(pdf.content),filename)
+        restaurant.invoice_pdf = invoice_file
+        restaurant.save()
+        email_pdf = EmailMultiAlternatives(
+            subject='Wellcome to the RestaurantQR',
+            body='The Invoice for your RestaurantQR account.',
+            from_email='',
+            to=[request.user.email],
+        )
+        email_pdf.attach_alternative(restaurant.invoice_pdf.read(), "application/pdf")
+        email_pdf.send()
     return redirect('dashboard')
 class GeneratePdf(View):
      def get(self, request, *args, **kwargs):
+        restaurant = RestaurantDetail.objects.get(user=request.user)
         context = {
-             'STATIC_ROOT':settings.STATIC_ROOT
+             'restaurant':restaurant,
+             'pack_order':{'pack_type':'2','order_amount':'200'},
+             'item':'Yearly Pack',
+             'paywith': 'PayTm Business'
          }
         # getting the template
         pdf = html_to_pdf('qrmenu/invoice.html',context_dict=context)
@@ -243,7 +267,8 @@ def qrBuilder(request):
         border=4,
     )
     qr.add_data(url)
-    img = qr.make_image(image_factory=StyledPilImage,module_drawer=RoundedModuleDrawer())
+    # img = qr.make_image(image_factory=StyledPilImage,module_drawer=RoundedModuleDrawer())
+    img = qr.make_image(fill_color="black", back_color="white")
     buffer = BytesIO()
     img.save(buffer,'PNG')
     img_str = base64.b64encode(buffer.getvalue())
@@ -462,7 +487,11 @@ def placeOrder(request):
         user = restaurant.user
         cus_order = CustomerOrder.objects.create(restaurant=restaurant,customer_name=customer_name,
             table_no=table_no,
-            total_price=total_price)
+            total_price=total_price,
+        )
+        if restaurant.pickup:
+            dinein_or_pickup = request.POST.get('dinein_or_pickup')
+            cus_order.order_type = dinein_or_pickup
         cus_order.save()
         for menu in ordered_menu_data:
             menu_item = MenuItem.objects.get(id=ordered_menu_data[menu]['id'])
@@ -470,7 +499,10 @@ def placeOrder(request):
             if not qt == 0:
                 order_menu = OrderedMenu.objects.create(menu=menu_item,quantity=qt)
                 cus_order.ordered_menu.add(order_menu)
-        notify.send(cus_order, recipient=user, verb='Order',description=f'{customer_name} Placing Order from table {table_no}',level='success')
+        if request.POST.get('dinein_or_pickup') == 'pickup':
+            notify.send(cus_order, recipient=user, verb='Order',description=f'{customer_name} Placing Pickup Order',level='success')
+        else:
+            notify.send(cus_order, recipient=user, verb='Order',description=f'{customer_name} Placing Order from table {table_no}',level='success')
         return JsonResponse(response_data)
 def callWaiter(request):
     response_data = {}

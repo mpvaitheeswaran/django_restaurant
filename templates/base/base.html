@@ -116,7 +116,7 @@
                         'id':data.unread_list[0].id,
                     }
                 }
-                var unread_notifications = document.getElementById('unread-notifications');
+                /*var unread_notifications = document.getElementById('unread-notifications');
                 unread_notifications.innerHTML='';
                 for (var i=0; i < data.unread_list.length; i++) {
                     notification = data.unread_list[i];
@@ -130,7 +130,7 @@
                     </div>
                     `
                     unread_notifications.insertAdjacentHTML('beforeend',elem)
-                }
+                }*/
                 toastr.options.positionClass = "toast-bottom-right";
                 toastr.options.closeButton = true;
                 toastr.options.showMethod = 'slideDown';

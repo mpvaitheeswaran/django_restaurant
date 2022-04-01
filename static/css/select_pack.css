@@ -1,0 +1,60 @@
+.body{
+    background : linear-gradient(#007bff 50%,#fff 50%) !important;
+}
+.rounded-3{
+    border-radius: 1.5rem;
+}
+.period, .pack-currency{
+    font-size: 25px;
+}
+.value{
+    font-size: 50px;
+    font-weight: bolder;
+}
+.pack-head{
+    background-color: #D6E6F2;
+}
+input[type=radio] {
+    width: 30px;
+    height: 30px;
+}
+.form-check-label{
+    font-size: 30px;
+}
+h3{
+    font-size: 20px;
+}
+.pack-price{
+    color: #00006D;
+}
+@media only screen and (max-width: 768px) {
+    .body {
+        height: 100%;
+        margin: 0;
+        background-repeat: no-repeat !important;
+        background-attachment: fixed !important;
+    }
+  .period, .pack-currency{
+    font-size: 20px;
+  }
+  .yearly-container{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .value{
+      font-size: 30px;
+  }
+  input[type=radio] {
+      width: 25px;
+      height: 25px;
+  }
+  .form-check-label{
+      font-size: 25px;
+  }
+  .container-fluid.mx-5{
+    margin: 0 !important;
+  }
+  .h-sm-auto{
+      height: auto !important;
+  }
+}

@@ -50,7 +50,9 @@
               </div>
               <div class="row mt-2">
                 <div class="col-sm-6">
+                    {%if order.order_type == 'dinein'%}
                     <p style="font-size: 16px;" class="m-0">Table No : {{order.table_no}}</p>
+                    {%endif%}
                 </div> 
                 <div class="col-sm-6 text-right">
                     <p style="font-size: 16px;" class="m-0">Total : {{currency.symbol}}{{order.total_price}}</p>

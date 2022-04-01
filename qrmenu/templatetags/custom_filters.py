@@ -50,3 +50,17 @@ def pack_type(value):
 @register.filter()
 def toList(value,startat=0):
     return range(startat,value+1)
+
+@register.filter()
+def subtractPercent(value,percent):
+    if not value:
+        return 0
+    price = float(value)
+    return price - ((percent/100) * price)
+
+@register.filter()
+def getPercent(value,percent):
+    if not value:
+        return 0
+    price = float(value)
+    return (percent/100) * price
