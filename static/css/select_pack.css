@@ -15,9 +15,13 @@
     background-color: #D6E6F2;
 }
 input[type=radio] {
-    width: 30px;
-    height: 30px;
+    display: none;
 }
+  input[type="radio"]:checked + label {
+    background: gray;
+    padding: 5px;
+    border-radius: 5px;
+  }
 .form-check-label{
     font-size: 30px;
 }

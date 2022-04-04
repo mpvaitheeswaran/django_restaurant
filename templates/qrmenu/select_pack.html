@@ -17,7 +17,7 @@
     </div>
   </nav>
   <!-- Navbar End -->
-
+    {%comment%}
     <!--SELECT PACK MODAL  -->
     <!-- Trial Pack -->
     <div class="modal fade" id="trial_pack_modal" tabindex="-1" aria-hidden="true">
@@ -141,7 +141,6 @@
           </div>
     </div>
     <!--SELECT PACK MODAL END -->
-    {%comment%}
     <div class="d-flex justify-content-center align-items-center mt-5">
         <div class="container-fluid mx-5">
             <div class="text-center mb-5">
@@ -256,14 +255,14 @@
           </div>
           <div class="row align-items-center">
             <!-- Free Tial -->
-            <div class="col-sm-12 col-md mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column h-sm-auto" style="height: 50vh">
+            <div class="col-sm-12 col-md mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column h-sm-auto" >
                 <div class="p-4">
                     <h2 class="text-center text-primary">Free Trial</h2>
                 </div>
                 <div class="pack-price d-flex align-items-top py-4 bg-light">
-                    <div class="pack-currenc fs-5 text-muted ml-auto"></div>
+                    <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
                     <div class="pack-value d-flex align-items-end mr-auto">
-                        <div class="value">Free</div>
+                        <div class="value">0</div>
                         <div class="period">/ 30 Days only</div>
                     </div>
                 </div>
@@ -277,7 +276,7 @@
                         <button class="btn btn-success btn-lg disabled">Active</button>
                     {%else%}
                         {%if not restaurant.is_free_pack_used%}
-                        <button class="btn btn-primary btn-lg rounded-pill w-100" data-toggle="modal" data-target="#trial_pack_modal">Try Now</button>
+                        <a href="{%url 'qrmenu-activate_trial'%}" class="btn btn-primary btn-lg rounded-pill w-100">Try Now</a>
                         {%else%}
                             <button class="btn btn-danger btn-lg disabled" disabled>Your Pack Expired</button>
                         {%endif%}
@@ -295,7 +294,7 @@
                 <div class="pack-price d-flex align-items-top py-4 bg-light">
                     <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
                     <div class="pack-value d-flex align-items-end mr-auto">
-                        <div id="yearly_value" class="value">999</div>
+                        <div id="yearly_value" class="value">1000</div>
                         <div class="period">/ Year</div>
                     </div>
                 </div>
@@ -307,20 +306,25 @@
                     {%if restaurant.pack.pack_type == 2%}
                         <button class="btn btn-success btn-lg disabled">Active</button>
                     {%else%}
-                        <button class="btn btn-primary btn-lg rounded-pill w-100" data-toggle="modal" data-target="#yearly_pack_modal">Buy Now</button>
+                      <div id="yearly_pay">
+                        <form action="{%url 'payments-pay'%}">
+                          <input type="hidden" name="pack_type" id="pack_type" value="2">
+                          <input type="submit" class="btn btn-primary btn-lg rounded-pill w-100" value="Buy Now">
+                        </form>
+                      </div>
                     {%endif%}
                 </div>
               </div>
             
             <!-- Monthly Pack -->
-            <div class="col-sm-12 col-md  mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column h-sm-auto" style="height: 50vh">
+            <div class="col-sm-12 col-md  mt-4 p-0 bg-white rounded-3 shadow d-flex flex-column h-sm-auto" >
               <div class="p-4">
                 <h2 class="text-center text-primary">Monthly Pack</h2>
               </div>
               <div class="pack-price d-flex align-items-top py-4 bg-light">
                   <div class="pack-currency fs-5 text-muted ml-auto">Rs</div>
                   <div class="pack-value d-flex align-items-end mr-auto">
-                      <div id="monthly_value" class="value">199</div>
+                      <div id="monthly_value" class="value">100</div>
                       <div class="period">/ Month</div>
                   </div>
               </div>
@@ -332,7 +336,12 @@
                   {%if restaurant.pack.pack_type == 1%}
                       <button class="btn btn-success btn-lg disabled">Active</button>
                   {%else%}
-                      <button class="btn btn-primary btn-lg rounded-pill w-100" data-toggle="modal" data-target="#monthly_pack_modal">Buy Now</button>
+                    <div id="monthly_pay">
+                      <form action="{%url 'payments-pay'%}">
+                        <input type="hidden" name="pack_type" id="pack_type" value="1">
+                        <input type="submit" class="btn btn-primary btn-lg rounded-pill w-100" value="Buy Now">
+                      </form>
+                    </div>
                   {%endif%}
                   
               </div>
@@ -356,36 +365,32 @@
         //Curency change event.
         $('input[type=radio][name=currency]').change(function() {
             if (this.value == 'inr') {
-                $('#monthly_modal_foot').html(`
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                $('#monthly_pay').html(`
                 <form action="{%url 'payments-pay'%}">
                     <input type="hidden" name="pack_type" id="pack_type" value="1">
-                    <input type="submit" class="btn btn-primary" value="Accept & Pay">
+                    <input type="submit" class="btn btn-primary btn-lg rounded-pill w-100" value="Buy Now">
                 </form>
                 `)
-                $('#yearly_modal_foot').html(`
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                $('#yearly_pay').html(`
                 <form action="{%url 'payments-pay'%}">
                     <input type="hidden" name="pack_type" id="pack_type" value="2">
-                    <input type="submit" class="btn btn-primary" value="Accept & Pay">
+                    <input type="submit" class="btn btn-primary btn-lg rounded-pill w-100" value="Buy Now">
                 </form>
                 `)
                 $('.pack-currency').text('Rs');
-                $('#monthly_value').text('199');
-                $('#yearly_value').text('999');
+                $('#monthly_value').text('100');
+                $('#yearly_value').text('1000');
             }
             else if (this.value == 'usd') {
-                $('#monthly_modal_foot').html(`
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                $('#monthly_pay').html(`
                 <div id="paypal-monthly-container"></div>
                 `)
-                $('#yearly_modal_foot').html(`
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                $('#yearly_pay').html(`
                 <div id="paypal-yearly-container"></div>
                 `)
                 $('.pack-currency').text('$');
-                $('#monthly_value').text('2.50');
-                $('#yearly_value').text('13');
+                $('#monthly_value').text('2');
+                $('#yearly_value').text('20');
                 monthlyPayment();
                 yearlyPayment();
                 
@@ -395,7 +400,7 @@
     function monthlyPayment(){
     //For Monthly Pack
     const pack_type = '1'
-    const amount = '2.50'
+    const amount = '2'
       paypal.Buttons({
 
         style: {
@@ -473,7 +478,7 @@
     function yearlyPayment(){
         //For Yearly Pack paypal payment
         const pack_type = '2'
-        const amount = '13.00'
+        const amount = '20'
       paypal.Buttons({
 
         style: {

@@ -21,9 +21,9 @@ def payment(request):
     restaurant = RestaurantDetail.objects.get(user=request.user)
     bill_amount = None
     if pack_type == '1':
-        bill_amount = "199"
+        bill_amount = "100"
     elif pack_type == '2':
-        bill_amount = "999"
+        bill_amount = "1000"
     
     pack_order = PackOrder.objects.create(order_id=order_id,
         restaurant = restaurant,
