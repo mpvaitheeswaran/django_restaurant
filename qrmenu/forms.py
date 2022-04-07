@@ -125,7 +125,7 @@ class AccountSettingForm(forms.ModelForm):
     def __init__(self,*args,**kargs):
         super(AccountSettingForm,self).__init__(*args,**kargs)
         self.fields['menu_layout'].widget.attrs['disabled'] = True
-        self.fields['menu_language'].widget.attrs['disabled'] = True
+        # self.fields['menu_language'].widget.attrs['disabled'] = True
         self.fields['currency_model'].label = 'Currency'
         self.fields['currency_model'].empty_label = None
         self.helper = FormHelper()

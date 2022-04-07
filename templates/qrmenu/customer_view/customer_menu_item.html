@@ -1,5 +1,6 @@
 {%extends 'qrmenu/customer_view/customer_menu_base.html'%}
 {%load static%}
+{%load i18n%}
 {% load currency %}
 {%load custom_filters%}
 {%block title%}{{restaurant.name}}{%endblock%}
@@ -13,7 +14,7 @@
     bottom:0;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="orderModalLabel">Order</h5>
+        <h5 class="modal-title" id="orderModalLabel">{%trans 'Order'%}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -25,21 +26,21 @@
             <div class="d-flex">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="dinein_or_pickup" id="dinein" value="dinein" checked style="width: 30px; height: 30px;">
-                <label class="form-check-label" for="dinein" style="font-size: 30px;">dinein</label>
+                <label class="form-check-label" for="dinein" style="font-size: 30px;">{%trans 'dinein'%}</label>
               </div>
               <div class="form-check form-check-inline ml-auto">
                 <input class="form-check-input" type="radio" name="dinein_or_pickup" id="pickup" value="pickup" style="width: 30px; height: 30px;">
-                <label class="form-check-label" for="pickup" style="font-size: 30px;">Store Pickup</label>
+                <label class="form-check-label" for="pickup" style="font-size: 30px;">{%trans 'Store Pickup'%}</label>
               </div>
             </div>
           {%endif%}
           <div class="form-group">
-            <label for="cus_name">Customer Name</label>
+            <label for="cus_name">{%trans 'Customer Name'%}</label>
             <input type="text" class="form-control" id="cus_name" name="cus_name">
             <small id="name_error" class="form-text text-danger"></small>
           </div>
           <div class="form-group" id="table_input">
-            <label for="table_no">Table No.</label>
+            <label for="table_no">{%trans 'Table No.'%}</label>
             <!-- <input type="number" class="form-control w-50" id="table_no" name="table_no"> -->
             <select class="form-control" id="table_no" name="table_no">
               {%for i in restaurant.total_tables|toList:1%}
@@ -50,15 +51,15 @@
           </div>
           {%if restaurant.pickup%}
             <div class="form-group d-none" id="address_input">
-              <label for="table_no">Address.</label>
+              <label for="table_no">{%trans 'Address.'%}</label>
               <textarea class="form-control" name="address" id="" rows="5"></textarea>
               <small id="table_error" class="form-text text-danger"></small>
             </div>
           {%endif%}
         </form>
         <div class="d-flex align-items-center">
-          <h3>Your Orders</h3>
-          <button id="clear_orders" class="ml-auto btn btn-sm btn-danger">clear all</button>
+          <h3>{%trans 'Your Orders'%}</h3>
+          <button id="clear_orders" class="ml-auto btn btn-sm btn-danger">{%trans 'clear all'%}</button>
         </div>
 
         <div id="ordered_list">
@@ -67,7 +68,7 @@
         <div class="card-body p-1 border">
           <div class="row justify-content-between align-items-center p-1">
             <div class="col-4">
-              <h6>Total</h6>
+              <h6>{%trans 'Total'%}</h6>
             </div>
             <div class="col-2">
               <p class="m-0">{{currency.code}} <small id="total_price" class="">0</small></p>
@@ -77,7 +78,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="placeorder_btn" type="button" class="btn btn-lg btn-primary w-100">Place Order</button>
+        <button id="placeorder_btn" type="button" class="btn btn-lg btn-primary w-100">{%trans 'Place Order'%}</button>
       </div>
     </div>
   </div>
@@ -92,7 +93,7 @@
     bottom:0;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="callModalLabel">Call</h5>
+        <h5 class="modal-title" id="callModalLabel">{%trans 'Call'%}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -105,7 +106,7 @@
             <small id="name_error" class="form-text text-danger"></small>
           </div> -->
           <div class="form-group">
-            <label for="call_table_no">Table No.</label>
+            <label for="call_table_no">{%trans 'Table No.'%}</label>
             <!-- <input type="number" class="form-control" id="call_table_no" name="table_no"> -->
             <select class="form-control" id="table_no" name="table_no">
               {%for i in restaurant.total_tables|toList:1%}
@@ -118,7 +119,7 @@
         
       </div>
       <div class="modal-footer">
-        <button  type="button" class="call_waiter btn btn-lg btn-primary w-100"><i class='bx bxs-bell-ring'></i> Call</button>
+        <button  type="button" class="call_waiter btn btn-lg btn-primary w-100"><i class='bx bxs-bell-ring'></i> {%trans 'Call'%}</button>
       </div>
     </div>
   </div>
@@ -217,7 +218,7 @@
             {%if not menu.start_time|available_time:menu.end_time == None%}
                 {%if not menu.start_time|available_time:menu.end_time%}
                   <div class="col-sm text-right">
-                    <h6 class="text-danger">Available From {{menu.start_time}}</h6>
+                    <h6 class="text-danger">{%trans 'Available From'%} {{menu.start_time}}</h6>
                   </div>
                 
                 {%endif%}
@@ -231,9 +232,9 @@
 </div>
 {%if restaurant.allowCalltoWaiter or restaurant.allowCustomerOrder%}
   {%if restaurant.allowCustomerOrder%}
-    <button class="fixed-bottom btn btn-lg btn-success rounded-0 w-100" data-toggle="modal" data-target="#orderModal">Add Cart <i class='bx bxs-cart-add'></i></button>
+    <button class="fixed-bottom btn btn-lg btn-success rounded-0 w-100" data-toggle="modal" data-target="#orderModal">{%trans 'Add Cart'%} <i class='bx bxs-cart-add'></i></button>
   {%else%}
-    <button class="fixed-bottom btn btn-lg btn-primary rounded-0 w-100" data-toggle="modal" data-target="#callModal">Call Waiter <i class='bx bxs-bell-ring'></i></button>
+    <button class="fixed-bottom btn btn-lg btn-primary rounded-0 w-100" data-toggle="modal" data-target="#callModal">{%trans 'Call Waiter'%} <i class='bx bxs-bell-ring'></i></button>
   {%endif%}
   
 {%endif%}

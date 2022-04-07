@@ -1,3 +1,4 @@
+{% load i18n %}
 <!-- Navbar -->
 <div class="banner">
     <img id="img_bg" class="img-fluid" src="{{restaurant.image.url}}" alt="BG" style="object-fit: cover;">
@@ -31,7 +32,7 @@
           <div> 
             
             <a href="{%url 'qrmenu-category_list' unique_id=restaurant.unique_id name=restaurant.name%}" class="nav_logo" style="text-decoration: none;">
-                 <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">Categories</span> 
+                 <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">{% trans "Categories" %}</span> 
             </a>
               <div class="nav_list">
                 {%for category in categories%}

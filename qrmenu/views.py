@@ -31,6 +31,7 @@ from .process import html_to_pdf
 from django.conf import settings
 from django.core.mail import EmailMessage,EmailMultiAlternatives
 from django.core.files import File
+from googletrans import Translator
 # Create your views here.
 @login_required
 def select_pack(request):
@@ -415,6 +416,16 @@ class CustomerView(TemplateView):
         if not checkScanLimit(pack) or pack.pack_type==-1:
             self.template_name = 'qrmenu/customer_view/outofscans.html'
         return super().get(request, *args, **kwargs)
+    def render_to_response(self, context, **response_kwargs):
+        from django.utils import translation
+        unique_id = self.kwargs['unique_id']
+        restaurant = RestaurantDetail.objects.get(unique_id=unique_id)
+        account_setting = AccountSetting.objects.get(restaurant=restaurant)
+        user_language = account_setting.menu_language
+        translation.activate(user_language)
+        response = super().render_to_response(context, **response_kwargs)
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, user_language)
+        return response
     def get_context_data(self, **kwargs):
         def get_client_ip(request):
             x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -519,10 +530,14 @@ def callWaiter(request):
 def addCategory(request):
     if request.method=='POST' and request.is_ajax():
         name = request.POST.get('name')
+        translator = Translator()
         responce_data ={}
         #Create a MenuCategory object.
         restaurant = RestaurantDetail.objects.get(user=request.user)
         category = MenuCategory(restaurant=restaurant,name=name)
+        # For Translation.
+        category.name_ta = translator.translate(name,dest='ta',src='en').text
+        category.name_ar = translator.translate(name,dest='ar',src='en').text
         category.save()
         responce_data['id'] = category.pk
         responce_data['name'] = category.name
@@ -533,9 +548,12 @@ def editCategory(request):
     if request.method=='POST' and request.is_ajax():
         id = request.POST.get('id')
         new_name = request.POST.get('new_name')
+        translator = Translator()
         responce_data ={}
         category = MenuCategory.objects.get(pk=id)
         category.name = new_name
+        category.name_ta = translator.translate(new_name,dest='ta',src='en').text
+        category.name_ar = translator.translate(new_name,dest='ar',src='en').text
         category.save()
         responce_data['name'] = category.name
         return HttpResponse(json.dumps(responce_data), content_type="application/json")
@@ -557,6 +575,7 @@ def addItem(request):
     pack = Pack.objects.get(restaurant=restaurant)
     if request.method=='POST' and request.is_ajax():
         responce_data ={}
+        translator = Translator()
         category_id = int(request.POST.get('id'))
         display = request.POST.get('display')
         if display:
@@ -574,6 +593,8 @@ def addItem(request):
                 item = form.save(commit=False)
                 item.category = category
                 item.display = display
+                item.name_ta = translator.translate(item.name,dest='ta',src='en').text
+                item.name_ar = translator.translate(item.name,dest='ar',src='en').text
                 item.save()
                 responce_data['error'] = False
                 responce_data['id'] = item.id
@@ -602,6 +623,7 @@ def addItem(request):
 def updateItem(request):
     if request.method=='POST' and request.is_ajax():
         responce_data ={}
+        translator = Translator()
         item_id = int(request.POST.get('id'))
         item_instance = MenuItem.objects.get(pk=item_id)
         display = request.POST.get('display')
@@ -613,6 +635,8 @@ def updateItem(request):
         if form.is_valid():
             item = form.save(commit=False)
             item.display = display
+            item.name_ta = translator.translate(item.name,dest='ta',src='en').text
+            item.name_ar = translator.translate(item.name,dest='ar',src='en').text
             item.save()
             print('Form valid')
             responce_data['error'] = False

@@ -147,9 +147,9 @@ class AccountSetting(models.Model):
         ('box','Box Layout'),
     )
     languages = (
-        ('english','English'),
-        ('tamil','Tamil'),
-        ('sakovia','Sakovia'),
+        ('en-us','English'),
+        ('ta','Tamil'),
+        ('ar','Arabic'),
     )
     restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE)
     phone = models.CharField(max_length=15,blank=True)

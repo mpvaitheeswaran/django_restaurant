@@ -1,9 +1,10 @@
 {%extends 'qrmenu/customer_view/customer_menu_base.html'%}
+{%load i18n%}
 {%block title%}{{restaurant.name}}{%endblock%}
 {%block content%}
     
     <div class="container">
-        <h3 class="text-center m-2">Wellcome</h3>
+        <h3 class="text-center m-2">{%trans 'Wellcome'%}</h3>
         
     </div>
 {%endblock%}
