@@ -1,43 +1,13 @@
-{%extends 'base/non_auth_base.html'%}
+{%extends 'base/login_base.html'%}
 {%load static%}
 {%block title%}Login{%endblock%}
 {%block stylesheet%}
 <link rel="stylesheet" href="{%static 'css/login.css'%}">
 {%endblock%}
 {%block content%}
-<!-- <div class="login-page">
-  <h1 class="text-center mb-4">Login</h1>
-    <div class="form">
-      <form class="register-form" method="post" autocomplete="off">
-        {%csrf_token%}
-        <div class="field">
-          <input type="text" name="{{form.username.name}}" placeholder="Email"/>
-          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
-            {%for error in form.username.errors%}
-              {{error}}
-            {%endfor%}
-            {% for error in form.non_field_errors %}
-              {{error}}
-            {% endfor %}
-          </p>
-        </div>
-        <div class="field">
-          <input type="password" name="{{form.password.name}}" placeholder="password"/>
-          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
-            {%for error in form.password.errors%}
-              {{error|escape}}
-            {%endfor%}
-          </p>
-        </div>
-        <button type="submit">Login</button>
-        <p class="message">Not registered? <a href="{%url 'accounts-register'%}">Create an account</a></p>
-      </form>
-    </div>
-</div> -->
-
 
 <!-- Wrapper Area -->
-<div class="wrapper__area" id="wrapper_Area">
+<div class="wrapper__area shadow" id="wrapper_Area">
   <!-- Forms Area -->
   <div class="forms__area">
     <!-- Login Form -->
@@ -85,9 +55,9 @@
       <!-- Login Button -->
       <button type="submit" class="submit-button" id="loginSubmitBtn">Sign in</button>
       <p class="sign-in-up text-center mt-4">
-        <a href="{%url 'accounts-register'%}">Sign Up</a>
+        <a href="{%url 'accounts-register'%}" class="text-primary">Sign Up</a>
       </p>
-      <p class="text-center m-0"><a href="{%url 'password_reset_view'%}">Forget Password?</a></p>
+      <p class="text-center m-0"><a href="{%url 'password_reset_view'%}" class="text-primary">Forget Password?</a></p>
       
     </form> <!-- End Login Form -->
 

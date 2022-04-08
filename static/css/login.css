@@ -114,10 +114,10 @@ body {
 }
 body{
   height: 100vh;
-  background-color: var(--body-BG-color);
+  /* background-color: var(--body-BG-color);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 /* End Css Reset */
 
@@ -134,6 +134,8 @@ body{
   justify-content: space-between;
   overflow: hidden;
   transform: scale(0.9);
+  margin: auto;
+  margin-top: 10rem;
 }
 
 /* Forms Area */
@@ -518,6 +520,10 @@ form.sign-up__form{
 }
 @media only screen and (max-width: 600px) {
   /* For mobile */
+  .wrapper__area{
+    width: 100%;
+    transform: scale(1);
+  }
   .forms__area{
     width: 100%;
   }

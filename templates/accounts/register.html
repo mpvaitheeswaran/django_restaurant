@@ -1,57 +1,12 @@
-{%extends 'base/non_auth_base.html'%}
+{%extends 'base/login_base.html'%}
 {%load static%}
 {%block title%}Registeration{%endblock%}
 {%block stylesheet%}
 <link rel="stylesheet" href="{%static 'css/login.css'%}">
 {%endblock%}
 {%block content%}
-<!-- <div class="login-page">
-    <h1>Login</h1>
-    <div class="form">
-      <form class="register-form" method="post" autocomplete="off">
-        {%csrf_token%}
-        <div class="field">
-          <input type="text" name="{{form.email.name}}" placeholder="Email"/>
-          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
-            {%for error in form.email.errors%}
-              {{error}}
-            {%endfor%}
-            {% for error in form.non_field_errors %}
-              {{error}}
-            {% endfor %}
-          </p>
-        </div>
-        <div class="field">
-          <input type="text" name="restaurant_name" placeholder="Restaurant Name (optional)"/>
-        </div>
-        <div class="field">
-          <input type="text" name="gstin" placeholder="GSTIN (optional)" maxlength="15" style="text-transform:uppercase"/>
-        </div>
-        <div class="field">
-          <input type="password" name="{{form.password1.name}}" placeholder="password"/>
-          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
-            {%for error in form.password1.errors%}
-              {{error}}
-            {%endfor%}
-          </p>
-        </div>
-        <div class="field">
-          <input type="password" name="{{form.password2.name}}" placeholder="Confirm password"/>
-          <p class="text-left m-0 text-danger px-2" style="font-size: 12px;">
-            {%for error in form.password2.errors%}
-              {{error}}
-            {%endfor%}
-          </p>
-        </div>
-        <button type="submit">create</button>
-        <p class="message">Already registered? <a href="{%url 'accounts-login'%}">Sign In</a></p>
-      </form>
-      
-    </div>
-</div> -->
-
 <!-- Wrapper Area -->
-<div class="wrapper__area" id="wrapper_Area">
+<div class="wrapper__area shadow" id="wrapper_Area">
   <!-- Forms Area -->
   <div class="forms__area">
   
@@ -159,7 +114,7 @@
       <!-- Sign Up Button -->
       <button type="submit" class="submit-button" id="signUpSubmitBtn">Sign Up</button>
       
-      <p class="sign-in-up text-center mt-4">Already have an account <a href="{%url 'accounts-login'%}">Sign In</a></p>
+      <p class="sign-in-up text-center mt-4">Already have an account <a href="{%url 'accounts-login'%}" class="text-primary">Sign In</a></p>
     </form> <!-- End Sign Up Form -->
   </div><!-- End Forms Area -->
 
