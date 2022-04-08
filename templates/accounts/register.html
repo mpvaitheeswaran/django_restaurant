@@ -44,7 +44,7 @@
     </form> <!-- End Login Form -->
 
     <!-- Sign Up Form -->
-    <form class="sign-up__form" id="signUpForm" method="post" autocomplete="off">
+    <form class="sign-up__form text-center" id="signUpForm" method="post" autocomplete="off">
       {%csrf_token%}
       <!-- Form Title -->
       <h1 class="form__title">Sign Up!</h1>
@@ -112,9 +112,9 @@
         {%endif%}
       </div>
       <!-- Sign Up Button -->
-      <button type="submit" class="submit-button" id="signUpSubmitBtn">Sign Up</button>
+      <button type="submit" class="btn text-light">Sign Up</button>
       
-      <p class="sign-in-up text-center mt-4">Already have an account <a href="{%url 'accounts-login'%}" class="text-primary">Sign In</a></p>
+      <p class="sign-in-up text-center mt-4">Already have an account <a href="{%url 'accounts-login'%}" style="color: #ff3e3f;">Sign In</a></p>
     </form> <!-- End Sign Up Form -->
   </div><!-- End Forms Area -->
 

@@ -440,7 +440,9 @@ form.sign-up__form{
   position: relative;
   width: var(--aside-area-width);
   height: 100%;
-  background-color: var(--aside-area-BG-color);
+  /* background-color: var(--aside-area-BG-color); */
+  background-color: #ff3e3f;
+  background-image: linear-gradient(to left, #ff4c31, #d60939);
   border-radius: 5px;
   opacity: 1;
 }

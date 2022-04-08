@@ -11,7 +11,7 @@
   <!-- Forms Area -->
   <div class="forms__area">
     <!-- Login Form -->
-    <form class="login__form" id="loginForm" method="post" autocomplete="off">
+    <form class="login__form text-center" id="loginForm" method="post" autocomplete="off">
       {%csrf_token%}
       <!-- Form Title -->
       <h1 class="form__title">Sign In!</h1>
@@ -53,11 +53,11 @@
         <div class="forgot_password">Forgot Password?</div>
       </div> -->
       <!-- Login Button -->
-      <button type="submit" class="submit-button" id="loginSubmitBtn">Sign in</button>
+      <button type="submit" class="btn mb-4 text-light" id="loginSubmitBtn">Sign in</button>
       <p class="sign-in-up text-center mt-4">
-        <a href="{%url 'accounts-register'%}" class="text-primary">Sign Up</a>
+        <a href="{%url 'accounts-register'%}" style="color: #ff3e3f;">Sign Up</a>
       </p>
-      <p class="text-center m-0"><a href="{%url 'password_reset_view'%}" class="text-primary">Forget Password?</a></p>
+      <p class="text-center m-0"><a href="{%url 'password_reset_view'%}" style="color: #ff3e3f;">Forget Password?</a></p>
       
     </form> <!-- End Login Form -->
 
