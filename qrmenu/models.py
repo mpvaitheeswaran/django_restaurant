@@ -150,7 +150,10 @@ class AccountSetting(models.Model):
     languages = (
         ('en-us','English'),
         ('ta','Tamil'),
+        ('hi','Hindi'),
         ('ar','Arabic'),
+        ('ru','Russian'),
+        ('fr','French'),
     )
     restaurant = models.OneToOneField(RestaurantDetail,on_delete=models.CASCADE)
     phone = models.CharField(max_length=15,blank=True)

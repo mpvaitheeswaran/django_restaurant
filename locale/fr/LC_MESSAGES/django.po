@@ -1,0 +1,125 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-12 14:56+0530\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\accounts\models.py:18
+msgid "The Email must be set"
+msgstr ""
+
+#: .\accounts\models.py:34
+msgid "Superuser must have is_staff=True."
+msgstr ""
+
+#: .\accounts\models.py:36
+msgid "Superuser must have is_superuser=True."
+msgstr ""
+
+#: .\accounts\models.py:42
+msgid "email address"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:154
+msgid "English"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:155
+msgid "Tamil"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:156
+msgid "Hindi"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:157
+msgid "Arabic"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:158
+msgid "French"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:159
+msgid "Russian"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\customer_menu.html:7
+msgid "Wellcome"
+msgstr "Bienvenue"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:17
+msgid "Order"
+msgstr "Commande"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:29
+msgid "dinein"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:33
+msgid "Store Pickup"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:38
+msgid "Customer Name"
+msgstr "Nom du client"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:43
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:109
+msgid "Table No."
+msgstr "numéro de bureau"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:54
+msgid "Address."
+msgstr "Adresse"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:61
+msgid "Your Orders"
+msgstr "Vos commandes"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:62
+msgid "clear all"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:71
+msgid "Total"
+msgstr "totale"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:81
+msgid "Place Order"
+msgstr "Passer la commande"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:96
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:122
+msgid "Call"
+msgstr "Appel"
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:221
+msgid "Available From"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:235
+msgid "Add Cart"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\customer_menu_item.html:237
+msgid "Call Waiter"
+msgstr ""
+
+#: .\templates\qrmenu\customer_view\menu_navbar.html:35
+msgid "Categories"
+msgstr "Catégories"

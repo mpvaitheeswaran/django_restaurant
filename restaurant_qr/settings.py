@@ -153,7 +153,10 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('en-us', _('English')),
     ('ta', _('Tamil')),
+    ('hi', _('Hindi')),
     ('ar', _('Arabic')),
+    ('fr', _('French')),
+    ('ru', _('Russian')),
 )
 
 #TIME_ZONE = 'UTC'
