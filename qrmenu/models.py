@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_save, pre_save
 from django.utils.crypto import get_random_string
 from currencies.models import Currency
+from django_countries.fields import CountryField
 
 # Create your models here.
 class RestaurantDetail(models.Model):
@@ -133,7 +134,7 @@ class BillingDetail(models.Model):
     city = models.CharField(max_length=30,null=True)
     state = models.CharField(max_length=30,null=True)
     zipcode = models.CharField(max_length=30,null=True)
-    country = models.CharField(max_length=30,choices=countries,default=countries[0][0],null=True)
+    country = CountryField(blank_label='(select country)')
 
 class AccountSetting(models.Model):
     currenries = (

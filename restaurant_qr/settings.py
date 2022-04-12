@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'currencies',
     'payments',
     'modeltranslation',
+    'django_countries',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
