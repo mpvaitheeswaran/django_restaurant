@@ -39,7 +39,23 @@ def select_pack(request):
     if not request.user.is_anonymous:
         restaurant = RestaurantDetail.objects.get(user=request.user)
         context['restaurant'] = restaurant
+    if not restaurant.billingdetail.name:
+        return redirect('qrmenu-enter_detail')
     return render(request,'qrmenu/select_pack.html',context)
+@login_required
+def billingDetail(request):
+    restaurant = RestaurantDetail.objects.get(user=request.user)
+    if restaurant.billingdetail.name:
+        return redirect('dashboard')
+    billing_detail = BillingDetail.objects.get(restaurant=restaurant)
+    form = BillingDetailForm(instance=billing_detail)
+    if request.method == 'POST':
+        form = BillingDetailForm(request.POST,instance=billing_detail)
+        if form.is_valid():
+            form.save(commit=False)
+            form.save()
+            return redirect('dashboard')
+    return render(request,'qrmenu/billing_detail.html',{'form':form})
 @login_required
 def activateTrial(request):
     restaurant = RestaurantDetail.objects.get(user=request.user)

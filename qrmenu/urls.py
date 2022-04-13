@@ -34,5 +34,6 @@ urlpatterns = [
     path('read_notification/', views.readNotification,name='qrmenu-read_notification'),
     path('invoice/',views.GeneratePdf.as_view(),name='invoice'),
     path('pack/',views.select_pack,name='qrmenu-pack'),
+    path('billing_detail/',views.billingDetail,name='qrmenu-enter_detail'),
     path('activate_trial/',views.activateTrial,name='qrmenu-activate_trial')
 ]

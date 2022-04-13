@@ -1,0 +1,42 @@
+{%extends 'base/non_auth_base.html'%}
+{% load crispy_forms_tags %}
+{%load static%}
+{%block stylesheet%}
+{%endblock%}
+{%block content%}
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm ">
+    <a class="navbar-brand" href="{%url 'dashboard'%}">RestaurantQR</a>
+
+    <div class="ml-auto">
+      <ul class="navbar-nav">
+        
+      </ul>
+    </div>
+  </nav>
+  <!-- Navbar End -->
+<div class="container mt-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 shadow-sm">
+            <span class="text-primary"><i class='bx bx-receipt'></i></span> Billing Details
+        </div>
+        <div class="card-body">
+          <form id="billDetailForm" method="post" autocomplete="off">
+            <div class="alert alert-info" role="alert">
+                These details will be used in invoice and payments.
+            </div>
+            {%crispy form%}
+          </form>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+{%block script%}
+<script>
+    $('#billDetailForm').on('input change', function() {
+        $(this).find(':submit').attr('disabled', false);
+        $(this).find(':submit').removeClass('disabled');
+      });
+</script>
+{%endblock%}
