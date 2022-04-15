@@ -25,12 +25,12 @@
           {%if restaurant.pickup%}
             <div class="d-flex">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="dinein_or_pickup" id="dinein" value="dinein" checked style="width: 30px; height: 30px;">
-                <label class="form-check-label" for="dinein" style="font-size: 30px;">{%trans 'dinein'%}</label>
+                <input class="form-check-input" type="radio" name="dinein_or_pickup" id="dinein" value="dinein" checked style="width: 20px; height: 20px;">
+                <label class="form-check-label" for="dinein" style="font-size: 20px;">{%trans 'dinein'%}</label>
               </div>
               <div class="form-check form-check-inline ml-auto">
-                <input class="form-check-input" type="radio" name="dinein_or_pickup" id="pickup" value="pickup" style="width: 30px; height: 30px;">
-                <label class="form-check-label" for="pickup" style="font-size: 30px;">{%trans 'Store Pickup'%}</label>
+                <input class="form-check-input" type="radio" name="dinein_or_pickup" id="pickup" value="pickup" style="width: 20px; height: 20px;">
+                <label class="form-check-label" for="pickup" style="font-size: 20px;">{%trans 'Store Pickup'%}</label>
               </div>
             </div>
           {%endif%}
@@ -58,7 +58,7 @@
           {%endif%}
         </form>
         <div class="d-flex align-items-center">
-          <h3>{%trans 'Your Orders'%}</h3>
+          <h4>{%trans 'Your Orders'%}</h4>
           <button id="clear_orders" class="ml-auto btn btn-sm btn-danger">{%trans 'clear all'%}</button>
         </div>
 

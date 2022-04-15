@@ -1,11 +1,12 @@
 {%extends 'base/base.html'%}
 {%load static%}
+{%load i18n%}
 {% load notifications_tags %}
 {%block content%}
 
     <div class="container-fluid pt-4"> 
         <div class="d-flex align-items-center mb-5">
-            <h3 class="mr-auto">Orders</h3>
+            <h3 class="mr-auto">{%trans 'Orders'%}</h3>
             <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
                 <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
                 <a href="#" class="btn btn-dark">Orders</a>
@@ -51,29 +52,29 @@
               <div class="row mt-2">
                 <div class="col-sm-6">
                     {%if order.order_type == 'dinein'%}
-                    <p style="font-size: 16px;" class="m-0">Table No : {{order.table_no}}</p>
+                    <p style="font-size: 16px;" class="m-0">{%trans "Table No"%} : {{order.table_no}}</p>
                     {%endif%}
                 </div> 
                 <div class="col-sm-6 text-right">
-                    <p style="font-size: 16px;" class="m-0">Total : {{currency.symbol}}{{order.total_price}}</p>
+                    <p style="font-size: 16px;" class="m-0">{%trans "Total"%} : {{currency.symbol}}{{order.total_price}}</p>
                 </div> 
               </div>
             </div>
             <div class="card-footer bg-white border-0">
                 {%if order.status == 'pending'%}
                 <div class="d-flex">
-                    <h6 class="text-warning"><small><i class='bx bx-sync'></i></small> Pending</h6>
-                    <button class="aprove_btn btn btn-primary ml-auto" data-id="{{order.id}}">Aprove <i class='bx bx-printer'></i></button>
+                    <h6 class="text-warning"><small><i class='bx bx-sync'></i></small> {%trans "Pending"%}</h6>
+                    <button class="aprove_btn btn btn-primary ml-auto" data-id="{{order.id}}">{%trans "Aprove"%} <i class='bx bx-printer'></i></button>
                     <!-- <a href="{%url 'bill_print' order.id %}" target="_blank" class="btn btn-primary print" >Print <i class='bx bx-printer'></i></a> -->
                     <button type="button" class="btn btn-danger ml-2" data-toggle="modal" data-target="#delete_orderModal{{order.id}}">
-                        Remove
+                        {%trans "Remove"%}
                     </button>
                     <!--Delete Order Modal -->
                     <div class="modal fade" id="delete_orderModal{{order.id}}" tabindex="-1" aria-labelledby="delete_orderModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h5 class="modal-title" id="delete_orderModalLabel">Delete Order</h5>
+                            <h5 class="modal-title" id="delete_orderModalLabel">{%trans "Delete Order"%}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -82,8 +83,8 @@
                             Are you want to delete {{order.customer_name}}'s order?
                             </div>
                             <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-danger delete_order_btn" data-order_id="{{order.id}}">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
+                            <button type="button" class="btn btn-danger delete_order_btn" data-order_id="{{order.id}}">{%trans "Delete"%}</button>
                             </div>
                         </div>
                         </div>
@@ -91,15 +92,15 @@
                 </div>
                 {%else%}
                     <div class="d-flex">
-                        <h6 class="text-success mr-auto"><small><i class='bx bxs-check-circle'></i> Success</h6>
+                        <h6 class="text-success mr-auto"><small><i class='bx bxs-check-circle'></i> {%trans "Success"%}</h6>
                         <!-- <button class="btn btn-info">Info <i class='bx bx-message-square-detail'></i></button> -->
-                        <a href="{%url 'bill_print' order.id %}" target="_blank" class="btn btn-primary print ml-2" >Print <i class='bx bx-printer'></i></a>
+                        <a href="{%url 'bill_print' order.id %}" target="_blank" class="btn btn-primary print ml-2" >{%trans "Print"%} <i class='bx bx-printer'></i></a>
                     </div>
                 {%endif%}
             </div>
         </div>
         {%empty%}
-        <h1 class="text-center text-muted">No Orders.</h1>
+        <h1 class="text-center text-muted">{%trans "No Orders"%}.</h1>
         {%endfor%} 
 {%endblock%}
 {%block script%}

@@ -1,12 +1,13 @@
 {%extends 'base/base.html'%}
+{%load i18n%}
 {%block content%}
     <div class="container-fluid pt-4">
         <div class="d-flex align-items-center mb-5">
-            <h3 class="mr-auto">Support</h3>
+            <h3 class="mr-auto">{%trans "Support"%}</h3>
             <button class="btn btn-primary" 
                 data-toggle="modal" 
                 data-target="#enquiryModal">
-                Add Enquiry
+                {%trans "Add Enquiry"%}
             </button>
         </div>
         <!--Query Modal Form-->
@@ -15,7 +16,7 @@
             <div class="modal-content">
                 <form method="post">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="enquiryModalLabel">Add Query</h5>
+                        <h5 class="modal-title" id="enquiryModalLabel">{%trans "Add Query"%}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -27,7 +28,7 @@
                                 maxlength="50"
                                 class="form-control"
                                 placeholder="Title">
-                            <label for="id_question">Enter your Query</label>
+                            <label for="id_question">{%trans "Enter your Query"%}</label>
                             <textarea name="question" 
                                 id="id_question" 
                                 class="form-control" 
@@ -35,8 +36,8 @@
                                 style="resize: none;"></textarea>
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
+                        <button type="submit" class="btn btn-primary">{%trans "Send"%}</button>
                         </div>
                 </form>
             </div>
@@ -48,9 +49,9 @@
             <table class="table bg-white shadow">
                 <thead>
                   <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Question</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">{%trans "Date"%}</th>
+                    <th scope="col">{%trans "Question"%}</th>
+                    <th scope="col">{%trans "Status"%}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -60,7 +61,7 @@
                         <div class="modal-dialog modal-dialog-centered">
                           <div class="modal-content">
                             <div class="modal-header">
-                              <h5 class="modal-title">Your Query</h5>
+                              <h5 class="modal-title">{%trans "Your Query"%}</h5>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                               </button>
@@ -105,7 +106,7 @@
             </table>
         </div>
         {%else%}
-        <h4 class="text-center">No Enquiries added</h4>
+        <h4 class="text-center">{%trans "No Enquiries added"%}</h4>
         {%endif%}
     </div>
 {%endblock%}

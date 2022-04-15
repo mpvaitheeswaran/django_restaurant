@@ -32,6 +32,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage,EmailMultiAlternatives
 from django.core.files import File
 from googletrans import Translator
+from django.utils import translation
 # Create your views here.
 @login_required
 def select_pack(request):
@@ -113,7 +114,6 @@ def dashboard(request):
     # Redirect to pack page when user not selected any package.
     if restaurant.pack.pack_type==-1:
         return redirect('qrmenu-pack')
-    print(restaurant.pack.pack_type)
     menu_count = MenuItem.objects.filter(category__restaurant=restaurant).count()
 
     total_scan = ScanCount.objects.filter(restaurant=restaurant).count()
@@ -122,7 +122,11 @@ def dashboard(request):
         'total_scan': total_scan,
         'pending_orders': CustomerOrder.objects.filter(restaurant=restaurant,status='pending').count()
     }
-    return render(request,'qrmenu/dashboard.html',context)
+    user_language = restaurant.accountsetting.menu_language
+    translation.activate(user_language)
+    response = render(request,'qrmenu/dashboard.html',context)
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, user_language)
+    return response
 
 class RestaurantView(UserPassesTestMixin,View):
     # Redirect when user was superuser.
@@ -400,6 +404,7 @@ class SupportView(UserPassesTestMixin,FormView):
 
 def changePassword(request):
     if request.method == 'POST':
+        isLangChanged = False
         passwordform = PasswordChangeForm(request.user,request.POST)
         restaurant = RestaurantDetail.objects.get(user=request.user)
         try:
@@ -412,6 +417,7 @@ def changePassword(request):
             settings = settingsform.save(commit=False)
             settings.restaurant = restaurant
             settings.save()
+            isLangChanged = True
         if passwordform.is_valid():
             user = passwordform.save()
             update_session_auth_hash(request,user)
@@ -419,7 +425,10 @@ def changePassword(request):
         else: 
             if passwordform.data['old_password']:
                 messages.error(request,'Wrong Password!')
-        return redirect('accountsettings')
+        if isLangChanged:
+            return redirect('dashboard')
+        else:
+            return redirect('accountsettings')
 
 # for customers
 class CustomerView(TemplateView):
@@ -433,7 +442,6 @@ class CustomerView(TemplateView):
             self.template_name = 'qrmenu/customer_view/outofscans.html'
         return super().get(request, *args, **kwargs)
     def render_to_response(self, context, **response_kwargs):
-        from django.utils import translation
         unique_id = self.kwargs['unique_id']
         restaurant = RestaurantDetail.objects.get(unique_id=unique_id)
         account_setting = AccountSetting.objects.get(restaurant=restaurant)
@@ -552,8 +560,8 @@ def addCategory(request):
         restaurant = RestaurantDetail.objects.get(user=request.user)
         category = MenuCategory(restaurant=restaurant,name=name)
         # For Translation.
-        category.name_ta = translator.translate(name,dest='ta',src='en').text
-        category.name_ar = translator.translate(name,dest='ar',src='en').text
+        # category.name_ta = translator.translate(name,dest='ta',src='en').text
+        # category.name_ar = translator.translate(name,dest='ar',src='en').text
         category.save()
         responce_data['id'] = category.pk
         responce_data['name'] = category.name
@@ -568,8 +576,8 @@ def editCategory(request):
         responce_data ={}
         category = MenuCategory.objects.get(pk=id)
         category.name = new_name
-        category.name_ta = translator.translate(new_name,dest='ta',src='en').text
-        category.name_ar = translator.translate(new_name,dest='ar',src='en').text
+        # category.name_ta = translator.translate(new_name,dest='ta',src='en').text
+        # category.name_ar = translator.translate(new_name,dest='ar',src='en').text
         category.save()
         responce_data['name'] = category.name
         return HttpResponse(json.dumps(responce_data), content_type="application/json")
@@ -609,8 +617,8 @@ def addItem(request):
                 item = form.save(commit=False)
                 item.category = category
                 item.display = display
-                item.name_ta = translator.translate(item.name,dest='ta',src='en').text
-                item.name_ar = translator.translate(item.name,dest='ar',src='en').text
+                # item.name_ta = translator.translate(item.name,dest='ta',src='en').text
+                # item.name_ar = translator.translate(item.name,dest='ar',src='en').text
                 item.save()
                 responce_data['error'] = False
                 responce_data['id'] = item.id
@@ -651,8 +659,8 @@ def updateItem(request):
         if form.is_valid():
             item = form.save(commit=False)
             item.display = display
-            item.name_ta = translator.translate(item.name,dest='ta',src='en').text
-            item.name_ar = translator.translate(item.name,dest='ar',src='en').text
+            # item.name_ta = translator.translate(item.name,dest='ta',src='en').text
+            # item.name_ar = translator.translate(item.name,dest='ar',src='en').text
             item.save()
             print('Form valid')
             responce_data['error'] = False

@@ -1,8 +1,9 @@
 {%extends 'base/base.html'%}
+{%load i18n%}
 {%block content%}
     <div class="container-fluid pt-4">
         <div class="d-flex align-items-center mb-5">
-            <h3 class="mr-auto">QR Builder</h3>
+            <h3 class="mr-auto">{%trans "QR Builder"%}</h3>
             <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
                 <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
                 <a href="#" class="btn btn-dark">QR Builder</a>
@@ -17,14 +18,14 @@
             <div class="col-sm-4">
                 <div class="card border-0 shadow">
                     <h5 class="card-header border-0 bg-white shadow-sm">
-                        <span class="text-primary"><i class='bx bx-qr-scan'></i></span> QR Code</h5>
+                        <span class="text-primary"><i class='bx bx-qr-scan'></i></span> {%trans "QR Code"%}</h5>
                     <div class="card-body">
                         <div class="text-center">
                             <img class="img-fluid" src='{{img_str}}'/>
                         </div>
                     </div>
                     <div class="card-footer border-0 bg-white">
-                        <a download="{{restaurant.name}}qr-code.png" href="{{img_str}}" class="btn btn-primary"><i class='bx bxs-download'></i> Download Image</a>
+                        <a download="{{restaurant.name}}qr-code.png" href="{{img_str}}" class="btn btn-primary"><i class='bx bxs-download'></i> {%trans "Download Image"%}</a>
                     </div>
                 </div>
                 

@@ -1,10 +1,11 @@
 {%extends 'base/base.html'%}
 {%load static%}
 {%load crispy_forms_tags%}
+{%load i18n%}
 {%block content%}
     <div class="container-fluid px-0 pt-4">
       <div class="d-flex align-items-center mb-5">
-        <h3 class="mr-auto">Menus</h3>
+        <h3 class="mr-auto">{%trans 'Menus'%}</h3>
         <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
             <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
             <a href="#" class="btn btn-dark">Menus</a>
@@ -15,17 +16,17 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="out_of_menusLabel">Can't add</h5>
+            <h5 class="modal-title" id="out_of_menusLabel">{%trans "Can't add"%}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            You can't add menus. If you want to add menus Buy the Pack.
+            {%trans "You can't add menus. If you want to add menus Buy the Pack"%}.
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <a href="{%url 'qrmenu-pack'%}" class="btn btn-success">Buy</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
+            <a href="{%url 'qrmenu-pack'%}" class="btn btn-success">{%trans "Buy"%}</a>
           </div>
         </div>
       </div>
@@ -36,17 +37,17 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="no_packLabel">Package Expired.</h5>
+            <h5 class="modal-title" id="no_packLabel">{%trans "Package Expired"%}.</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            Your pack is expired, You should buy any package.
+            {%trans "Your pack is expired, You should buy any package"%}.
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <a href="{%url 'qrmenu-pack'%}" class="btn btn-success">Buy</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans 'Close'%}</button>
+            <a href="{%url 'qrmenu-pack'%}" class="btn btn-success">{%trans 'Buy'%}</a>
           </div>
         </div>
       </div>
@@ -57,7 +58,7 @@
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+              <h5 class="modal-title" id="exampleModalLabel">{%trans "Add Category"%}</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -69,8 +70,8 @@
                   {{form_menucategory|crispy}}
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="btn_addcategory" type="submit" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans 'Close'%}</button>
+                <button id="btn_addcategory" type="submit" class="btn btn-primary">{%trans 'Add'%}</button>
               </div>
             </form>
           </div>
@@ -80,7 +81,7 @@
       <!-- Menu Category List -->
       <div class="card border-0 shadow">
         <h4 class="card-header bg-primary-cus text-light">
-          Menu List
+          {%trans "Menu List"%}
           <button class="btn float-right p-1" style="font-size: 20px;" data-toggle="modal" data-target="#add_category"><i class='bx bxs-message-square-add'></i></button>
         </h4>
         <div class="card-body px-2">
@@ -92,17 +93,17 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="deleteCategory{{category.id}}Label">Delete Category</h5>
+                      <h5 class="modal-title" id="deleteCategory{{category.id}}Label">{%trans "Delete Category"%}</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                      Are you want to delete "{{category.name}}"
+                      {%trans 'Are you want to delete'%} "{{category.name}}"
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button id="btnDeleteCategory{{category.id}}" data-id="{{category.id}}" type="button" class="btn btn-danger">Delete</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans 'Close'%}</button>
+                      <button id="btnDeleteCategory{{category.id}}" data-id="{{category.id}}" type="button" class="btn btn-danger">{%trans "Delete"%}</button>
                     </div>
                   </div>
                 </div>
@@ -113,7 +114,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="editCategory{{category.id}}Label">Edit Category</h5>
+                      <h5 class="modal-title" id="editCategory{{category.id}}Label">{%trans 'Edit Category'%}</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -122,8 +123,8 @@
                       <input id="id_editCategory{{category.id}}" type="text" class="form-control" value="{{category.name}}" required>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button id="btnEditCategory{{category.id}}" data-id="{{category.id}}" type="button" class="btn btn-success">Save Changes</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
+                      <button id="btnEditCategory{{category.id}}" data-id="{{category.id}}" type="button" class="btn btn-success">{%trans "Save Changes"%}</button>
                     </div>
                   </div>
                 </div>
@@ -135,7 +136,7 @@
                 <div class="modal-dialog modal-dialog-scrollable">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+                      <h5 class="modal-title" id="exampleModalLabel">{%trans "Add Item"%}</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -146,24 +147,24 @@
                           {%csrf_token%}
                           <input name="id" type="hidden" value="{{category.id}}" >
                           <div class="form-group">
-                            <label for="id_name{{category.id}}">Name</label>
+                            <label for="id_name{{category.id}}">{%trans "Name"%}</label>
                             <input name="name" type="text" class="form-control" id="id_name{{category.id}}" placeholder="Example:Burger, Pitza and etc.">
                           </div>
                           <div class="form-group">
-                            <label for="id_price{{category.id}}">Price ({{currency.code}})</label>
+                            <label for="id_price{{category.id}}">{%trans "Price"%} ({{currency.code}})</label>
                             <input name="price" type="number" class="form-control" id="id_price{{category.id}}" placeholder="{{currency.symbol}}">
                           </div>
                           <div class="form-group">
-                            <label for="id_desc{{category.id}}">Description</label>
+                            <label for="id_desc{{category.id}}">{%trans "Description"%}</label>
                             <textarea name="desc" class="form-control" id="id_desc{{category.id}}" rows="3"></textarea>
                           </div>
                           <div class="form-row align-items-center">
                             <div class="form-group col">
-                              <h6>Item Image</h6>
+                              <h6>{%trans "Item Image"%}</h6>
                               <div class="item-pic mb-4">
                                   <label class="-label" for="id_image{{category.id}}">
                                       <span><i class="bi bi-pencil"></i></span>
-                                      <span>Edit</span>
+                                      <span>{%trans "Edit"%}</span>
                                   </label>
                                   <input id="id_image{{category.id}}" type="file" name="img" accept="image/*"/>
                                   <img src="/media/item_imgs/default.png" class="img-fluid" id="output_image{{category.id}}" width="200" />
@@ -173,15 +174,15 @@
                               <div class="form-group">
                                 <div class="form-check form-check-inline">
                                   <input class="form-check-input" type="radio" name="food_type" id="non-veg{{category.id}}" value="true" checked>
-                                  <label class="form-check-label" for="non-veg{{category.id}}">Non-Veg</label>
+                                  <label class="form-check-label" for="non-veg{{category.id}}">{%trans "Non-Veg"%}</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                   <input class="form-check-input" type="radio" name="food_type" id="veg{{category.id}}" value="false">
-                                  <label class="form-check-label" for="veg{{category.id}}">Veg</label>
+                                  <label class="form-check-label" for="veg{{category.id}}">{%trans "Veg"%}</label>
                                 </div>
                               </div>
                               <div class="form-group d-flex align-items-center">
-                                <p class="mr-2 m-0 " id="">Enable</p>
+                                <p class="mr-2 m-0 " id="">{%trans "Enable"%}</p>
                                 <label class="switch m-0">
                                   <input name="display" id="id_display{{category.id}}" type="checkbox" checked>
                                   <span class="slider round"></span>
@@ -191,50 +192,21 @@
                               
                             </div>
                           </div>
-                          <label for="">Food Available Time</label>
+                          <label for="">{%trans "Food Available Time"%}</label>
                           <div class="form-row">
                             <div class="form-group col">
-                              <label for="id_start_time{{category.id}}">Start Time</label>
+                              <label for="id_start_time{{category.id}}">{%trans "Start Time"%}</label>
                               <input type="time" id="id_start_time{{category.id}}" name="start_time" class="form-control" >
                             </div>
                             <div class="form-group col">
-                              <label for="id_end_time{{category.id}}">End Time</label>
+                              <label for="id_end_time{{category.id}}">{%trans "End Time"%}</label>
                               <input type="time" id="id_end_time{{category.id}}" name="end_time" class="form-control" >
                             </div>
                           </div>
-                          <!-- <div class="form-group">
-                            <h5 class="text-center">Item Image</h5>
-                            <div class="item-pic mb-4">
-                                <label class="-label" for="id_image{{category.id}}">
-                                    <span><i class="bi bi-pencil"></i></span>
-                                    <span>Edit</span>
-                                </label>
-                                <input id="id_image{{category.id}}" type="file" name="img" accept="image/*"/>
-                                <img src="/media/item_imgs/default.png" class="img-fluid" id="output_image{{category.id}}" width="200" />
-                            </div>
-                          </div> -->
-                          <!-- <div class="form-row justify-content-between">
-                            <div class="form-group col">
-                              <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="food_type" id="non-veg{{category.id}}" value="true" checked>
-                                <label class="form-check-label" for="non-veg{{category.id}}">Non-Veg</label>
-                              </div>
-                              <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="food_type" id="veg{{category.id}}" value="false">
-                                <label class="form-check-label" for="veg{{category.id}}">Veg</label>
-                              </div>
-                            </div>
-                            <div class="form-group col text-right d-flex align-items-center">
-                              <p class="mr-2 m-0 " id="">Display to customers</p>
-                              <label class="switch m-0">
-                                <input name="display" id="id_display{{category.id}}" type="checkbox" checked>
-                                <span class="slider round"></span>
-                              </label>
-                            </div>
-                          </div> -->
+                         
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
                         <!-- <button id="btn_additem{{category.id}}" type="button" class="btn btn-primary" data-id="{{category.id}}">Add</button> -->
                         <input id="btn_additem{{category.id}}" data-id="{{category.id}}" type="submit" value="Add" class="btn btn-success">
                       </div>
@@ -276,7 +248,7 @@
                     <div class="modal-dialog modal-dialog-scrollable">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title text-dark" id="exampleModalLabel">Edit Item</h5>
+                          <h5 class="modal-title text-dark" id="exampleModalLabel">{%trans "Edit Item"%}</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -287,25 +259,25 @@
                               {%csrf_token%}
                               <input name="id" type="hidden" value="{{item.id}}" >
                               <div class="form-group">
-                                <label for="id_name{{item.id}}">Name</label>
+                                <label for="id_name{{item.id}}">{%trans "Name"%}</label>
                                 <input name="name" type="text" class="form-control" id="id_name{{item.id}}" placeholder="Example:Burger, Pitza and etc." value="{{item.name}}">
                               </div>
                               <div class="form-group">
-                                <label for="id_price{{item.id}}">Price ({{currency.code}})</label>
+                                <label for="id_price{{item.id}}">{%trans "Price"%} ({{currency.code}})</label>
                                 <input name="price" type="number" class="form-control" id="id_price{{item.id}}" value="{{item.price}}" placeholder="{{currency.symbol}}">
                               </div>
                               <div class="form-group">
-                                <label for="id_desc{{item.id}}">Description</label>
+                                <label for="id_desc{{item.id}}">{%trans "Description"%}</label>
                                 <textarea name="desc" class="form-control" id="id_desc{{item.id}}" rows="3">{{item.desc}}</textarea>
                               </div>
                               
                               <div class="form-row align-items-center">
                                 <div class="form-group col">
-                                  <h6>Item Image</h6>
+                                  <h6>{%trans "Item Image"%}</h6>
                                   <div class="item-pic mb-4">
                                       <label class="-label" for="id_edit_image{{item.id}}">
                                           <span><i class="bi bi-pencil"></i></span>
-                                          <span>Edit</span>
+                                          <span>{%trans "Edit"%}</span>
                                       </label>
                                       <input id="id_edit_image{{item.id}}" type="file" name="img" accept="image/*"/>
                                       <img src="{{item.img.url}}" class="img-fluid" id="item_output_image{{item.id}}" width="200" />
@@ -315,15 +287,15 @@
                                   <div class="form-group">
                                     <div class="form-check form-check-inline">
                                       <input class="form-check-input" type="radio" name="food_type" id="non-veg{{item.id}}" value="true" {%if item.food_type%}checked{%endif%}>
-                                      <label class="form-check-label" for="non-veg{{item.id}}">Non-Veg</label>
+                                      <label class="form-check-label" for="non-veg{{item.id}}">{%trans "Non-Veg"%}</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                       <input class="form-check-input" type="radio" name="food_type" id="veg{{item.id}}" value="false"{%if not item.food_type%}checked{%endif%}>
-                                      <label class="form-check-label" for="veg{{item.id}}">Veg</label>
+                                      <label class="form-check-label" for="veg{{item.id}}">{%trans "Veg"%}</label>
                                     </div>
                                   </div>
                                   <div class="form-group text-right d-flex align-items-center">
-                                    <p class="m-0 mr-2 ">Enable</p>
+                                    <p class="m-0 mr-2 ">{%trans "Enable"%}</p>
                                     <label class="switch m-0">
                                       <input name="display" id="id_display{{item.id}}" type="checkbox" checked>
                                       <span style="height: 2.5em;" class="slider round"></span>
@@ -333,21 +305,21 @@
                                   </div>
                                 </div>
                               </div>
-                              <label for="">Food Available Time</label>
+                              <label for="">{%trans "Food Available Time"%}</label>
                               <div class="form-row">
                                 <div class="form-group col">
-                                  <label for="id_start_time{{item.id}}">Start Time</label>
+                                  <label for="id_start_time{{item.id}}">{%trans "Start Time"%}</label>
                                   <input type="time" id="id_start_time{{item.id}}" name="start_time" class="form-control" value="{{item.start_time|time:'H:i'}}">
                                 </div>
                                 <div class="form-group col">
-                                  <label for="id_end_time{{item.id}}">End Time</label>
+                                  <label for="id_end_time{{item.id}}">{%trans "End Time"%}</label>
                                   <input type="time" id="id_end_time{{item.id}}" name="end_time" class="form-control" value="{{item.end_time|time:'H:i'}}">
                                 </div>
                               </div>
                               
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
                             <!-- <button id="btn_additem{{category.id}}" type="button" class="btn btn-primary" data-id="{{category.id}}">Add</button> -->
                             <input id="btn_edititem{{item.id}}" data-id="{{item.id}}" type="submit" value="Save Changes" class="btn btn-success">
                           </div>
@@ -361,17 +333,17 @@
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title text-dark" id="deleteItem{{item.id}}Label">Delete Item</h5>
+                          <h5 class="modal-title text-dark" id="deleteItem{{item.id}}Label">{%trans "Delete Item"%}</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
                         <div class="modal-body">
-                          <h6 class="text-dark">Are you want to delete "{{item.name}}"</h6>
+                          <h6 class="text-dark">{%trans "Are you want to delete"%} "{{item.name}}"</h6>
                         </div>
                         <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button id="btnDeleteItem{{item.id}}" data-id="{{item.id}}" type="button" class="btn btn-danger">Delete</button>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">{%trans "Close"%}</button>
+                          <button id="btnDeleteItem{{item.id}}" data-id="{{item.id}}" type="button" class="btn btn-danger">{%trans "Delete"%}</button>
                         </div>
                       </div>
                     </div>

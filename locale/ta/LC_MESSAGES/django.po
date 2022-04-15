@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-06 16:26+0530\n"
+"POT-Creation-Date: 2022-04-15 11:28+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,17 +34,96 @@ msgstr ""
 msgid "email address"
 msgstr ""
 
-#: .\restaurant_qr\settings.py:152
+#: .\restaurant_qr\settings.py:154
 msgid "English"
 msgstr ""
 
-#: .\restaurant_qr\settings.py:153
+#: .\restaurant_qr\settings.py:155
 msgid "Tamil"
 msgstr ""
 
-#: .\restaurant_qr\settings.py:154
+#: .\restaurant_qr\settings.py:156
+msgid "Hindi"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:157
 msgid "Arabic"
 msgstr ""
+
+#: .\restaurant_qr\settings.py:158
+msgid "French"
+msgstr ""
+
+#: .\restaurant_qr\settings.py:159
+msgid "Russian"
+msgstr ""
+
+#: .\templates\base\navbar.html:63 .\templates\qrmenu\dashboard.html:9
+msgid "Dashboard"
+msgstr ""
+
+#: .\templates\base\navbar.html:65
+msgid "Restaurant Profile"
+msgstr "உணவக விவரம்"
+
+#: .\templates\base\navbar.html:67
+msgid "Menu"
+msgstr "பட்டியல்"
+
+#: .\templates\base\navbar.html:69 .\templates\qrmenu\orders.html:9
+#, fuzzy
+#| msgid "Your Orders"
+msgid "Orders"
+msgstr "ஆர்டர்கள்"
+
+#: .\templates\base\navbar.html:71 .\templates\qrmenu\membership.html:14
+msgid "Membership"
+msgstr "உறுப்பினராக"
+
+#: .\templates\base\navbar.html:73 .\templates\qrmenu\qrbuilder.html:6
+msgid "QR Builder"
+msgstr ""
+
+#: .\templates\base\navbar.html:76 .\templates\qrmenu\transactions.html:7
+msgid "Transactions"
+msgstr "பரிவர்த்தனைகள்"
+
+#: .\templates\base\navbar.html:78 .\templates\qrmenu\accountsettings.html:8
+#: .\templates\qrmenu\accountsettings.html:15
+msgid "Account Settings"
+msgstr "அமைப்புகள்"
+
+#: .\templates\base\navbar.html:80 .\templates\qrmenu\support.html:6
+msgid "Support"
+msgstr "ஆதரவு"
+
+#: .\templates\base\navbar.html:83
+msgid "SignOut"
+msgstr "வெளியேறு"
+
+#: .\templates\qrmenu\accountsettings.html:36
+msgid "Email address"
+msgstr "மின்னஞ்சல் "
+
+#: .\templates\qrmenu\accountsettings.html:43
+msgid "Old Password"
+msgstr "பழைய கடவுச்சொல்"
+
+#: .\templates\qrmenu\accountsettings.html:49
+msgid "New Password"
+msgstr "புதிய கடவுச்சொல்"
+
+#: .\templates\qrmenu\accountsettings.html:55
+msgid "Confirm Password"
+msgstr "கடவுச்சொல்லை உறுதிப்படுத்தவும்"
+
+#: .\templates\qrmenu\accountsettings.html:67
+msgid "Billing Details"
+msgstr ""
+
+#: .\templates\qrmenu\accountsettings.html:72
+msgid "These details will be used in invoice and payments."
+msgstr "இந்த விவரங்கள் விலைப்பட்டியல் மற்றும் கட்டணங்களில் பயன்படுத்தப்படும்."
 
 #: .\templates\qrmenu\customer_view\customer_menu.html:7
 msgid "Wellcome"
@@ -52,7 +131,7 @@ msgstr ""
 
 #: .\templates\qrmenu\customer_view\customer_menu_item.html:17
 msgid "Order"
-msgstr ""
+msgstr "ஆர்டர்"
 
 #: .\templates\qrmenu\customer_view\customer_menu_item.html:29
 msgid "dinein"
@@ -84,6 +163,7 @@ msgid "clear all"
 msgstr ""
 
 #: .\templates\qrmenu\customer_view\customer_menu_item.html:71
+#: .\templates\qrmenu\orders.html:59
 msgid "Total"
 msgstr "மொத்தம்"
 
@@ -111,3 +191,283 @@ msgstr "அழைக்கவும்"
 #: .\templates\qrmenu\customer_view\menu_navbar.html:35
 msgid "Categories"
 msgstr "உணவு வகைகள்"
+
+#: .\templates\qrmenu\dashboard.html:19
+#, fuzzy
+#| msgid "Place Order"
+msgid "Pending Orders"
+msgstr "நிலுவையில் உள்ளவை  "
+
+#: .\templates\qrmenu\dashboard.html:31
+#, fuzzy
+#| msgid "Total"
+msgid "Total Scans"
+msgstr "மொத்த வருடல்"
+
+#: .\templates\qrmenu\dashboard.html:43
+#, fuzzy
+#| msgid "Total"
+msgid "Total Menus"
+msgstr "மொத்த பட்டியல்"
+
+#: .\templates\qrmenu\membership.html:21
+msgid "Monthly Pack"
+msgstr ""
+
+#: .\templates\qrmenu\membership.html:27
+msgid "Month"
+msgstr ""
+
+#: .\templates\qrmenu\membership.html:31 .\templates\qrmenu\membership.html:54
+msgid "Unlimited Menus"
+msgstr ""
+
+#: .\templates\qrmenu\membership.html:32 .\templates\qrmenu\membership.html:55
+msgid "Unlimited Scans"
+msgstr ""
+
+#: .\templates\qrmenu\membership.html:36 .\templates\qrmenu\membership.html:58
+msgid "Show Details"
+msgstr ""
+
+#: .\templates\qrmenu\membership.html:44
+msgid "Yearly Pack"
+msgstr ""
+
+#: .\templates\qrmenu\membership.html:50
+msgid "Year"
+msgstr ""
+
+#: .\templates\qrmenu\menu.html:8
+msgid "Menus"
+msgstr ""
+
+#: .\templates\qrmenu\menu.html:19
+msgid "Can't add"
+msgstr "சேர்க்க முடியாது"
+
+#: .\templates\qrmenu\menu.html:25
+msgid "You can't add menus. If you want to add menus Buy the Pack"
+msgstr ""
+"நீங்கள் மெனுக்களை சேர்க்க முடியாது. நீங்கள் மெனுக்களை சேர்க்க விரும்பினால், பேக்கை வாங்கவும்"
+
+#: .\templates\qrmenu\menu.html:28 .\templates\qrmenu\menu.html:49
+#: .\templates\qrmenu\menu.html:73 .\templates\qrmenu\menu.html:105
+#: .\templates\qrmenu\menu.html:126 .\templates\qrmenu\menu.html:209
+#: .\templates\qrmenu\menu.html:322 .\templates\qrmenu\menu.html:345
+#: .\templates\qrmenu\orders.html:86 .\templates\qrmenu\support.html:39
+msgid "Close"
+msgstr "மூடு"
+
+#: .\templates\qrmenu\menu.html:29 .\templates\qrmenu\menu.html:50
+msgid "Buy"
+msgstr "வாங்கு"
+
+#: .\templates\qrmenu\menu.html:40
+msgid "Package Expired"
+msgstr "தொகுப்பு காலாவதியானது"
+
+#: .\templates\qrmenu\menu.html:46
+msgid "Your pack is expired, You should buy any package"
+msgstr "உங்கள் பேக் காலாவதியானது, நீங்கள் ஏதேனும் ஒரு தொகுப்பை வாங்க வேண்டும்"
+
+#: .\templates\qrmenu\menu.html:61
+#, fuzzy
+#| msgid "Add Cart"
+msgid "Add Category"
+msgstr "வகையைச் சேர்"
+
+#: .\templates\qrmenu\menu.html:74
+msgid "Add"
+msgstr "சேர்க்கவும்"
+
+#: .\templates\qrmenu\menu.html:84
+#, fuzzy
+#| msgid "Menu"
+msgid "Menu List"
+msgstr "பட்டியல்"
+
+#: .\templates\qrmenu\menu.html:96
+msgid "Delete Category"
+msgstr "வகையை நீக்கு"
+
+#: .\templates\qrmenu\menu.html:102 .\templates\qrmenu\menu.html:342
+msgid "Are you want to delete"
+msgstr "நீக்க வேண்டுமா"
+
+#: .\templates\qrmenu\menu.html:106 .\templates\qrmenu\menu.html:346
+#: .\templates\qrmenu\orders.html:87
+msgid "Delete"
+msgstr "நீக்கு"
+
+#: .\templates\qrmenu\menu.html:117
+#, fuzzy
+#| msgid "Categories"
+msgid "Edit Category"
+msgstr "வகையைத் திருத்தவும்"
+
+#: .\templates\qrmenu\menu.html:127
+msgid "Save Changes"
+msgstr "சேமி"
+
+#: .\templates\qrmenu\menu.html:139
+#, fuzzy
+#| msgid "Add Cart"
+msgid "Add Item"
+msgstr "பொருளைச் சேர்க்கவும்"
+
+#: .\templates\qrmenu\menu.html:150 .\templates\qrmenu\menu.html:262
+msgid "Name"
+msgstr "பெயர்"
+
+#: .\templates\qrmenu\menu.html:154 .\templates\qrmenu\menu.html:266
+msgid "Price"
+msgstr "விலை"
+
+#: .\templates\qrmenu\menu.html:158 .\templates\qrmenu\menu.html:270
+msgid "Description"
+msgstr "விளக்கம்"
+
+#: .\templates\qrmenu\menu.html:163 .\templates\qrmenu\menu.html:276
+msgid "Item Image"
+msgstr "பொருளின் படம்"
+
+#: .\templates\qrmenu\menu.html:167 .\templates\qrmenu\menu.html:280
+msgid "Edit"
+msgstr "திருத்து"
+
+#: .\templates\qrmenu\menu.html:177 .\templates\qrmenu\menu.html:290
+msgid "Non-Veg"
+msgstr "அசைவம்"
+
+#: .\templates\qrmenu\menu.html:181 .\templates\qrmenu\menu.html:294
+msgid "Veg"
+msgstr "சைவம்"
+
+#: .\templates\qrmenu\menu.html:185 .\templates\qrmenu\menu.html:298
+msgid "Enable"
+msgstr ""
+
+#: .\templates\qrmenu\menu.html:195 .\templates\qrmenu\menu.html:308
+#, fuzzy
+#| msgid "Available From"
+msgid "Food Available Time"
+msgstr "கிடைக்கும் நேரம்"
+
+#: .\templates\qrmenu\menu.html:198 .\templates\qrmenu\menu.html:311
+msgid "Start Time"
+msgstr "ஆரம்பிக்கும் நேரம்"
+
+#: .\templates\qrmenu\menu.html:202 .\templates\qrmenu\menu.html:315
+msgid "End Time"
+msgstr "முடிவு நேரம்"
+
+#: .\templates\qrmenu\menu.html:251
+msgid "Edit Item"
+msgstr "பொருளை திருத்து"
+
+#: .\templates\qrmenu\menu.html:336
+msgid "Delete Item"
+msgstr "பொருளை நீக்கு"
+
+#: .\templates\qrmenu\orders.html:55
+#, fuzzy
+#| msgid "Table No."
+msgid "Table No"
+msgstr "மேசை எண்."
+
+#: .\templates\qrmenu\orders.html:66
+#, fuzzy
+#| msgid "Place Order"
+msgid "Pending"
+msgstr "நிலுவையில்"
+
+#: .\templates\qrmenu\orders.html:67
+msgid "Aprove"
+msgstr ""
+
+#: .\templates\qrmenu\orders.html:70
+msgid "Remove"
+msgstr "நீக்கு"
+
+#: .\templates\qrmenu\orders.html:77
+#, fuzzy
+#| msgid "Place Order"
+msgid "Delete Order"
+msgstr "ஆர்டரை நீக்கு "
+
+#: .\templates\qrmenu\orders.html:95
+msgid "Success"
+msgstr ""
+
+#: .\templates\qrmenu\orders.html:97
+msgid "Print"
+msgstr "அச்சிடுக"
+
+#: .\templates\qrmenu\orders.html:103
+#, fuzzy
+#| msgid "Your Orders"
+msgid "No Orders"
+msgstr "ஆர்டர்கள் இல்லை"
+
+#: .\templates\qrmenu\qrbuilder.html:21
+msgid "QR Code"
+msgstr ""
+
+#: .\templates\qrmenu\qrbuilder.html:28
+msgid "Download Image"
+msgstr "படத்தைப் பதிவிறக்கவும்"
+
+#: .\templates\qrmenu\restaurant.html:82
+#, fuzzy
+#| msgid "Restaurant Profile"
+msgid "Restaurant"
+msgstr "உணவக விவரம்"
+
+#: .\templates\qrmenu\support.html:10
+msgid "Add Enquiry"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:19
+#, fuzzy
+#| msgid "Add Cart"
+msgid "Add Query"
+msgstr "ஆர்டர்"
+
+#: .\templates\qrmenu\support.html:31
+msgid "Enter your Query"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:40
+msgid "Send"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:52
+msgid "Date"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:53
+msgid "Question"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:54
+msgid "Status"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:64
+msgid "Your Query"
+msgstr ""
+
+#: .\templates\qrmenu\support.html:109
+msgid "No Enquiries added"
+msgstr ""
+
+#: .\templates\qrmenu\transactions.html:8
+msgid "Download Current Invoice"
+msgstr ""
+
+#: .\templates\qrmenu\transactions.html:55
+#, fuzzy
+#| msgid "Transactions"
+msgid "No Transactions"
+msgstr "பரிவர்த்தனைகள்"

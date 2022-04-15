@@ -1,5 +1,6 @@
 {%extends 'base/base.html'%}
 {%load static%}
+{%load i18n%}
 {% load crispy_forms_tags %}
 {%block style%}
   <style>
@@ -78,7 +79,7 @@
 {%block content%}
     <div class="container-fluid pt-4">
       <div class="d-flex align-items-center mb-5">
-        <h3 class="mr-auto">Restaurant</h3>
+        <h3 class="mr-auto">{%trans "Restaurant"%}</h3>
         <!-- <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
             <a href="{%url 'dashboard'%}" class="btn btn-dark text-lightgrey">Home <i class="bi bi-caret-right-fill"></i></a>
             <a href="#" class="btn btn-dark">Restaurant</a>

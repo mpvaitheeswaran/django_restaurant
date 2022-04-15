@@ -1,17 +1,18 @@
 {%extends 'base/base.html'%}
 {%load static%}
 {% load crispy_forms_tags %}
+{%load i18n%}
 {%block content%}
     <div class="container-fluid pt-4">
       <div class="d-flex align-items-center mb-5">
-        <h3 class="mr-auto">Account Settings</h3>
+        <h3 class="mr-auto">{%trans 'Account Settings'%}</h3>
   
       </div>
 
         
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white border-0 shadow-sm">
-                <span class="text-primary"><i class='bx bx-bell'></i></span> Account Settings
+                <span class="text-primary"><i class='bx bx-bell'></i></span> {%trans 'Account Settings'%}
             </div>
             {% if messages %}
 
@@ -32,26 +33,26 @@
                 <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group">
-                          <label for="useremail">Email address</label>
+                          <label for="useremail">{%trans 'Email address'%}</label>
                           <input type="email" class="form-control" value="{{useremail}}" id="useremail" readonly>
                           
                       </div>
                     </div>
                     <div class="col-sm-12 ">
                       <div class="form-group">
-                          <label for="id_oldpassword">Old Password</label>
+                          <label for="id_oldpassword">{%trans 'Old Password'%}</label>
                           <input type="password" name="old_password" class="form-control" id="id_oldpassword">
                       </div>
                     </div>
                     <div class="col-sm-6 ">
                       <div class="form-group">
-                          <label for="id_newpassword1">New Password</label>
+                          <label for="id_newpassword1">{%trans 'New Password'%}</label>
                           <input type="password" name="new_password1" class="form-control" id="id_newpassword1">
                       </div>
                     </div>
                   <div class="col-sm-6">
                       <div class="form-group">
-                          <label for="id_newpassword2">Confirm Password</label>
+                          <label for="id_newpassword2">{%trans 'Confirm Password'%}</label>
                           <input type="password" name="new_password2" class="form-control" id="id_newpassword2">
                       </div>
                     </div>
@@ -63,12 +64,12 @@
         
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-0 shadow-sm">
-                <span class="text-primary"><i class='bx bx-receipt'></i></span> Billing Details
+                <span class="text-primary"><i class='bx bx-receipt'></i></span> {%trans 'Billing Details'%}
             </div>
             <div class="card-body">
               <form id="billDetailForm" method="post" autocomplete="off">
                 <div class="alert alert-info" role="alert">
-                    These details will be used in invoice and payments.
+                    {%trans 'These details will be used in invoice and payments.'%}
                 </div>
                 {%crispy form%}
               </form>

@@ -1,4 +1,5 @@
 {% load notifications_tags %}
+{%load i18n%}
 <!-- Navbar -->
 <header class="header body-pd bg-white shadow-sm" id="header">
     <nav class="navbar navbar-default navbar-expand-lg navbar-light bg-white pl-0">
@@ -59,27 +60,27 @@
           <div> 
               <a href="#" class="nav_logo" style="text-decoration: none;"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">RestaurantQR</span> </a>
               <div class="nav_list">
-                <a title="Dashboard" href="{%url 'dashboard'%}" class="nav_link {%if request.path == dashboard%}active{%endif%}"> <i class="bi bi-speedometer2"></i> <span class="nav_name">Dashboard</span> 
+                <a title="Dashboard" href="{%url 'dashboard'%}" class="nav_link {%if request.path == dashboard%}active{%endif%}"> <i class="bi bi-speedometer2"></i> <span class="nav_name">{%trans 'Dashboard'%}</span> 
                 </a> 
-                <a title="Restaurants" href="{%url 'restaurant'%}" class="nav_link {%if request.path == restaurant%}active{%endif%}"> <i class="bi bi-shop"></i> <span class="nav_name">Restaurant Profile</span> 
+                <a title="Restaurants" href="{%url 'restaurant'%}" class="nav_link {%if request.path == restaurant%}active{%endif%}"> <i class="bi bi-shop"></i> <span class="nav_name">{%trans 'Restaurant Profile'%}</span> 
                 </a> 
-                <a title="Menu" href="{%url 'menu'%}" class="nav_link {%if request.path == menu%}active{%endif%}"> <i class="bi bi-menu-button-wide"></i> <span class="nav_name">Menu</span> 
+                <a title="Menu" href="{%url 'menu'%}" class="nav_link {%if request.path == menu%}active{%endif%}"> <i class="bi bi-menu-button-wide"></i> <span class="nav_name">{%trans 'Menu'%}</span> 
                 </a>
-                <a title="Orders" href="{%url 'orders'%}" class="nav_link {%if request.path == orders%}active{%endif%}"> <i class='bx bx-restaurant'></i> <span class="nav_name">Orders</span> 
+                <a title="Orders" href="{%url 'orders'%}" class="nav_link {%if request.path == orders%}active{%endif%}"> <i class='bx bx-restaurant'></i> <span class="nav_name">{%trans 'Orders'%}</span> 
                 </a>
-                <a title="Membership" href="{%url 'membership'%}" class="nav_link {%if request.path == membership%}active{%endif%}"> <i class='bx bx-gift'></i> <span class="nav_name">Membership</span> 
+                <a title="Membership" href="{%url 'membership'%}" class="nav_link {%if request.path == membership%}active{%endif%}"> <i class='bx bx-gift'></i> <span class="nav_name">{%trans 'Membership'%}</span> 
                 </a>
-                <a title="QR Builder" href="{%url 'qr-builder'%}" class="nav_link {%if request.path == qr_builder%}active{%endif%}"> <i class='bx bx-qr-scan'></i> <span class="nav_name">QR Builder</span> 
+                <a title="QR Builder" href="{%url 'qr-builder'%}" class="nav_link {%if request.path == qr_builder%}active{%endif%}"> <i class='bx bx-qr-scan'></i> <span class="nav_name">{%trans 'QR Builder'%}</span> 
                 </a>
 
-                <a title="Account Settings" href="{%url 'transactions'%}" class="nav_link {%if request.path == transactions%}active{%endif%}">  <i class='bx bx-spreadsheet'></i> <span class="nav_name">Transactions</span>
+                <a title="Account Settings" href="{%url 'transactions'%}" class="nav_link {%if request.path == transactions%}active{%endif%}">  <i class='bx bx-spreadsheet'></i> <span class="nav_name">{%trans 'Transactions'%}</span>
                 </a>
-                <a title="Account Settings" href="{%url 'accountsettings'%}" class="nav_link {%if request.path == accountsettings%}active{%endif%}"> <i class='bx bxs-cog'></i> <span class="nav_name">Account Settings</span>
+                <a title="Account Settings" href="{%url 'accountsettings'%}" class="nav_link {%if request.path == accountsettings%}active{%endif%}"> <i class='bx bxs-cog'></i> <span class="nav_name">{%trans 'Account Settings'%}</span>
                 </a>
-                <a title="Support" href="{%url 'support'%}" class="nav_link {%if request.path == support%}active{%endif%}"> <i class='bx bx-help-circle'></i> <span class="nav_name">Support</span>
+                <a title="Support" href="{%url 'support'%}" class="nav_link {%if request.path == support%}active{%endif%}"> <i class='bx bx-help-circle'></i> <span class="nav_name">{%trans 'Support'%}</span>
                 </a>
                 
-                <a href="{%url 'accounts-logout'%}" class="nav_link" data-bs-toggle="tooltip" data-bs-placement="left" title="Sign Out"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> 
+                <a href="{%url 'accounts-logout'%}" class="nav_link" data-bs-toggle="tooltip" data-bs-placement="left" title="Sign Out"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">{%trans 'SignOut'%}</span> 
                 </a>
               </div>
           </div> 

@@ -1,10 +1,11 @@
 {%extends 'base/base.html'%}
 {%load static%}
+{%load i18n%}
 {%block content%}
     <div class="container-fluid pt-4">
         <div class="d-flex align-items-center mb-5">
-            <h3 class="mr-auto">Transactions</h3>
-            <a download="current_invoice.pdf" href="/media/{{restaurant.invoice_pdf}}" class="btn btn-primary"><i class='bx bxs-download'></i> Download Current Invoice</a>
+            <h3 class="mr-auto">{%trans "Transactions"%}</h3>
+            <a download="current_invoice.pdf" href="/media/{{restaurant.invoice_pdf}}" class="btn btn-primary"><i class='bx bxs-download'></i> {%trans "Download Current Invoice"%}</a>
         </div>
 
         <div class="table-responsive mt-5 bg-white shadow-sm p-2">
@@ -51,7 +52,7 @@
                     </tr>
                     {%empty%}
                     <tr>
-                        <td colspan="7" class="text-center">No Transactions</td>
+                        <td colspan="7" class="text-center">{%trans "No Transactions"%}</td>
                     </tr>
                     {%endfor%}
                   
